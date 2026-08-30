@@ -4,6 +4,15 @@
 the 60° hex grid). Formalized in Lean, built in Verilog, measured in ngspice — with the
 honesty rule: *borrow, don't trust; verify like our own intuition.*
 
+## Note from the human
+I did the core initial math and idea, and an ai told me this was the einstine itegers while trying to figure out gauge theory
+After realizing that Tau/6 is ternary * 2 it all sort of came together
+
+This is a hobby project, now with lean proofs, and hardware description language and testing
+This is a proof of concept only, write up by the AI, parts may be wrong, have not double checked
+
+Enjoy :)
+
 ## The claim, honestly
 
 > Ternary buys **names** exponentially (proved), moves **bits on a wire** cheaper by a
