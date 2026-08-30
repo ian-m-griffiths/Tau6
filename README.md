@@ -1,4 +1,4 @@
-# The Tau Architecture
+# The Tau6 Architecture
 
 **A balanced-ternary processor on the Eisenstein integer lattice ℤ[ω]** (ω = e^(iπ/3),
 the 60° hex grid). Formalized in Lean, built in Verilog, measured in ngspice — with the
