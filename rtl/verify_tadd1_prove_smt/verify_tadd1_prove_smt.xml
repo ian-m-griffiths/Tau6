@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-08-28T22:22:25" hostname="ElarasLightHouse" package="verify_tadd1" id="0" name="prove_smt" tests="30" errors="0" failures="0" time="2" skipped="27">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="PASS"/>
+</properties>
+<testcase classname="prove_smt" name="build execution" time="0">
+</testcase>
+<testcase classname="prove_smt" name="Property ASSERT in tadd1_verify at verify_tadd1.sv:82.6-85.54" time="0" type="ASSERT" location="verify_tadd1.sv:82.6-85.54" id="_witness_.check_assert_verify_tadd1_sv_82_181">
+</testcase>
+<testcase classname="prove_smt" name="Property ASSERT in tadd1_verify at verify_tadd1.sv:85.55-86.65" time="0" type="ASSERT" location="verify_tadd1.sv:85.55-86.65" id="_witness_.check_assert_verify_tadd1_sv_85_185">
+</testcase>
+<testcase classname="prove_smt" name="Property ASSERT in tadd1_verify at verify_tadd1.sv:86.66-88.82" time="0" type="ASSERT" location="verify_tadd1.sv:86.66-88.82" id="_witness_.check_assert_verify_tadd1_sv_86_191">
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_197">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_203">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_209">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_215">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_221">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_227">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_233">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_239">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_245">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_251">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_257">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_263">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_269">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_275">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_281">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_287">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_293">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_299">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_305">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_311">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_317">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_323">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_329">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_335">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_341">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_347">
+<skipped />
+</testcase>
+<testcase classname="prove_smt" name="Property COVER in tadd1_verify at verify_tadd1.sv:97.85-98.55" time="0" type="COVER" location="verify_tadd1.sv:97.85-98.55" id="_witness_.check_cover_verify_tadd1_sv_97_353">
+<skipped />
+</testcase>
+<system-out>SBY 22:22:24 [verify_tadd1_prove_smt] Removing directory '/home/ian/dsh/projects/lattice/rtl/verify_tadd1_prove_smt'.
+SBY 22:22:24 [verify_tadd1_prove_smt] Copy '/home/ian/dsh/projects/lattice/rtl/trit_functions.vh' to '/home/ian/dsh/projects/lattice/rtl/verify_tadd1_prove_smt/src/trit_functions.vh'.
+SBY 22:22:24 [verify_tadd1_prove_smt] Copy '/home/ian/dsh/projects/lattice/rtl/verify_tadd1.sv' to '/home/ian/dsh/projects/lattice/rtl/verify_tadd1_prove_smt/src/verify_tadd1.sv'.
+SBY 22:22:24 [verify_tadd1_prove_smt] engine_0: smtbmc z3
+SBY 22:22:24 [verify_tadd1_prove_smt] base: starting process &quot;cd verify_tadd1_prove_smt/src; yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 22:22:24 [verify_tadd1_prove_smt] base: finished (returncode=0)
+SBY 22:22:24 [verify_tadd1_prove_smt] prep: starting process &quot;cd verify_tadd1_prove_smt/model; yosys -ql design_prep.log design_prep.ys&quot;
+SBY 22:22:24 [verify_tadd1_prove_smt] prep: finished (returncode=0)
+SBY 22:22:24 [verify_tadd1_prove_smt] smt2: starting process &quot;cd verify_tadd1_prove_smt/model; yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 22:22:24 [verify_tadd1_prove_smt] smt2: finished (returncode=0)
+SBY 22:22:24 [verify_tadd1_prove_smt] engine_0.basecase: starting process &quot;cd verify_tadd1_prove_smt; yosys-smtbmc -s z3 --presat --noprogress -t 20  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2&quot;
+SBY 22:22:24 [verify_tadd1_prove_smt] engine_0.induction: starting process &quot;cd verify_tadd1_prove_smt; yosys-smtbmc -s z3 --presat -i --noprogress -t 20  --append 0 --dump-vcd engine_0/trace_induct.vcd --dump-yw engine_0/trace_induct.yw --dump-vlogtb engine_0/trace_induct_tb.v --dump-smtc engine_0/trace_induct.smtc model/design_smt2.smt2&quot;
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Solver: z3
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 0..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.induction: ##   0:00:00  Solver: z3
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.induction: ##   0:00:00  Trying induction in step 20..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 0..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.induction: ##   0:00:00  Temporal induction successful.
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.induction: ##   0:00:00  Status: passed
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.induction: finished (returncode=0)
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.induction: Status returned by engine for induction: pass
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 1..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 1..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 2..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 2..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 3..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 3..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 4..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 4..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 5..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 5..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 6..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 6..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 7..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 7..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 8..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 8..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 9..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 9..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 10..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 10..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 11..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 11..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 12..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 12..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 13..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 13..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 14..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 14..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 15..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 15..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 16..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 16..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 17..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 17..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 18..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 18..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assumptions in step 19..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Checking assertions in step 19..
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: ##   0:00:00  Status: passed
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: finished (returncode=0)
+SBY 22:22:25 [verify_tadd1_prove_smt] engine_0.basecase: Status returned by engine for basecase: pass
+SBY 22:22:25 [verify_tadd1_prove_smt] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:01 (1)
+SBY 22:22:25 [verify_tadd1_prove_smt] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:02 (2)
+SBY 22:22:25 [verify_tadd1_prove_smt] summary: engine_0 (smtbmc z3) returned pass for basecase
+SBY 22:22:25 [verify_tadd1_prove_smt] summary: engine_0 (smtbmc z3) returned pass for induction
+SBY 22:22:25 [verify_tadd1_prove_smt] summary: engine_0 did not produce any traces
+SBY 22:22:25 [verify_tadd1_prove_smt] summary: successful proof by k-induction.
+SBY 22:22:25 [verify_tadd1_prove_smt] DONE (PASS, rc=0)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

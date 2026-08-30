@@ -1,0 +1,451 @@
+High Performance CNFET-based Ternary Full Adders                                                                                                     1
+
+
+
+         High Performance CNFET-based Ternary Full
+                          Adders
+                           Fazel Sharifi, Atiyeh Panahi, Mohammad Hossein Moaiyeri and Keivan Navi
+
+         Nano-technology & Quantum Computing lab, Shahid Beheshti University, GC, Tehran, Iran. e-mails: f_sharifi@sbu.ac.ir, at.panahi@mail.sbu.ac.ir,
+         h_moaiyeri@sbu.ac.ir and navi@sbu.ac.ir.
+
+
+
+ABSTRACT
+     This paper investigates the use of carbon nanotube field effect transistors (CNFETs) for the design of ternary full
+     adder cells. The proposed circuits have been designed based on the unique properties of CNFETs such as
+     having desired threshold voltages by adjusting diameter of the CNFETs gate nanotubes. The proposed circuits
+     are examined using HSPICE simulator with the standard 32 nm CNFET technology. The proposed methods are
+     simulated at different conditions such as different supply voltages, different temperature and operational
+     frequencies. Simulation results show that the proposed designs are faster than the state of the art CNFET based
+     ternary full adders.
+     Keywords:
+         CNFET, Full adder, High speed, Multiple Valued Logic (MVL), Nanotechnology, Ternary arithmetic circuits.
+.
+
+
+
+
+                                                                            problem limits the number of inside and outside connections
+1.         INTRODUCTION                                                     [7]. By using MVL, we can reduce the circuit area by reducing
+Due to the limitations of CMOS transistors, they are not able               the overhead in interconnects and pin counts [7]. In MVL
+to continue the process of feature size reduction and should be             designs, wires and interconnections carry more information
+replaced by new alternative emerging technologies. CMOS                     than binary logic; so it has higher speed and smaller number of
+transistors have problems such as short channel effect, reduced             computation stages [6]. Among all radices that exist for MVL
+gate control, high leakage power and parameter variation [1].               logic, e (≈ 2.718) base operations have the most efficient
+So thinking about alternative new technologies such as                      implementation [8]. But due to the hardware restrictions for
+Quantum dot Cellular Automata (QCA) [2], Single Electron                    implementing real systems, we should use natural numbers as
+Transistors (SET) [3] and Carbon Nanotube Field-Effect                      the base of computations. So radix 3 which is the nearest
+Transistors (CNFET) [4] is essential.                                       natural number to e; is more attractive and as a result, ternary
+A suitable alternative for CMOS transistors is CNFET.                       logic is the best and leads to less complexity and production
+Because of the similarities between CMOS and CNFET                          cost [9].
+transistors in terms of inherent electronic parameters, CNFET               Since adders are one of the most basic functional units in
+could be a good alternative technology without any major                    computer arithmetic and using high speed and low power
+changes in CMOS platforms [4]. In addition, a unique                        adders can improve efficiency of other operations, in this
+characteristic of CNFET devices is one dimensional band                     paper two new efficient CNFET based ternary full adders are
+structure which suppresses backscattering and causes near                   proposed.
+ballistic operation, that makes it suitable for implementing fast           This paper is organized as follows: the next section describes
+and low power CNFET based circuits [4]. Another feature of                  the CNFET device characteristics in detail. Section 3 presents
+CNFET is that it has same mobility and consequently same                    the proposed methods for ternary full adder cells and section 4
+current drive for P-FET and N-FET devices. This makes                       compares these methods with other existing ternary full adders
+transistor sizing easier for complex circuits [5]. Among all                and includes the simulation results and finally section 5
+applications of CNFET transistors, Multiple Valued Logic                    concludes the paper.
+(MVL) could be more of an interest. MVL logic means using
+more than two logic values for designing circuits and systems.              2.      CARBON NANOTUBE FIELD EFFECT TRANSISTOR
+Using CNFETs is appropriate for MVL designing. Because                      (CNFET)
+MVL is based on multiple threshold design technique and                         Carbon Nano Tube Field Effect Transistors (CNFET) are
+determining the threshold voltage of CNFETs is easily                       formed in the shape of a sheet of graphite tubes. Some
+possible by changing the diameter of the nanotubes [10]. One                advantages of CNFETs are such as they have higher ON
+of the major challenges of binary logic is the number of pin                current compared to MOSFET transistors. By using CNFETs
+counts and interconnects specially in dense chips. This                     it is possible to scale down feature size, beyond what currently
+High Performance CNFET-based Ternary Full Adders                                                                                      2
+
+lithographic methods permit. Also ballistic conduction of            heavily doped and they have field effect and unipolar
+CNFETs reduces the power dissipation in the transistor body.         characteristics. In general, this type of CNFETs operates like
+One dimension structure of CNTs reduces the resistivity and          the normal MOSFETs but its performance is better. Because
+consequently the energy dissipation and power consumption            of the high ON current in this type of CNFETs, they are
+[7].                                                                 appropriate for ultra-high performance circuits. Band-to-band
+CNTs are grouped to Single-Walled Carbon Nano Tube                   CNFET transistors are the third type of CNFETs (T-CNFET).
+(SWCNT) and Multi-Walled Carbon Nano Tube (MWCNT).                   Due to super cut-off characteristic of them, they have been
+SWCNTs are made of one cylinder and MWCNTs are made                  used for sub-threshold and ultra-low-power applications [13].
+of more than one cylinder that are nested inside each other [9].     In addition to all the benefits of CNFETs, fabrication
+                                                                     problems such as placing CNFETs on an existing MOSFET
+SWCNT could be conductor or semiconductor. Electrical and
+                                                                     platform is one of the challenges in using them [14].
+physical properties of CNFETs are depending on the
+                                                                     Due to the similarities between MOSFET-like CNTs and
+orientation of chiral vector components and the rolling
+                                                                     MOSFETs in terms of inherent characteristics, MOSFET-like
+direction of graphite sheet [11]. Chiral vector describes
+                                                                     CNTs are utilized in this paper for designing the proposed full
+structure of CNTs and is determined by (n1, n2) indices. For         adder cells.
+example if n1-n2 = 3k (k∈Z), SWCNT has the metallic
+characteristics, otherwise it is semiconductor [4].                  3.     PROPOSED WORK
+Several SWCNTs could be placed next to each other under the
+transistor gate and set its width. The width of a CNFET              Ternary logic that is the most important type of MVLs, is
+transistor depends on the number of tubes which are placed           made of three logic levels that represent themselves with “0”,
+under the transistor gate and also it depends on the distance        “1” and “2” logical values. Equivalent voltage of these logical
+                                                                                      ?
+between two adjacent tubes which is called a pitch. Therefore        values are “0”, “ [[” and “𝑉\\ ”. As previously mentioned, the
+                                                                                          <
+the width of a transistor is determined by the following             full adder cell is one of the most important functional units of
+equation [12].                                                       arithmetic operations. So in this section two proposed designs
+                                                                     for the ternary full adder cell are presented. In a ternary full
+𝑊$%&' ≅ 𝑀𝑖𝑛(𝑊-./ , 𝑁×𝑃𝑖𝑡𝑐ℎ)                                    (1)   adder the relation between inputs and outputs represents by the
+                                                                     following equation:
+Where, 𝑁 is the number of nanotubes that are placed under the
+transistor gate and 𝑊-./ is the minimum width of the gate.                𝑖𝑛 = 𝐴 + 𝐵 + 𝐶./ = 3𝐶`a& + 𝑆𝑢𝑚                            (4)
+Threshold voltage of CNFET transistors is determined by the
+following equation [12].                                             Therefor:
+
+        :;       > %?@            E.G>                               𝑆𝑢𝑚 =       𝑖𝑛 − 3𝐶`a&                                         (5)
+𝑉&9 ≅        =             ≅                                   (2)
+        <'       > 'ABCD       ABCD (/-)
+                                                                     Where, 𝐴 and 𝐵 are input trits (TRinary digITal unit), 𝐶./ is
+In the above mentioned equation, 𝑎 is the carbon to carbon           the input carry and 𝐶`a& is the output carry trit that weighs 3.
+atom distance, 𝑉I is the carbon 𝜋 − 𝜋 band energy in the tight       In the ternary logic, operations are done at radix 3 and
+bonding model, 𝑒 is the unit electron charge and 𝐷NOP is the         consequently weight of each trit position is 3 times more than
+diameter of CNFETs that can be calculated by the following           the weight of previous trit position.
+equation [12].                                                       According to Equation (4) and also by considering Equation
+                                                                     (6) for a given dividend as 𝑋, a divisor as 𝐷, a quotient as 𝑄
+         %× /Q R S /R R S /Q /R                                      and a reminder as 𝑅 [17],
+𝐷NOP =                            ≅ 0.0783 𝑛Y < + 𝑛< < + 𝑛Y 𝑛< (3)
+                    I
+
+As previously mentioned and due to the Equation (2) and              𝑋 = 𝑄𝐷 + 𝑅 𝑤𝑖𝑡ℎ 𝑅 < 𝐷                                          (6)
+Equation (3), modification of CNFET threshold voltage is
+possible only by changing the diameter of the nanotubes. So          if we suppose that 𝑋 = 𝐴 + 𝐵 + 𝐶./ = 𝑖𝑛 and 𝐷 = 3, it is
+CNFETs are appropriate for implementing multiple threshold           concluded that the Sum output trit is the reminder of the
+circuits. By changing the chiral vector indices the nanotube         division and 𝐶`a& trit is the quotient of the division. So:
+diameter of transistor changes and consequently the threshold
+voltage of CNFET sets simply.                                         𝑆𝑢𝑚 =           𝑖𝑛 𝑚𝑜𝑑 3
+Three different types of CNFETs which have been introduced                        ./                                                (7)
+                                                                      𝐶`a& =
+are as following. The first type is Schottky-Barrier (SB) that is                 >
+created by tunneling of electrons through Schottky-Barrier at
+the source-channel junction. The source and drain of this type       At the above equation,            notation represents the floor
+of CNFETs are metallic inside a semiconductor body; the              function that results the integer part of the quotient of division.
+direct contact between metal and semiconductor causes strong         As a result:
+ambipolar characteristic which restricts the usage of this type
+in CMOS-like logic families. The second type of CNFETs is
+called MOSFET-like. The source and drain of this type are
+High Performance CNFET-based Ternary Full Adders                                                                                          3
+
+       0           0≤      𝑖𝑛 ≤ 2                                       Logical voltages
+                                                                                           0
+                                                                        by summation of
+𝐶`a& = 1           3≤      𝑖𝑛 ≤ 5                             (8)           A, B, Cin      1
+                                                                                           2
+       2           5<      𝑖𝑛 ≤ 6                                                          3
+                                                                                                2.5
+
+                                                                                           4
+According to Equation (5) and Equation (8) for the Sum                     A               5
+                                                                                           6
+output trit the following equation is concluded:                                                                    Ternary
+                                                                           B                                                        Cout
+                                                                                                                     Buffer
+                                 𝑖𝑛          0≤    𝑖𝑛 ≤ 2                  Cin
+𝑆𝑢𝑚 =        𝑖𝑛 − 3𝐶`a& =        𝑖𝑛 − 3      3≤    𝑖𝑛 ≤ 5     (9)
+                                 𝑖𝑛 − 6      5<    𝑖𝑛 ≤ 6             Logical Thereshod voltage=5.5
+
+
+Truth table of the ternary full adder is represented in Table 1.
+                                                                     Figure 1: Output carry design.
+According to the Table 1 and Equation (8), 𝐶`a& trit could be
+implemented with a ternary buffer. Threshold voltages of
+𝐶`a& buffer are determined easily by setting nanotube
+diameters of CNFET transistors. This ternary buffer
+represented in Figure 1. Its threshold voltages have been set so
+that to implement the Equation (8). Logical values of the
+inputs of this buffer would be one of the numbers that is
+shown in Figure 1. If the logical values of the input trits ( 𝑖𝑛)
+be less than 2.5 then the output will be equal to “0” and
+similarity, if 𝑖𝑛 > 5.5, upper path of output will be active
+and output node would be equal to “𝑉\\ ”. For other values of
+  𝑖𝑛, two paths would be active and logical output value
+would be “1” and voltage value of this node would be equal to
+ ?
+“ [[”.
+  <
+Table 1: Truth table of ternary full adder
+  𝐴 + 𝐵 + 𝐶./                  𝑆𝑢𝑚                𝐶`a&
+       0                        0                  0
+       1                        1                  0
+       2                        2                  0
+       3                        0                  1
+       4                        1                  1
+       5                        2                  1
+       6                        0                  2                 Figure 2: First proposed ternary full adder.
+
+
+According to Table 1 and Equation (9), the Sum output
+determines by the output carry trit and summation of the
+logical values of the input trits ( 𝑖𝑛). The proposed methods
+are based on this idea that the 𝐶`a& trit determines that for each
+of the input trits, which paths of Sum output should be
+activated. The first proposed design of the Sum output is
+shown in Figure 2. In this figure 𝑆 and 𝐹 signals are selectors
+that determine output path. 𝑆 is the output of a binary inverter
+with threshold logic value of 2.5 and also 𝐹 signal is the
+output of a binary inverter with threshold logic value of 5.5.
+So the Sum output trit is determined based on the 𝐶`a& trit and
+the values of these control signals. They specify that for each
+combination of the input trits which of the paths should be
+activated.
+According to the Figure 2 for the first proposed Sum output, If
+   𝑖𝑛 < 2.5 so based on the Equation (8), 𝐶`a& = 0 and 𝑆 = 1.
+Therefore 𝑇𝐺E (Transmission Gate) is ON and the first path
+will be active and output of the 𝑆𝑇𝐼E gate after passing through
+a ternary inverter reaches to output. 𝑆𝑇𝐼E is a Standard Ternary
+Inverter that operates on “0”, “1” and “2” logic values.
+Threshold logic values of PFET and NFET transistors in this
+                                                                     Figure 3: Second proposed ternary full adder. Table 2: CNFET model
+standard ternary inverter are set so that to implement this          parameters [18]
+High Performance CNFET-based Ternary Full Adders                                                                                             4
+
+functionality. If 2.5 < 𝑖𝑛 < 5.5 then according to Equation          the operation of methods versus different load capacitors, load
+(8), 𝐶`a& = 1, 𝑆 = 0 and 𝐹 = 1 so 𝑇𝐺Y and 𝑇𝐺< are active and         capacitors up to 5 fF are placed at the output nodes of the
+output of 𝑆𝑇𝐼Y that operates on logic values of “3”, “4” and         circuits. Figure 5 shows the simulation results. As it is clear,
+“5”, reaches to output. The output of 𝑆𝑇𝐼Y gate is logically         the proposed methods reduce the delay and energy
+equal to “0”, “1” and “2” for input logic values of “3”, “4” and     consumption in the presence of different load capacitors.
+“5”. And finally, if 5.5 < 𝑖𝑛, so 𝐹 = 0, 𝐹 = 1 and NFET              Figure 6 evaluates operation of the proposed methods by
+transistor is active and Sum output becomes “0”.                     increasing the temperature at 500 MHz operational frequency.
+Therefore the Sum output trit determines according to 𝐶`a& and       As anticipated, the operation of CNFETs is independent of the
+also consequently 𝑆 and 𝐹 selector signals. In another word,         temperature changes. As Figure 6 shows, for different
+for each of the input combinations, one of the paths will be         temperatures that are ranging from 0 ℃ to 80 ℃, all the three
+activated and consequently there is no contention for the Sum        evaluated parameters are fixed without any major changes
+output voltage. To reduce the number of transistors that are         versus temperature. To evaluate the operation of methods
+used in the first proposed design, it is possible to use a ternary   versus different supply voltages, they are simulated at
+                                                                     different supply voltages at 250 MHz operational frequencies
+buffer instead of two cascaded inverters. Schematic gate level
+                                                                     for a fixed 1 fF load at output nodes. The results are
+design of the second proposed method is shown in Figure 3.
+                                                                     represented in Figure 7. As shown in Figure 7, for all of the
+The second proposed method has the same operation of the
+                                                                     supply voltages the proposed methods have less delay and also
+first proposed method as described previously. The only              less energy consumption comparing to proposed methods of
+difference between two designs is that two cascaded inverter         [7].
+gates are replaced with 𝑆𝑇𝐵E and 𝑆𝑇𝐵Y ternary buffer gates. To
+compare the time and area complexity of two proposed                 Table 1: Truth table of ternary full adder
+designs with each other, the first design is composed of 55          Parameter                      Description                    Value
+CNFETs and 3 input capacitors and the second design has 43
+                                                                        𝐿{9                 Physical channel Length               32 nm
+CNFETs and 3 input capacitors. So the second design has
+smaller area and also it has less delay. Because its Sum output                        The mean free path in the intrinsic
+                                                                       𝐿$'||                                                      100 nm
+transmits through one buffer gate whereas in the first design,                                    CNT channel
+the Sum output signal passes through two cascaded inverter                            The length of doped CNT drain-side
+                                                                        𝐿\\                                                       32 nm
+                                                                                                 extension region
+gates which increases the critical path delay.
+                                                                                       The length of doped CNT source-
+                                                                            𝐿}}                                                   32 nm
+                                                                                              side extension region
+4.   SIMULATION RESULTS
+                                                                                        The thickness of high-k top gate
+ In this section, the results of simulating two proposed                    𝑇`~                                                    1 nm
+                                                                                                dielectric material
+methods are presented. Simulation is done using Synopsys                              The dielectric constant of high-k top
+HSPICE simulator for 32 nm CMOS technology with                        𝐾$%&'                                                        16
+                                                                                             gate dielectric material
+Compact SPICE model for CNFET that is further described in                  𝐸|.        The Femi level’s doped S/D tube             6 eV
+[15] and [16]. Table 2 represents some of the important
+                                                                                      The coupling capacitor between the
+parameters of this CNFET model. The proposed methods are                𝐶}a•                                                     20 pF/m
+                                                                                        channel region and the substrate
+simulated at different conditions such as different supply
+voltages, different temperature and operational frequencies
+and also for different load capacitors in output nodes.
+                                                                     Table 3: simulation results of the methods
+Figure 4 shows the waveform of output nodes for different
+                                                                                  Frequency = 250 MHz, Load = 1 fF, 𝑉\\ = 0.9 V
+combinations of inputs which confirms correct operating of
+                                                                                                  Delay             Power         PDP
+ternary full adder.                                                                              (e-10 s )        (𝑒 − 6 w )   (𝑒 − 15 J )
+In the following of this paper, we compared two proposed
+methods with other existing ternary full adder designs in               1st Proposed             0.665            10.412        0.692
+                                                                            nd
+different conditions. Average power consumption, worth case            2 Proposed                0.555            18.414        1.023
+delay and power-delay product (PDP) are evaluation criteria            st
+                                                                      1 design of [7]            2.531            6.4661        1.636
+of the circuits. Table 3 shows these parameters for the
+                                                                       nd
+proposed methods versus methods presented in [7] at 100              2 design of [7]             1.749            17.184        3.005
+MHz and 250 MHz operational frequencies and for a fixed 1fF                       Frequency = 100 MHz, Load =1 fF, 𝑉\\ = 0.9 V
+load capacitor at output nodes. As Table 3 represents, two                  st
+proposed methods have less delay and energy consumption                 1 Proposed               0.665             10.16        0.676
+comparing to proposed designs of [7]. For example at 250                    nd
+                                                                       2 Proposed                0.559             19.36        1.084
+MHz operational frequency, the first proposed method                   st
+decreases the PDP up to 57.67% and the second proposed                1 design of [7]            2.599             6.380        1.658
+                                                                       nd
+method reduces it up to 37.50%.                                      2 design of [7]             1.755             17.35        3.046
+To compare the performance of the designs, ternary full
+adders are simulated at 250 MHz operational frequencies by
+three evaluation criteria (power, delay and PDP). To evaluate
+High Performance CNFET-based Ternary Full Adders                                                                                                                                       5
+
+                                                                                                             Average power consumption of the proposed methods is
+                                                                                                             between the power consumption of the methods presented in
+                                                                                                             [7]. It should be noted that the methods represented in [7] do
+                                                                                                             not work properly for a supply voltage of 0.8 V. Therefore
+                                                                                                             there is no data for these methods at this supply voltage.
+
+                                                                                                             6.   CONCLUSION
+                                                                                                             Two novel high-performance ternary full adder cells have
+                                                                                                             been proposed based on CNFETs. The proposed circuits have
+                                                                                                             been designed based on multiple-Vth devices by utilizing
+                                                                                                             unique characteristics of CNFETs. Simulation results indicate
+                                                                                                             the superiority of the proposed designs in terms of delay and
+                                                                                                             PDP compared to the other existing circuits in various
+                                                                                                             conditions.
+
+Figure 4: Transient response of the proposed design.
+
+
+
+                       1st proposed             2nd proposed                        1th proposed             2nd proposed                      1st proposed             2nd proposed
+                       1st of [7]               2nd of [7]                          1th of [7]               2nd of [7]                        1st of [7]               2nd of [7]
+
+             3.5                                                               20                                                          5
+             3.0
+                                                                                                                                           4
+
+
+
+                                                                                                                            PDP (e-15 J)
+Delay (e-10 s)
+
+
+
+
+                                                               Power (e-6 W)
+
+
+
+
+             2.5                                                               15
+             2.0                                                                                                                           3
+                                                                               10
+             1.5                                                                                                                           2
+             1.0                                                                5                                                          1
+             0.5
+             0.0                                                                0                                                          0
+                       0     1        2     3      4      5                         0     1        2     3        4    5                       0     1        2     3      4      5
+                                      Loads (fF)                                                   Loads (fF)                                                 Loads (fF)
+Figure 5: Delay, power and PDP of designs vs. load capacitors.
+
+                       1st proposed             2nd proposed                        1th proposed             2nd proposed                      1st proposed             2nd proposed
+                       1st of [7]               2nd of [7]                          1th of [7]               2nd of [7]                        1st of [7]               2nd of [7]
+
+                 3.5                                                           25                                                          7
+                 3.0                                                                                                                       6
+                                                                               20
+                                                                                                                            PDP (e-15 J)
+Delay (e-10 s)
+
+
+
+
+                                                               Power (e-6 W)
+
+
+
+
+                 2.5                                                                                                                       5
+                 2.0                                                           15                                                          4
+                 1.5                                                           10                                                          3
+                 1.0                                                                                                                       2
+                                                                                5
+                 0.5                                                                                                                       1
+                 0.0                                                            0                                                          0
+                       0   10 20 30 40 50 60 70 80                                  0   10 20 30 40 50 60 70 80                                0   10 20 30 40 50 60 70 80
+                                      Temprature (oC)                                              Temprature (oC)                                            Temprature (oC)
+Figure 6: Delay, power and PDP of designs vs. temperature variation.
+High Performance CNFET-based Ternary Full Adders                                                                                                                                           6
+
+
+                 1th proposed              2nd proposed                       1th proposed           2nd proposed                        1th proposed           2nd proposed
+                 1th of [7]                2nd of [7]                         1th of [7]             2nd of [7]                          1th of [7]             2nd of [7]
+                 6.0                                                         35.0                                                        4.0
+                 5.0                                                         30.0                                                        3.5
+
+
+
+
+                                                                                                                          PDP (e-15 J)
+Delay (e-10 s)
+
+
+
+
+                                                             Power (e-6 W)
+                                                                             25.0                                                        3.0
+                 4.0                                                                                                                     2.5
+                                                                             20.0
+                 3.0                                                                                                                     2.0
+                                                                             15.0
+                 2.0                                                                                                                     1.5
+                                                                             10.0                                                        1.0
+                 1.0                                                          5.0                                                        0.5
+                 0.0                                                          0.0                                                        0.0
+                              0.8         0.9           1                             0.8          0.9           1                               0.8          0.9        1
+                                    Supply Voltage (V)                                       Supply Voltage (V)                                        Supply Voltage (V)
+Figure 7: Delay, power and PDP of designs vs. supply voltage variation.
+                                                                                                         14.   M. Zhang, P. C. H. Chan, Y. Chai, Z. Tang, “Applying SOI technology
+                                                                                                               on carbon nanotube transistors,” IEEE International SOI Conference,
+                                             REFERENCES                                                        pp. 147-148, 2007.
+1.               K. Roy, S. Mukhopadhyay, H. Meirmandi, “Leakage current
+                 mechanisms and leakage reduction technologies in deep-submicron                         15.   J. Deng, H.-S. P. Wong, “A compact SPICE model for carbon-nanotube
+                 CMOS circuits,” Proc IEEE, vol. 91, no. 2, pp. 305-327, 2003.                                 field-effect transistors including non idealities and its
+                                                                                                                application-part I: Model of the intrinsic channel region,” IEEE
+2.               K. Navi, S. Sayedsalehi, R. Farazkish, M. Rahimi Azghadi, “Five input                          Transactions on Electron Devices, vol. 54, no. 12, pp. 3186-3194,
+                 majority gate, a new device for quantum-dot cellular automata,” Journal                        2007.
+                 of. Computational and Theoretical Nanoscience, vol. 7, no. 8, pp. 1546–
+                 1553, 2010.                                                                             16.   J. Deng, H.-S. P. Wong, “A compact SPICE model for carbon-nanotube
+                                                                                                               field-effect transistors including non idealities and its application-part II:
+3.               A. K. Abu El-Seoud, M. El-Banna, M. A. Hakim, “On modeling and                                Full device model and circuit performance benchmarking,” IEEE
+                 characterization of single electron transistor,” International Journal of                     Transactions on Electron Devices, vol. 54, no. 12, pp. 3195-3205, 2007.
+                 Electronics, vol. 94, no. 6, pp. 573–585, 2007.
+                                                                                                         17.   I. Koren, “Computer arithmetic algorithms,” 2nd ed, Ed. Natick,
+4.               S. Lin, Y. B. Kim, F. Lombardi, “A novel CNFET-based ternary logic                            Massachusetts: A. K. Peters, 2002, pp. 39-42.
+                 gate design,” in Proceedings of IEEE International MidwestSymposium
+                 on Circuits and Systems (MWSCA '09), Cancun, Mexico, pp. 435-438,                       18.   M. H. Moaiyeri, A. Doostaregan, K. Navi, “Design of energy-efficient
+                 2009.                                                                                         and robust ternary circuits for nanotechnology,” IET Circuits, Devices
+                                                                                                               and Systems, vol. 5, no. 4, pp. 285-296, 2011.
+5.               G. Cho, Y. Kim, F. Lombardi, “Performance evaluation of CNFET-
+                 based logic gates,” in Proc. IEEE Int. Instrumentation and Measurement
+                 Technology Conf., Singapore, pp. 909–912, 2009.
+
+6.               H. M. Razavi, S. E. Bou-Ghazale, “Design of a fast CMOS ternary
+                 adder,” in Proceedings of IEEE International Symposium on Multiple-
+                 Valued Logic, pp. 20-23, 1987.
+
+7.               M. Moaiyeri, R. Faghih Mirzaee, K. Navi, O. Hashemipour, “Efficient
+                 CNFET-based ternary full adder cells for nanoelectronics,” Nano-Micro
+                 Lett, vol. 3, no. 1, pp. 43-50, 2011.
+
+8.               S. L. Hurst, “Multiple-valued logic – its status and future,” IEEE Trans.
+                 Comput, vol. 33, no. 12, pp. 1160–1179, 1984.
+9.               P. L. McEuen, M. Fuhrer and H. Park, “Single-walled carbon nanotube
+                 electronics,” IEEE Transactions on Nanotechnology, vol. 1, no. 1, pp.
+                 78-85, 2002.
+
+10.              S. Lin, Y. Kim, F. Lombardi, “CNTFET-based design of ternary logic
+                 gates and arithmetic circuits,” IEEE Transaction on. Nanotechnology,
+                 vol. 10, no. 2, pp. 217-225, 2011.
+
+11.              L. C. Castro, D. L. John, D. L. Pulfrey, M. Purfath , A. Gehring, H.
+                 Kosina, “Method of predicting FT for carbon nanotube FETs,” in IEEE
+                 Transaction on Nanotechnology, vol. 4, no. 6, 2005.
+
+12.              K. Y. Bok, Y. B. Kim, F. Lombardi, “Novel design methodology to
+                 optimize the speed and power of the CNTFET circuits,” in Proc. IEEE
+                 Int. Midwest Symp. on Circuits and Systems, Cancun, Mexico, pp. 1130–
+                 1133, 2009.
+
+13.              A. Raychowdhury, K. Roy, “Carbon nanotube electronics: design of
+                 high-performance and low-power digital circuits,” IEEE Trans. Circuits
+                 Syst, vol. 54, no. 11, pp. 2391–2401, 2007.
+

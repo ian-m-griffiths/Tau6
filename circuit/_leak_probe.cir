@@ -1,0 +1,15 @@
+* leak_probe: reverse-blocking leakage of the diode-connected NMOS
+.options reltol=1e-4 abstol=1e-15 vntol=1e-6
+.param WL = 6400
+.param LEN = 0.18u
+.param VTON = 0.3
+.model NMOSDIODE NMOS(LEVEL=1 VTO={VTON} KP=200u LAMBDA=0.05 GAMMA=0 PHI=0.7 TOX=2n IS=0)
+
+* reverse-block: rail rAk held at +1 V (as if asserted), line lk at 0
+Vl1 lk 0 DC 0
+M1K lk lk rAk rAk NMOSDIODE W={WL*LEN} L={LEN}
+VrAk rAk 0 DC 1.0
+Rlk rAk 0 500
+.dc Vl1 -1.0 1.0 0.05
+.print dc i(vl1) v(lk)
+.end

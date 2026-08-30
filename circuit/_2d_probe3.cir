@@ -1,0 +1,93 @@
+* =====================================================================
+* _2d_probe3.cir -- equal-detectability probe for Ian's V^2-vs-t
+* question: is LONG-LOW cheaper than SHORT-HIGH for EQUAL detectability?
+* Three push cases, all measured from rest with the same tcell4 +
+* sense-amp receiver:
+*   P1 short-high:  (11u, 1.0 ns)  rail@eval ~0.142 V  (pwm5's short)
+*   P2 long-low:    (5.6u, 1.618 ns) rail@eval ~0.142 V (width tuned to
+*                    match P1's rail -- equal rail = equal detectability
+*                    for this receiver, which samples at the eval edge)
+*   P3 long-low:    (4.5u, 1.618 ns) rail ~0.11 V -- equal AREA variant
+*                    (area of P1 = 336 pV.s; tuned toward that)
+* Reports E_drv, rail@eval, rail AREA for each so the V^2-vs-t physics
+* prediction can be checked with measured numbers on both proxies.
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param VDDR  = 1.0
+.param W     = 11u
+.param WN    = {W/2}
+.param PW    = 1.0n
+.param WLB   = 300
+.param LEN   = 0.18u
+
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4 KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+.model NMOSDIODEB NMOS(LEVEL=1 VTO=0.30 KP=200u LAMBDA=0.05 GAMMA=0 PHI=0.7 TOX=2n IS=0)
+
+.subckt tcell4 in rA rB rwire=100 cline=1p rload=500 cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+M1  x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1B x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1C x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1D x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M2  rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2B rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2C rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2D rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+VDD   vdd   0 DC {VDDR}
+VSS   vss   0 DC {-VDDR}
+BpSUP pwpSUP 0 V = -(V(vdd)*I(VDD) + V(vss)*I(VSS))
+
+* --- push case at 100n, width W, pulse PW (swept) ---
+MP1 drv1 gP1 vdd vdd PMOS1 W={W} L=0.18u
+MN1 drv1 gN1 vss vss NMOS1 W={WN} L=0.18u
+VgP1 gP1 0 PULSE({VDDR} 0 100n 0.2n 0.2n {PW} 200n)
+VgN1 gN1 0 DC {-VDDR}
+Vs1  drv1 cell1 DC 0
+Xc1  cell1 rA1 rB1 tcell4
+BpG1 pwpG1 0 V = V(gP1)*I(VgP1)
+BqG1 qG1 0 V = I(VgP1)
+
+.tran 20p 110n
+
+.meas tran e1 INTEG V(pwpSUP) FROM=99n TO={100n+PW+5n}
+.meas tran eg1 INTEG V(pwpG1) FROM={100n+PW+0.1n} TO={100n+PW+1.1n}
+.meas tran l1 MAX V(Xc1.x) FROM=100n TO={100n+PW+2n}
+.meas tran r1p MAX V(rA1) FROM=100n TO={100n+PW+4n}
+.meas tran r1e FIND V(rA1) AT=101.7n
+.meas tran a1 INTEG V(rA1) FROM=100n TO=103.2n
+
+.control
+echo "===== P1: short-high (11u, 1.0 ns) ====="
+alterparam W = 11u
+alterparam PW = 1.0n
+reset
+run
+echo "===== P2: long-low equal-rail (5.6u, 1.618 ns) ====="
+alterparam W = 5.6u
+alterparam PW = 1.618n
+reset
+run
+echo "===== P3: long-low equal-area probe (4.5u, 1.618 ns) ====="
+alterparam W = 4.5u
+alterparam PW = 1.618n
+reset
+run
+echo "===== P4: long-low 4.0u (area match guess) ====="
+alterparam W = 4.0u
+alterparam PW = 1.618n
+reset
+run
+.endc
+
+.end

@@ -1,0 +1,251 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * =====================================================================
+
+===== P1: short-high (11u, 1.0 ns) =====
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+pwpsup                                2.02e-12
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpg1                                        0
+qg1                                          0
+bqg1#branch                                  0
+vgp1#branch                                  0
+bpg1#branch                                  0
+bpsup#branch                                 0
+vdd#branch                           -1.01e-12
+vss#branch                            1.01e-12
+vs1#branch                                   0
+vgn1#branch                                  0
+
+
+No. of Data Rows : 5520
+
+  Measurements for Transient Analysis
+
+e1                  =   1.13048e-12 from=  9.90000e-08 to=  1.06000e-07
+eg1                 =   -1.07601e-14 from=  1.01100e-07 to=  1.02100e-07
+l1                  =  6.157926e-01 at=  1.012300e-07
+r1p                 =  2.502734e-01 at=  1.012300e-07
+r1e                 =  1.422867e-01
+a1                  =   3.35735e-10 from=  1.00000e-07 to=  1.03200e-07
+
+===== P2: long-low equal-rail (5.6u, 1.618 ns) =====
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+pwpsup                                2.02e-12
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpg1                                        0
+qg1                                          0
+bqg1#branch                                  0
+vgp1#branch                                  0
+bpg1#branch                                  0
+bpsup#branch                                 0
+vdd#branch                           -1.01e-12
+vss#branch                            1.01e-12
+vs1#branch                                   0
+vgn1#branch                                  0
+
+ Reference value :  8.76560e-09
+No. of Data Rows : 5520
+
+  Measurements for Transient Analysis
+
+e1                  =   9.66728e-13 from=  9.90000e-08 to=  1.06618e-07
+eg1                 =   -5.35118e-15 from=  1.01718e-07 to=  1.02718e-07
+l1                  =  5.173018e-01 at=  1.018480e-07
+r1p                 =  1.645497e-01 at=  1.018480e-07
+r1e                 =  1.479584e-01
+a1                  =   2.45549e-10 from=  1.00000e-07 to=  1.03200e-07
+
+===== P3: long-low equal-area probe (4.5u, 1.618 ns) =====
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+pwpsup                                2.02e-12
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpg1                                        0
+qg1                                          0
+bqg1#branch                                  0
+vgp1#branch                                  0
+bpg1#branch                                  0
+bpsup#branch                                 0
+vdd#branch                           -1.01e-12
+vss#branch                            1.01e-12
+vs1#branch                                   0
+vgn1#branch                                  0
+
+ Reference value :  2.66256e-08
+No. of Data Rows : 5520
+
+  Measurements for Transient Analysis
+
+e1                  =   7.88907e-13 from=  9.90000e-08 to=  1.06618e-07
+eg1                 =   -4.31910e-15 from=  1.01718e-07 to=  1.02718e-07
+l1                  =  4.532128e-01 at=  1.018480e-07
+r1p                 =  1.096945e-01 at=  1.018480e-07
+r1e                 =  9.091484e-02
+a1                  =   1.67894e-10 from=  1.00000e-07 to=  1.03200e-07
+
+===== P4: long-low 4.0u (area match guess) =====
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+pwpsup                                2.02e-12
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpg1                                        0
+qg1                                          0
+bqg1#branch                                  0
+vgp1#branch                                  0
+bpg1#branch                                  0
+bpsup#branch                                 0
+vdd#branch                           -1.01e-12
+vss#branch                            1.01e-12
+vs1#branch                                   0
+vgn1#branch                                  0
+
+ Reference value :  4.46856e-08
+No. of Data Rows : 5520
+
+  Measurements for Transient Analysis
+
+e1                  =   7.03831e-13 from=  9.90000e-08 to=  1.06618e-07
+eg1                 =   -3.84893e-15 from=  1.01718e-07 to=  1.02718e-07
+l1                  =  4.174380e-01 at=  1.018480e-07
+r1p                 =  8.030879e-02 at=  1.018680e-07
+r1e                 =  6.245480e-02
+a1                  =   1.31868e-10 from=  1.00000e-07 to=  1.03200e-07
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+pwpsup                                2.02e-12
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpg1                                        0
+qg1                                          0
+bqg1#branch                                  0
+vgp1#branch                                  0
+bpg1#branch                                  0
+bpsup#branch                                 0
+vdd#branch                           -1.01e-12
+vss#branch                            1.01e-12
+vs1#branch                                   0
+vgn1#branch                                  0
+
+ Reference value :  6.20056e-08
+No. of Data Rows : 5520
+
+  Measurements for Transient Analysis
+
+e1                  =   7.03831e-13 from=  9.90000e-08 to=  1.06618e-07
+eg1                 =   -3.84893e-15 from=  1.01718e-07 to=  1.02718e-07
+l1                  =  4.174380e-01 at=  1.018480e-07
+r1p                 =  8.030879e-02 at=  1.018680e-07
+r1e                 =  6.245480e-02
+a1                  =   1.31868e-10 from=  1.00000e-07 to=  1.03200e-07
+
+
+Total analysis time (seconds) = 0.429709
+
+Total elapsed time (seconds) = 1.084 
+
+Total DRAM available = 62177.336 MB.
+DRAM currently available = 10385.648 MB.
+Maximum ngspice program size =   27.336 MB.
+Current ngspice program size =   17.570 MB.
+
+Shared ngspice pages =   11.684 MB.
+Text (code) pages =    7.578 MB.
+Stack = 0 bytes.
+Library pages =    5.930 MB.
+

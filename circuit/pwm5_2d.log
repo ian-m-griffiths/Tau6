@@ -1,0 +1,1563 @@
+Note: Starting dynamic gmin stepping
+Note: Dynamic gmin stepping completed
+
+Note: No compatibility mode selected!
+
+
+Circuit: * =====================================================================
+
+================================================================
+VARIANT A : amplitude-distinguished, both ~1.0 ns
+  +H = 21u @ 1.0n (rail ~0.218)   +L = 11u @ 1.0n (rail ~0.142)
+  THR=0.18 (midpoint). High symbol energy-matched to pwm5 long.
+================================================================
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+vddsa                                        1
+vsssa                                       -1
+pwpsup                                1.01e-11
+pwpsa                              1.42267e-11
+pwpsap                             1.15333e-11
+pwpsan                             2.69333e-12
+thrp                                      0.18
+thrn                                     -0.18
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+pwpg1                                        0
+qg1                                          0
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpl1                                        0
+clk1                                         1
+pwpclk1                                      0
+outa1                                 1.02e-09
+xsaa1.cs                                  0.33
+outab1                                1.02e-09
+outb1                                 1.02e-09
+xsab1.cs                                  0.33
+outbb1                                1.02e-09
+outl1                                 1.02e-09
+xsal1.cs                                  0.33
+outlb1                                1.02e-09
+vda1                                         0
+vdb1                                         0
+vdl1                                         0
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+pwpg2                                        0
+qg2                                          0
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+pwpl2                                        0
+clk2                                         1
+pwpclk2                                      0
+outa2                                 1.02e-09
+xsaa2.cs                                  0.33
+outab2                                1.02e-09
+outb2                                 1.02e-09
+xsab2.cs                                  0.33
+outbb2                                1.02e-09
+outl2                                 1.02e-09
+xsal2.cs                                  0.33
+outlb2                                1.02e-09
+vda2                                         0
+vdb2                                         0
+vdl2                                         0
+drv3                                         0
+gp3                                          1
+gn3                                         -1
+pwpg3                                        0
+qg3                                          0
+cell3                                        0
+xc3.x                                        0
+ra3                                          0
+rb3                                          0
+pwpl3                                        0
+clk3                                         1
+pwpclk3                                      0
+clkb3                                       -1
+pwpclkb3                                     0
+outa3                                 1.02e-09
+xsaa3.cs                                  0.33
+outab3                                1.02e-09
+outb3                                 1.02e-09
+xsab3.cs                                  0.33
+outbb3                                1.02e-09
+outl3                                        1
+xsal3.ct                              0.336667
+outlb3                                       1
+vda3                               2.06795e-25
+vdb3                                         0
+vdl3                                         0
+drv4                                         0
+gp4                                          1
+gn4                                         -1
+pwpg4                                        0
+qg4                                          0
+cell4                                        0
+xc4.x                                        0
+ra4                                          0
+rb4                                          0
+pwpl4                                        0
+clk4                                         1
+pwpclk4                                      0
+clkb4                                       -1
+pwpclkb4                                     0
+outa4                                 1.02e-09
+xsaa4.cs                                  0.33
+outab4                                1.02e-09
+outb4                                 1.02e-09
+xsab4.cs                                  0.33
+outbb4                                1.02e-09
+outl4                                        1
+xsal4.ct                              0.336667
+outlb4                                       1
+vda4                              -2.06795e-25
+vdb4                               2.06795e-25
+vdl4                                         0
+drv5                                         0
+gp5                                          1
+gn5                                         -1
+cell5                                        0
+xc5.x                                        0
+ra5                                          0
+rb5                                          0
+pwpl5                                        0
+clk5                                         1
+pwpclk5                                      0
+outa5                                 1.02e-09
+xsaa5.cs                                  0.33
+outab5                                1.02e-09
+outb5                                 1.02e-09
+xsab5.cs                                  0.33
+outbb5                                1.02e-09
+outl5                                 1.02e-09
+xsal5.cs                                  0.33
+outlb5                                1.02e-09
+vda5                                         0
+vdb5                                         0
+vdl5                                         0
+bdl5#branch                                  0
+bdb5#branch                                  0
+bda5#branch                                  0
+bpclk5#branch                                0
+vclk5#branch                                 0
+bpl5#branch                                  0
+vs5#branch                                   0
+bdl4#branch                                  0
+bdb4#branch                                  0
+bda4#branch                                  0
+bpclkb4#branch                               0
+vclkb4#branch                                0
+bpclk4#branch                                0
+vclk4#branch                                 0
+bpl4#branch                                  0
+vs4#branch                                   0
+bqg4#branch                                  0
+vgn4#branch                                  0
+bpg4#branch                                  0
+bdl3#branch                                  0
+bdb3#branch                                  0
+bda3#branch                                  0
+bpclkb3#branch                               0
+vclkb3#branch                                0
+bpclk3#branch                                0
+vclk3#branch                                 0
+bpl3#branch                                  0
+vs3#branch                                   0
+bqg3#branch                                  0
+vgn3#branch                                  0
+bpg3#branch                                  0
+bdl2#branch                                  0
+bdb2#branch                                  0
+bda2#branch                                  0
+bpclk2#branch                                0
+vclk2#branch                                 0
+bpl2#branch                                  0
+vs2#branch                                   0
+bqg2#branch                                  0
+vgp2#branch                                  0
+bpg2#branch                                  0
+bdl1#branch                                  0
+bdb1#branch                                  0
+bda1#branch                                  0
+bpclk1#branch                                0
+vclk1#branch                                 0
+bpl1#branch                                  0
+vs1#branch                                   0
+bqg1#branch                                  0
+vgp1#branch                                  0
+bpg1#branch                                  0
+bpsan#branch                                 0
+vsssa#branch                       2.69333e-12
+bpsap#branch                                 0
+vddsa#branch                      -1.15333e-11
+bpsa#branch                                  0
+bpsup#branch                                 0
+vdd#branch                           -5.05e-12
+vss#branch                            5.05e-12
+vgn5#branch                                  0
+vgp5#branch                                  0
+vgp4#branch                                  0
+vgp3#branch                                  0
+vgn2#branch                                  0
+vgn1#branch                                  0
+vthrn#branch                                 0
+vthrp#branch                                 0
+
+ Reference value :  3.28456e-08 Reference value :  6.97056e-08 Reference value :  1.07586e-07 Reference value :  1.45686e-07 Reference value :  1.82310e-07 Reference value :  2.18490e-07 Reference value :  2.53070e-07 Reference value :  2.88970e-07
+No. of Data Rows : 15866
+
+  Measurements for Transient Analysis
+
+e1_drv              =   1.60158e-12 from=  1.59000e-07 to=  1.66000e-07
+e1_line             =   1.02010e-12 from=  1.59000e-07 to=  1.66000e-07
+qg1                 =   -5.00239e-14 from=  1.61100e-07 to=  1.62100e-07
+e1_rec              =   9.80402e-14 from=  1.58000e-07 to=  1.65200e-07
+e1_recp             =   9.80401e-14 from=  1.58000e-07 to=  1.65200e-07
+e1_recn             =   1.93920e-20 from=  1.58000e-07 to=  1.65200e-07
+raila1              =  3.793349e-01 at=  1.612300e-07
+raila1e             =  2.181879e-01
+areaa1              =   5.59285e-10 from=  1.60000e-07 to=  1.63200e-07
+linea1              =  7.588331e-01 at=  1.612300e-07
+dema1               =  7.446498e-01
+demb1               =  6.750488e-01
+deml1               =  7.456572e-02
+da1                 =  6.118544e-01
+db1                 =  1.884982e-01
+dl1                 =  -7.362363e-01
+da1pk               =  6.604215e-01 at=  1.622700e-07
+dl1pk               =  4.429947e-03 at=  1.618700e-07
+e2_drv              =   1.13071e-12 from=  1.89000e-07 to=  1.96000e-07
+e2_line             =   5.21026e-13 from=  1.89000e-07 to=  1.96000e-07
+qg2                 =   -2.33672e-14 from=  1.91100e-07 to=  1.92100e-07
+e2_rec              =   9.96270e-14 from=  1.88000e-07 to=  1.95200e-07
+e2_recp             =   9.96270e-14 from=  1.88000e-07 to=  1.95200e-07
+e2_recn             =   1.93920e-20 from=  1.88000e-07 to=  1.95200e-07
+raila2              =  2.500375e-01 at=  1.912300e-07
+raila2e             =  1.422544e-01
+areaa2              =   3.36652e-10 from=  1.90000e-07 to=  1.93200e-07
+linea2              =  6.155570e-01 at=  1.912300e-07
+dema2               =  7.261579e-01
+demb2               =  6.594382e-01
+deml2               =  7.492718e-02
+da2                 =  5.715059e-01
+db2                 =  1.352439e-01
+dl2                 =  -7.377489e-01
+da2pk               =  6.022296e-01 at=  1.923100e-07
+dl2pk               =  0.000000e+00 at=  1.917900e-07
+e3_drv              =   1.13034e-12 from=  2.19000e-07 to=  2.26000e-07
+e3_line             =   5.20920e-13 from=  2.19000e-07 to=  2.26000e-07
+qg3                 =   1.16579e-14 from=  2.21100e-07 to=  2.22100e-07
+e3_rec              =   2.78087e-13 from=  2.18000e-07 to=  2.25200e-07
+e3_recp             =   1.74593e-13 from=  2.18000e-07 to=  2.25200e-07
+e3_recn             =   1.03495e-13 from=  2.18000e-07 to=  2.25200e-07
+railb3              =  -2.498845e-01 at=  2.212300e-07
+railb3e             =  -1.421006e-01
+areab3              =   -3.36450e-10 from=  2.20000e-07 to=  2.23200e-07
+linea3              =  -6.152774e-01 at=  2.212300e-07
+dema3               =  6.963358e-01
+demb3               =  6.890808e-01
+deml3               =  -8.884231e-01
+da3                 =  3.085090e-01
+db3                 =  3.752999e-01
+dl3                 =  -1.743238e+00
+db3pk               =  3.753157e-01 at=  2.226500e-07
+dl3pk               =  4.440892e-16 at=  2.217700e-07
+e4_drv              =   1.59901e-12 from=  2.49000e-07 to=  2.56000e-07
+e4_line             =   1.01806e-12 from=  2.49000e-07 to=  2.56000e-07
+qg4                 =   2.49161e-14 from=  2.51100e-07 to=  2.52100e-07
+e4_rec              =   2.82227e-13 from=  2.48000e-07 to=  2.55200e-07
+e4_recp             =   1.76485e-13 from=  2.48000e-07 to=  2.55200e-07
+e4_recn             =   1.05741e-13 from=  2.48000e-07 to=  2.55200e-07
+railb4              =  -3.788114e-01 at=  2.512300e-07
+railb4e             =  -2.170344e-01
+areab4              =   -5.57993e-10 from=  2.50000e-07 to=  2.53200e-07
+linea4              =  -7.580579e-01 at=  2.512300e-07
+dema4               =  7.017407e-01
+demb4               =  6.895135e-01
+deml4               =  -8.882256e-01
+da4                 =  4.903637e-01
+db4                 =  4.187378e-01
+dl4                 =  -1.743116e+00
+db4pk               =  4.504244e-01 at=  2.520900e-07
+dl4pk               =  3.565835e-02 at=  2.518500e-07
+e5_drv              =   7.07000e-20 from=  2.79000e-07 to=  2.86000e-07
+e5_rec              =   1.02563e-13 from=  2.78000e-07 to=  2.85200e-07
+e5_recp             =   1.02563e-13 from=  2.78000e-07 to=  2.85200e-07
+e5_recn             =   8.78192e-21 from=  2.78000e-07 to=  2.85200e-07
+raila5              =  2.297535e-03 at=  2.818500e-07
+railb5              =  -1.299042e-03 at=  2.834140e-07
+dema5               =  6.091283e-01
+demb5               =  5.994125e-01
+deml5               =  7.531552e-02
+da5                 =  1.373556e-02
+db5                 =  -5.904621e-03
+dl5                 =  -7.389877e-01
+
+Note: Starting dynamic gmin stepping
+Note: Dynamic gmin stepping completed
+================================================================
+VARIANT A2 : amplitude-distinguished at max reachable amplitude
+  +H = 25u @ 1.0n (rail ~0.232)   +L = 11u @ 1.0n (rail ~0.142)
+  THR=0.19. Shows the amplitude ceiling at the RC floor.
+================================================================
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+vddsa                                        1
+vsssa                                       -1
+pwpsup                                1.01e-11
+pwpsa                              1.42267e-11
+pwpsap                             1.15333e-11
+pwpsan                             2.69333e-12
+thrp                                      0.19
+thrn                                     -0.19
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+pwpg1                                        0
+qg1                                          0
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpl1                                        0
+clk1                                         1
+pwpclk1                                      0
+outa1                                 1.02e-09
+xsaa1.cs                                  0.33
+outab1                                1.02e-09
+outb1                                 1.02e-09
+xsab1.cs                                  0.33
+outbb1                                1.02e-09
+outl1                                 1.02e-09
+xsal1.cs                                  0.33
+outlb1                                1.02e-09
+vda1                                         0
+vdb1                                         0
+vdl1                                         0
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+pwpg2                                        0
+qg2                                          0
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+pwpl2                                        0
+clk2                                         1
+pwpclk2                                      0
+outa2                                 1.02e-09
+xsaa2.cs                                  0.33
+outab2                                1.02e-09
+outb2                                 1.02e-09
+xsab2.cs                                  0.33
+outbb2                                1.02e-09
+outl2                                 1.02e-09
+xsal2.cs                                  0.33
+outlb2                                1.02e-09
+vda2                                         0
+vdb2                                         0
+vdl2                                         0
+drv3                                         0
+gp3                                          1
+gn3                                         -1
+pwpg3                                        0
+qg3                                          0
+cell3                                        0
+xc3.x                                        0
+ra3                                          0
+rb3                                          0
+pwpl3                                        0
+clk3                                         1
+pwpclk3                                      0
+clkb3                                       -1
+pwpclkb3                                     0
+outa3                                 1.02e-09
+xsaa3.cs                                  0.33
+outab3                                1.02e-09
+outb3                                 1.02e-09
+xsab3.cs                                  0.33
+outbb3                                1.02e-09
+outl3                                        1
+xsal3.ct                              0.336667
+outlb3                                       1
+vda3                               2.06795e-25
+vdb3                                         0
+vdl3                                         0
+drv4                                         0
+gp4                                          1
+gn4                                         -1
+pwpg4                                        0
+qg4                                          0
+cell4                                        0
+xc4.x                                        0
+ra4                                          0
+rb4                                          0
+pwpl4                                        0
+clk4                                         1
+pwpclk4                                      0
+clkb4                                       -1
+pwpclkb4                                     0
+outa4                                 1.02e-09
+xsaa4.cs                                  0.33
+outab4                                1.02e-09
+outb4                                 1.02e-09
+xsab4.cs                                  0.33
+outbb4                                1.02e-09
+outl4                                        1
+xsal4.ct                              0.336667
+outlb4                                       1
+vda4                              -2.06795e-25
+vdb4                               2.06795e-25
+vdl4                                         0
+drv5                                         0
+gp5                                          1
+gn5                                         -1
+cell5                                        0
+xc5.x                                        0
+ra5                                          0
+rb5                                          0
+pwpl5                                        0
+clk5                                         1
+pwpclk5                                      0
+outa5                                 1.02e-09
+xsaa5.cs                                  0.33
+outab5                                1.02e-09
+outb5                                 1.02e-09
+xsab5.cs                                  0.33
+outbb5                                1.02e-09
+outl5                                 1.02e-09
+xsal5.cs                                  0.33
+outlb5                                1.02e-09
+vda5                                         0
+vdb5                                         0
+vdl5                                         0
+bdl5#branch                                  0
+bdb5#branch                                  0
+bda5#branch                                  0
+bpclk5#branch                                0
+vclk5#branch                                 0
+bpl5#branch                                  0
+vs5#branch                                   0
+bdl4#branch                                  0
+bdb4#branch                                  0
+bda4#branch                                  0
+bpclkb4#branch                               0
+vclkb4#branch                                0
+bpclk4#branch                                0
+vclk4#branch                                 0
+bpl4#branch                                  0
+vs4#branch                                   0
+bqg4#branch                                  0
+vgn4#branch                                  0
+bpg4#branch                                  0
+bdl3#branch                                  0
+bdb3#branch                                  0
+bda3#branch                                  0
+bpclkb3#branch                               0
+vclkb3#branch                                0
+bpclk3#branch                                0
+vclk3#branch                                 0
+bpl3#branch                                  0
+vs3#branch                                   0
+bqg3#branch                                  0
+vgn3#branch                                  0
+bpg3#branch                                  0
+bdl2#branch                                  0
+bdb2#branch                                  0
+bda2#branch                                  0
+bpclk2#branch                                0
+vclk2#branch                                 0
+bpl2#branch                                  0
+vs2#branch                                   0
+bqg2#branch                                  0
+vgp2#branch                                  0
+bpg2#branch                                  0
+bdl1#branch                                  0
+bdb1#branch                                  0
+bda1#branch                                  0
+bpclk1#branch                                0
+vclk1#branch                                 0
+bpl1#branch                                  0
+vs1#branch                                   0
+bqg1#branch                                  0
+vgp1#branch                                  0
+bpg1#branch                                  0
+bpsan#branch                                 0
+vsssa#branch                       2.69333e-12
+bpsap#branch                                 0
+vddsa#branch                      -1.15333e-11
+bpsa#branch                                  0
+bpsup#branch                                 0
+vdd#branch                           -5.05e-12
+vss#branch                            5.05e-12
+vgn5#branch                                  0
+vgp5#branch                                  0
+vgp4#branch                                  0
+vgp3#branch                                  0
+vgn2#branch                                  0
+vgn1#branch                                  0
+vthrn#branch                                 0
+vthrp#branch                                 0
+
+ Reference value :  8.28560e-09 Reference value :  4.75856e-08 Reference value :  8.64056e-08 Reference value :  1.25186e-07 Reference value :  1.63130e-07 Reference value :  2.00030e-07 Reference value :  2.37130e-07 Reference value :  2.74410e-07 Reference value :  3.12850e-07
+No. of Data Rows : 15866
+
+  Measurements for Transient Analysis
+
+e1_drv              =   1.70161e-12 from=  1.59000e-07 to=  1.66000e-07
+e1_line             =   1.15032e-12 from=  1.59000e-07 to=  1.66000e-07
+qg1                 =   -6.02693e-14 from=  1.61100e-07 to=  1.62100e-07
+e1_rec              =   9.71511e-14 from=  1.58000e-07 to=  1.65200e-07
+e1_recp             =   9.71511e-14 from=  1.58000e-07 to=  1.65200e-07
+e1_recn             =   1.93920e-20 from=  1.58000e-07 to=  1.65200e-07
+raila1              =  4.015260e-01 at=  1.612300e-07
+raila1e             =  2.318876e-01
+areaa1              =   6.07085e-10 from=  1.60000e-07 to=  1.63200e-07
+linea1              =  7.831889e-01 at=  1.612300e-07
+dema1               =  7.479080e-01
+demb1               =  6.770667e-01
+deml1               =  7.072177e-02
+da1                 =  6.184011e-01
+db1                 =  1.968461e-01
+dl1                 =  -7.462826e-01
+da1pk               =  6.697595e-01 at=  1.622500e-07
+dl1pk               =  5.413428e-03 at=  1.618700e-07
+e2_drv              =   1.13071e-12 from=  1.89000e-07 to=  1.96000e-07
+e2_line             =   5.21026e-13 from=  1.89000e-07 to=  1.96000e-07
+qg2                 =   -2.33672e-14 from=  1.91100e-07 to=  1.92100e-07
+e2_rec              =   9.90210e-14 from=  1.88000e-07 to=  1.95200e-07
+e2_recp             =   9.90210e-14 from=  1.88000e-07 to=  1.95200e-07
+e2_recn             =   1.93920e-20 from=  1.88000e-07 to=  1.95200e-07
+raila2              =  2.500378e-01 at=  1.912300e-07
+raila2e             =  1.422543e-01
+areaa2              =   3.36661e-10 from=  1.90000e-07 to=  1.93200e-07
+linea2              =  6.155572e-01 at=  1.912300e-07
+dema2               =  7.261609e-01
+demb2               =  6.594388e-01
+deml2               =  7.115670e-02
+da2                 =  5.715130e-01
+db2                 =  1.352453e-01
+dl2                 =  -7.480622e-01
+da2pk               =  6.022486e-01 at=  1.923100e-07
+dl2pk               =  0.000000e+00 at=  1.917900e-07
+e3_drv              =   1.13034e-12 from=  2.19000e-07 to=  2.26000e-07
+e3_line             =   5.20920e-13 from=  2.19000e-07 to=  2.26000e-07
+qg3                 =   1.16579e-14 from=  2.21100e-07 to=  2.22100e-07
+e3_rec              =   2.71750e-13 from=  2.18000e-07 to=  2.25200e-07
+e3_recp             =   1.71423e-13 from=  2.18000e-07 to=  2.25200e-07
+e3_recn             =   1.00327e-13 from=  2.18000e-07 to=  2.25200e-07
+railb3              =  -2.498845e-01 at=  2.212300e-07
+railb3e             =  -1.421006e-01
+areab3              =   -3.36452e-10 from=  2.20000e-07 to=  2.23200e-07
+linea3              =  -6.152774e-01 at=  2.212300e-07
+dema3               =  6.963357e-01
+demb3               =  6.890807e-01
+deml3               =  -8.926310e-01
+da3                 =  3.085036e-01
+db3                 =  3.753081e-01
+dl3                 =  -1.753448e+00
+db3pk               =  3.753240e-01 at=  2.226500e-07
+dl3pk               =  3.330669e-16 at=  2.217000e-07
+e4_drv              =   1.69825e-12 from=  2.49000e-07 to=  2.56000e-07
+e4_line             =   1.14791e-12 from=  2.49000e-07 to=  2.56000e-07
+qg4                 =   3.02547e-14 from=  2.51100e-07 to=  2.52100e-07
+e4_rec              =   2.76066e-13 from=  2.48000e-07 to=  2.55200e-07
+e4_recp             =   1.73381e-13 from=  2.48000e-07 to=  2.55200e-07
+e4_recn             =   1.02685e-13 from=  2.48000e-07 to=  2.55200e-07
+railb4              =  -4.008634e-01 at=  2.512300e-07
+railb4e             =  -2.304256e-01
+areab4              =   -6.05435e-10 from=  2.50000e-07 to=  2.53200e-07
+linea4              =  -7.822443e-01 at=  2.512300e-07
+dema4               =  7.026687e-01
+demb4               =  6.896215e-01
+deml4               =  -8.923975e-01
+da4                 =  4.980590e-01
+db4                 =  4.200465e-01
+dl4                 =  -1.753302e+00
+db4pk               =  4.574218e-01 at=  2.520700e-07
+dl4pk               =  4.046878e-02 at=  2.518700e-07
+e5_drv              =   7.07000e-20 from=  2.79000e-07 to=  2.86000e-07
+e5_rec              =   1.01964e-13 from=  2.78000e-07 to=  2.85200e-07
+e5_recp             =   1.01964e-13 from=  2.78000e-07 to=  2.85200e-07
+e5_recn             =   8.78193e-21 from=  2.78000e-07 to=  2.85200e-07
+raila5              =  2.302364e-03 at=  2.818500e-07
+railb5              =  -1.301124e-03 at=  2.834140e-07
+dema5               =  6.091807e-01
+demb5               =  5.994097e-01
+deml5               =  7.153908e-02
+da5                 =  1.384412e-02
+db5                 =  -5.910075e-03
+dl5                 =  -7.492659e-01
+
+Note: Starting dynamic gmin stepping
+Note: Dynamic gmin stepping completed
+================================================================
+VARIANT A3 : amplitude-distinguished, WIDEST resolvable gap
+  +H = 25u @ 1.0n (rail ~0.232)   +L = 8u @ 1.0n (rail ~0.083)
+  THR=0.157. Tests whether ANY amplitude split at 1.0 ns resolves
+  (A/A2 at +-0.038..0.042 V input diff latched WRONG side).
+================================================================
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+vddsa                                        1
+vsssa                                       -1
+pwpsup                                1.01e-11
+pwpsa                              1.42267e-11
+pwpsap                             1.15333e-11
+pwpsan                             2.69333e-12
+thrp                                     0.157
+thrn                                    -0.157
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+pwpg1                                        0
+qg1                                          0
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpl1                                        0
+clk1                                         1
+pwpclk1                                      0
+outa1                                 1.02e-09
+xsaa1.cs                                  0.33
+outab1                                1.02e-09
+outb1                                 1.02e-09
+xsab1.cs                                  0.33
+outbb1                                1.02e-09
+outl1                                 1.02e-09
+xsal1.cs                                  0.33
+outlb1                                1.02e-09
+vda1                                         0
+vdb1                                         0
+vdl1                                         0
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+pwpg2                                        0
+qg2                                          0
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+pwpl2                                        0
+clk2                                         1
+pwpclk2                                      0
+outa2                                 1.02e-09
+xsaa2.cs                                  0.33
+outab2                                1.02e-09
+outb2                                 1.02e-09
+xsab2.cs                                  0.33
+outbb2                                1.02e-09
+outl2                                 1.02e-09
+xsal2.cs                                  0.33
+outlb2                                1.02e-09
+vda2                                         0
+vdb2                                         0
+vdl2                                         0
+drv3                                         0
+gp3                                          1
+gn3                                         -1
+pwpg3                                        0
+qg3                                          0
+cell3                                        0
+xc3.x                                        0
+ra3                                          0
+rb3                                          0
+pwpl3                                        0
+clk3                                         1
+pwpclk3                                      0
+clkb3                                       -1
+pwpclkb3                                     0
+outa3                                 1.02e-09
+xsaa3.cs                                  0.33
+outab3                                1.02e-09
+outb3                                 1.02e-09
+xsab3.cs                                  0.33
+outbb3                                1.02e-09
+outl3                                        1
+xsal3.ct                              0.336667
+outlb3                                       1
+vda3                               2.06795e-25
+vdb3                                         0
+vdl3                                         0
+drv4                                         0
+gp4                                          1
+gn4                                         -1
+pwpg4                                        0
+qg4                                          0
+cell4                                        0
+xc4.x                                        0
+ra4                                          0
+rb4                                          0
+pwpl4                                        0
+clk4                                         1
+pwpclk4                                      0
+clkb4                                       -1
+pwpclkb4                                     0
+outa4                                 1.02e-09
+xsaa4.cs                                  0.33
+outab4                                1.02e-09
+outb4                                 1.02e-09
+xsab4.cs                                  0.33
+outbb4                                1.02e-09
+outl4                                        1
+xsal4.ct                              0.336667
+outlb4                                       1
+vda4                              -2.06795e-25
+vdb4                               2.06795e-25
+vdl4                                         0
+drv5                                         0
+gp5                                          1
+gn5                                         -1
+cell5                                        0
+xc5.x                                        0
+ra5                                          0
+rb5                                          0
+pwpl5                                        0
+clk5                                         1
+pwpclk5                                      0
+outa5                                 1.02e-09
+xsaa5.cs                                  0.33
+outab5                                1.02e-09
+outb5                                 1.02e-09
+xsab5.cs                                  0.33
+outbb5                                1.02e-09
+outl5                                 1.02e-09
+xsal5.cs                                  0.33
+outlb5                                1.02e-09
+vda5                                         0
+vdb5                                         0
+vdl5                                         0
+bdl5#branch                                  0
+bdb5#branch                                  0
+bda5#branch                                  0
+bpclk5#branch                                0
+vclk5#branch                                 0
+bpl5#branch                                  0
+vs5#branch                                   0
+bdl4#branch                                  0
+bdb4#branch                                  0
+bda4#branch                                  0
+bpclkb4#branch                               0
+vclkb4#branch                                0
+bpclk4#branch                                0
+vclk4#branch                                 0
+bpl4#branch                                  0
+vs4#branch                                   0
+bqg4#branch                                  0
+vgn4#branch                                  0
+bpg4#branch                                  0
+bdl3#branch                                  0
+bdb3#branch                                  0
+bda3#branch                                  0
+bpclkb3#branch                               0
+vclkb3#branch                                0
+bpclk3#branch                                0
+vclk3#branch                                 0
+bpl3#branch                                  0
+vs3#branch                                   0
+bqg3#branch                                  0
+vgn3#branch                                  0
+bpg3#branch                                  0
+bdl2#branch                                  0
+bdb2#branch                                  0
+bda2#branch                                  0
+bpclk2#branch                                0
+vclk2#branch                                 0
+bpl2#branch                                  0
+vs2#branch                                   0
+bqg2#branch                                  0
+vgp2#branch                                  0
+bpg2#branch                                  0
+bdl1#branch                                  0
+bdb1#branch                                  0
+bda1#branch                                  0
+bpclk1#branch                                0
+vclk1#branch                                 0
+bpl1#branch                                  0
+vs1#branch                                   0
+bqg1#branch                                  0
+vgp1#branch                                  0
+bpg1#branch                                  0
+bpsan#branch                                 0
+vsssa#branch                       2.69333e-12
+bpsap#branch                                 0
+vddsa#branch                      -1.15333e-11
+bpsa#branch                                  0
+bpsup#branch                                 0
+vdd#branch                           -5.05e-12
+vss#branch                            5.05e-12
+vgn5#branch                                  0
+vgp5#branch                                  0
+vgp4#branch                                  0
+vgp3#branch                                  0
+vgn2#branch                                  0
+vgn1#branch                                  0
+vthrn#branch                                 0
+vthrp#branch                                 0
+
+ Reference value :  3.34056e-08 Reference value :  7.33056e-08 Reference value :  1.13026e-07 Reference value :  1.52506e-07 Reference value :  1.87950e-07 Reference value :  2.22170e-07 Reference value :  2.58150e-07 Reference value :  2.95210e-07
+No. of Data Rows : 15866
+
+  Measurements for Transient Analysis
+
+e1_drv              =   1.70161e-12 from=  1.59000e-07 to=  1.66000e-07
+e1_line             =   1.15032e-12 from=  1.59000e-07 to=  1.66000e-07
+qg1                 =   -6.02693e-14 from=  1.61100e-07 to=  1.62100e-07
+e1_rec              =   1.02829e-13 from=  1.58000e-07 to=  1.65200e-07
+e1_recp             =   1.02829e-13 from=  1.58000e-07 to=  1.65200e-07
+e1_recn             =   1.93920e-20 from=  1.58000e-07 to=  1.65200e-07
+raila1              =  4.015257e-01 at=  1.612300e-07
+raila1e             =  2.318882e-01
+areaa1              =   6.06893e-10 from=  1.60000e-07 to=  1.63200e-07
+linea1              =  7.831886e-01 at=  1.612300e-07
+dema1               =  7.477658e-01
+demb1               =  6.770786e-01
+deml1               =  7.411199e-01
+da1                 =  6.181167e-01
+db1                 =  1.968881e-01
+dl1                 =  6.070629e-01
+da1pk               =  6.696465e-01 at=  1.622500e-07
+dl1pk               =  6.072722e-01 at=  1.627100e-07
+e2_drv              =   8.76662e-13 from=  1.89000e-07 to=  1.96000e-07
+e2_line             =   3.19048e-13 from=  1.89000e-07 to=  1.96000e-07
+qg2                 =   -1.62061e-14 from=  1.91100e-07 to=  1.92100e-07
+e2_rec              =   1.02095e-13 from=  1.88000e-07 to=  1.95200e-07
+e2_recp             =   1.02095e-13 from=  1.88000e-07 to=  1.95200e-07
+e2_recn             =   1.93920e-20 from=  1.88000e-07 to=  1.95200e-07
+raila2              =  1.614901e-01 at=  1.912500e-07
+raila2e             =  9.202214e-02
+areaa2              =   2.18976e-10 from=  1.90000e-07 to=  1.93200e-07
+linea2              =  5.144384e-01 at=  1.912300e-07
+dema2               =  7.133619e-01
+demb2               =  6.439336e-01
+deml2               =  8.453269e-02
+da2                 =  5.385439e-01
+db2                 =  9.260587e-02
+dl2                 =  -7.136003e-01
+da2pk               =  5.522396e-01 at=  1.924300e-07
+dl2pk               =  0.000000e+00 at=  1.917700e-07
+e3_drv              =   8.76594e-13 from=  2.19000e-07 to=  2.26000e-07
+e3_line             =   3.19045e-13 from=  2.19000e-07 to=  2.26000e-07
+qg3                 =   8.10504e-15 from=  2.21100e-07 to=  2.22100e-07
+e3_rec              =   2.93334e-13 from=  2.18000e-07 to=  2.25200e-07
+e3_recp             =   1.82324e-13 from=  2.18000e-07 to=  2.25200e-07
+e3_recn             =   1.11010e-13 from=  2.18000e-07 to=  2.25200e-07
+railb3              =  -1.613901e-01 at=  2.212500e-07
+railb3e             =  -9.199262e-02
+areab3              =   -2.18921e-10 from=  2.20000e-07 to=  2.23200e-07
+linea3              =  -5.143170e-01 at=  2.212300e-07
+dema3               =  6.675170e-01
+demb3               =  6.890876e-01
+deml3               =  -8.786870e-01
+da3                 =  1.606214e-01
+db3                 =  2.885065e-01
+dl3                 =  -1.719195e+00
+db3pk               =  3.007989e-01 at=  2.231900e-07
+dl3pk               =  2.220446e-16 at=  2.217060e-07
+e4_drv              =   1.69825e-12 from=  2.49000e-07 to=  2.56000e-07
+e4_line             =   1.14791e-12 from=  2.49000e-07 to=  2.56000e-07
+qg4                 =   3.02547e-14 from=  2.51100e-07 to=  2.52100e-07
+e4_rec              =   3.32880e-13 from=  2.48000e-07 to=  2.55200e-07
+e4_recp             =   2.01722e-13 from=  2.48000e-07 to=  2.55200e-07
+e4_recn             =   1.31158e-13 from=  2.48000e-07 to=  2.55200e-07
+railb4              =  -4.008634e-01 at=  2.512300e-07
+railb4e             =  -2.304256e-01
+areab4              =   -6.05233e-10 from=  2.50000e-07 to=  2.53200e-07
+linea4              =  -7.822443e-01 at=  2.512300e-07
+dema4               =  7.026807e-01
+demb4               =  6.896183e-01
+deml4               =  7.843692e-01
+da4                 =  4.981867e-01
+db4                 =  4.200415e-01
+dl4                 =  1.627177e+00
+db4pk               =  4.574043e-01 at=  2.520700e-07
+dl4pk               =  1.693082e+00 at=  2.521700e-07
+e5_drv              =   7.07000e-20 from=  2.79000e-07 to=  2.86000e-07
+e5_rec              =   1.04019e-13 from=  2.78000e-07 to=  2.85200e-07
+e5_recp             =   1.04019e-13 from=  2.78000e-07 to=  2.85200e-07
+e5_recn             =   8.78189e-21 from=  2.78000e-07 to=  2.85200e-07
+raila5              =  2.283998e-03 at=  2.818500e-07
+railb5              =  -1.294951e-03 at=  2.834140e-07
+dema5               =  6.089965e-01
+demb5               =  5.994193e-01
+deml5               =  8.476799e-02
+da5                 =  1.346252e-02
+db5                 =  -5.890967e-03
+dl5                 =  -7.143362e-01
+
+Note: Starting dynamic gmin stepping
+Note: Dynamic gmin stepping completed
+================================================================
+VARIANT B : long-LOW vs short-HIGH (opposite (V,t) corners)
+  +L = 3.67u @ 1.618n (rail ~0.048)   +H = 11u @ 1.0n (rail ~0.142)
+  THR=0.095 (midpoint).
+================================================================
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+vddsa                                        1
+vsssa                                       -1
+pwpsup                                1.01e-11
+pwpsa                              1.42267e-11
+pwpsap                             1.15333e-11
+pwpsan                             2.69333e-12
+thrp                                     0.095
+thrn                                    -0.095
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+pwpg1                                        0
+qg1                                          0
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpl1                                        0
+clk1                                         1
+pwpclk1                                      0
+outa1                                 1.02e-09
+xsaa1.cs                                  0.33
+outab1                                1.02e-09
+outb1                                 1.02e-09
+xsab1.cs                                  0.33
+outbb1                                1.02e-09
+outl1                                 1.02e-09
+xsal1.cs                                  0.33
+outlb1                                1.02e-09
+vda1                                         0
+vdb1                                         0
+vdl1                                         0
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+pwpg2                                        0
+qg2                                          0
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+pwpl2                                        0
+clk2                                         1
+pwpclk2                                      0
+outa2                                 1.02e-09
+xsaa2.cs                                  0.33
+outab2                                1.02e-09
+outb2                                 1.02e-09
+xsab2.cs                                  0.33
+outbb2                                1.02e-09
+outl2                                 1.02e-09
+xsal2.cs                                  0.33
+outlb2                                1.02e-09
+vda2                                         0
+vdb2                                         0
+vdl2                                         0
+drv3                                         0
+gp3                                          1
+gn3                                         -1
+pwpg3                                        0
+qg3                                          0
+cell3                                        0
+xc3.x                                        0
+ra3                                          0
+rb3                                          0
+pwpl3                                        0
+clk3                                         1
+pwpclk3                                      0
+clkb3                                       -1
+pwpclkb3                                     0
+outa3                                 1.02e-09
+xsaa3.cs                                  0.33
+outab3                                1.02e-09
+outb3                                 1.02e-09
+xsab3.cs                                  0.33
+outbb3                                1.02e-09
+outl3                                        1
+xsal3.ct                              0.336667
+outlb3                                       1
+vda3                               2.06795e-25
+vdb3                                         0
+vdl3                                         0
+drv4                                         0
+gp4                                          1
+gn4                                         -1
+pwpg4                                        0
+qg4                                          0
+cell4                                        0
+xc4.x                                        0
+ra4                                          0
+rb4                                          0
+pwpl4                                        0
+clk4                                         1
+pwpclk4                                      0
+clkb4                                       -1
+pwpclkb4                                     0
+outa4                                 1.02e-09
+xsaa4.cs                                  0.33
+outab4                                1.02e-09
+outb4                                 1.02e-09
+xsab4.cs                                  0.33
+outbb4                                1.02e-09
+outl4                                        1
+xsal4.ct                              0.336667
+outlb4                                       1
+vda4                              -2.06795e-25
+vdb4                               2.06795e-25
+vdl4                                         0
+drv5                                         0
+gp5                                          1
+gn5                                         -1
+cell5                                        0
+xc5.x                                        0
+ra5                                          0
+rb5                                          0
+pwpl5                                        0
+clk5                                         1
+pwpclk5                                      0
+outa5                                 1.02e-09
+xsaa5.cs                                  0.33
+outab5                                1.02e-09
+outb5                                 1.02e-09
+xsab5.cs                                  0.33
+outbb5                                1.02e-09
+outl5                                 1.02e-09
+xsal5.cs                                  0.33
+outlb5                                1.02e-09
+vda5                                         0
+vdb5                                         0
+vdl5                                         0
+bdl5#branch                                  0
+bdb5#branch                                  0
+bda5#branch                                  0
+bpclk5#branch                                0
+vclk5#branch                                 0
+bpl5#branch                                  0
+vs5#branch                                   0
+bdl4#branch                                  0
+bdb4#branch                                  0
+bda4#branch                                  0
+bpclkb4#branch                               0
+vclkb4#branch                                0
+bpclk4#branch                                0
+vclk4#branch                                 0
+bpl4#branch                                  0
+vs4#branch                                   0
+bqg4#branch                                  0
+vgn4#branch                                  0
+bpg4#branch                                  0
+bdl3#branch                                  0
+bdb3#branch                                  0
+bda3#branch                                  0
+bpclkb3#branch                               0
+vclkb3#branch                                0
+bpclk3#branch                                0
+vclk3#branch                                 0
+bpl3#branch                                  0
+vs3#branch                                   0
+bqg3#branch                                  0
+vgn3#branch                                  0
+bpg3#branch                                  0
+bdl2#branch                                  0
+bdb2#branch                                  0
+bda2#branch                                  0
+bpclk2#branch                                0
+vclk2#branch                                 0
+bpl2#branch                                  0
+vs2#branch                                   0
+bqg2#branch                                  0
+vgp2#branch                                  0
+bpg2#branch                                  0
+bdl1#branch                                  0
+bdb1#branch                                  0
+bda1#branch                                  0
+bpclk1#branch                                0
+vclk1#branch                                 0
+bpl1#branch                                  0
+vs1#branch                                   0
+bqg1#branch                                  0
+vgp1#branch                                  0
+bpg1#branch                                  0
+bpsan#branch                                 0
+vsssa#branch                       2.69333e-12
+bpsap#branch                                 0
+vddsa#branch                      -1.15333e-11
+bpsa#branch                                  0
+bpsup#branch                                 0
+vdd#branch                           -5.05e-12
+vss#branch                            5.05e-12
+vgn5#branch                                  0
+vgp5#branch                                  0
+vgp4#branch                                  0
+vgp3#branch                                  0
+vgn2#branch                                  0
+vgn1#branch                                  0
+vthrn#branch                                 0
+vthrp#branch                                 0
+
+ Reference value :  1.54856e-08 Reference value :  5.49856e-08 Reference value :  9.37456e-08 Reference value :  1.31466e-07 Reference value :  1.66070e-07 Reference value :  2.02870e-07 Reference value :  2.40250e-07 Reference value :  2.77450e-07
+No. of Data Rows : 15866
+
+  Measurements for Transient Analysis
+
+e1_drv              =   1.13072e-12 from=  1.59000e-07 to=  1.66000e-07
+e1_line             =   5.21025e-13 from=  1.59000e-07 to=  1.66000e-07
+qg1                 =   -2.33671e-14 from=  1.61100e-07 to=  1.62100e-07
+e1_rec              =   1.06752e-13 from=  1.58000e-07 to=  1.65200e-07
+e1_recp             =   1.06752e-13 from=  1.58000e-07 to=  1.65200e-07
+e1_recn             =   1.93920e-20 from=  1.58000e-07 to=  1.65200e-07
+raila1              =  2.500358e-01 at=  1.612300e-07
+raila1e             =  1.422554e-01
+areaa1              =   3.36436e-10 from=  1.60000e-07 to=  1.63200e-07
+linea1              =  6.155553e-01 at=  1.612300e-07
+dema1               =  7.260288e-01
+demb1               =  6.595071e-01
+deml1               =  7.227304e-01
+da1                 =  5.712012e-01
+db1                 =  1.354501e-01
+dl1                 =  5.589843e-01
+da1pk               =  6.017920e-01 at=  1.623100e-07
+dl1pk               =  5.602253e-01 at=  1.627500e-07
+e2_drv              =   6.46123e-13 from=  1.89000e-07 to=  1.96618e-07
+e2_line             =   1.57410e-13 from=  1.89000e-07 to=  1.96618e-07
+qg2                 =   -7.24230e-15 from=  1.91718e-07 to=  1.92718e-07
+e2_rec              =   1.06177e-13 from=  1.88000e-07 to=  1.95200e-07
+e2_recp             =   1.06177e-13 from=  1.88000e-07 to=  1.95200e-07
+e2_recn             =   1.93920e-20 from=  1.88000e-07 to=  1.95200e-07
+raila2              =  6.098755e-02 at=  1.918596e-07
+raila2e             =  4.845093e-02
+areaa2              =   1.08970e-10 from=  1.90000e-07 to=  1.93200e-07
+linea2              =  3.910120e-01 at=  1.918596e-07
+dema2               =  7.064064e-01
+demb2               =  5.631158e-01
+deml2               =  1.178531e-01
+da2                 =  5.167389e-01
+db2                 =  -7.226853e-02
+dl2                 =  -6.377408e-01
+da2pk               =  5.206783e-01 at=  1.925680e-07
+dl2pk               =  0.000000e+00 at=  1.917060e-07
+e3_drv              =   6.46120e-13 from=  2.19000e-07 to=  2.26618e-07
+e3_line             =   1.57396e-13 from=  2.19000e-07 to=  2.26618e-07
+qg3                 =   3.62170e-15 from=  2.21718e-07 to=  2.22718e-07
+e3_rec              =   3.35376e-13 from=  2.18000e-07 to=  2.25200e-07
+e3_recp             =   2.03459e-13 from=  2.18000e-07 to=  2.25200e-07
+e3_recn             =   1.31917e-13 from=  2.18000e-07 to=  2.25200e-07
+railb3              =  -6.078304e-02 at=  2.218596e-07
+railb3e             =  -4.844820e-02
+areab3              =   -1.08981e-10 from=  2.20000e-07 to=  2.23200e-07
+linea3              =  -3.909279e-01 at=  2.218596e-07
+dema3               =  5.623496e-01
+demb3               =  6.859000e-01
+deml3               =  -8.509651e-01
+da3                 =  -7.331441e-02
+db3                 =  2.450906e-01
+dl3                 =  -1.649749e+00
+db3pk               =  2.628579e-01 at=  2.231880e-07
+dl3pk               =  0.000000e+00 at=  2.217700e-07
+e4_drv              =   1.13034e-12 from=  2.49000e-07 to=  2.56000e-07
+e4_line             =   5.20920e-13 from=  2.49000e-07 to=  2.56000e-07
+qg4                 =   1.16579e-14 from=  2.51100e-07 to=  2.52100e-07
+e4_rec              =   3.58225e-13 from=  2.48000e-07 to=  2.55200e-07
+e4_recp             =   2.14554e-13 from=  2.48000e-07 to=  2.55200e-07
+e4_recn             =   1.43671e-13 from=  2.48000e-07 to=  2.55200e-07
+railb4              =  -2.498845e-01 at=  2.512300e-07
+railb4e             =  -1.421006e-01
+areab4              =   -3.36223e-10 from=  2.50000e-07 to=  2.53200e-07
+linea4              =  -6.152774e-01 at=  2.512300e-07
+dema4               =  6.963900e-01
+demb4               =  6.890791e-01
+deml4               =  7.636025e-01
+da4                 =  3.096407e-01
+db4                 =  3.750736e-01
+dl4                 =  1.592992e+00
+db4pk               =  3.750860e-01 at=  2.526500e-07
+dl4pk               =  1.640194e+00 at=  2.521300e-07
+e5_drv              =   7.07000e-20 from=  2.79000e-07 to=  2.86000e-07
+e5_rec              =   1.07632e-13 from=  2.78000e-07 to=  2.85200e-07
+e5_recp             =   1.07632e-13 from=  2.78000e-07 to=  2.85200e-07
+e5_recn             =   8.78185e-21 from=  2.78000e-07 to=  2.85200e-07
+raila5              =  2.229921e-03 at=  2.818500e-07
+railb5              =  -1.274373e-03 at=  2.834140e-07
+dema5               =  6.086140e-01
+demb5               =  5.994392e-01
+deml5               =  1.179789e-01
+da5                 =  1.267178e-02
+db5                 =  -5.851336e-03
+dl5                 =  -6.385228e-01
+
+Note: Starting dynamic gmin stepping
+Note: Dynamic gmin stepping completed
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+vddsa                                        1
+vsssa                                       -1
+pwpsup                                1.01e-11
+pwpsa                              1.42267e-11
+pwpsap                             1.15333e-11
+pwpsan                             2.69333e-12
+thrp                                     0.095
+thrn                                    -0.095
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+pwpg1                                        0
+qg1                                          0
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpl1                                        0
+clk1                                         1
+pwpclk1                                      0
+outa1                                 1.02e-09
+xsaa1.cs                                  0.33
+outab1                                1.02e-09
+outb1                                 1.02e-09
+xsab1.cs                                  0.33
+outbb1                                1.02e-09
+outl1                                 1.02e-09
+xsal1.cs                                  0.33
+outlb1                                1.02e-09
+vda1                                         0
+vdb1                                         0
+vdl1                                         0
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+pwpg2                                        0
+qg2                                          0
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+pwpl2                                        0
+clk2                                         1
+pwpclk2                                      0
+outa2                                 1.02e-09
+xsaa2.cs                                  0.33
+outab2                                1.02e-09
+outb2                                 1.02e-09
+xsab2.cs                                  0.33
+outbb2                                1.02e-09
+outl2                                 1.02e-09
+xsal2.cs                                  0.33
+outlb2                                1.02e-09
+vda2                                         0
+vdb2                                         0
+vdl2                                         0
+drv3                                         0
+gp3                                          1
+gn3                                         -1
+pwpg3                                        0
+qg3                                          0
+cell3                                        0
+xc3.x                                        0
+ra3                                          0
+rb3                                          0
+pwpl3                                        0
+clk3                                         1
+pwpclk3                                      0
+clkb3                                       -1
+pwpclkb3                                     0
+outa3                                 1.02e-09
+xsaa3.cs                                  0.33
+outab3                                1.02e-09
+outb3                                 1.02e-09
+xsab3.cs                                  0.33
+outbb3                                1.02e-09
+outl3                                        1
+xsal3.ct                              0.336667
+outlb3                                       1
+vda3                               2.06795e-25
+vdb3                                         0
+vdl3                                         0
+drv4                                         0
+gp4                                          1
+gn4                                         -1
+pwpg4                                        0
+qg4                                          0
+cell4                                        0
+xc4.x                                        0
+ra4                                          0
+rb4                                          0
+pwpl4                                        0
+clk4                                         1
+pwpclk4                                      0
+clkb4                                       -1
+pwpclkb4                                     0
+outa4                                 1.02e-09
+xsaa4.cs                                  0.33
+outab4                                1.02e-09
+outb4                                 1.02e-09
+xsab4.cs                                  0.33
+outbb4                                1.02e-09
+outl4                                        1
+xsal4.ct                              0.336667
+outlb4                                       1
+vda4                              -2.06795e-25
+vdb4                               2.06795e-25
+vdl4                                         0
+drv5                                         0
+gp5                                          1
+gn5                                         -1
+cell5                                        0
+xc5.x                                        0
+ra5                                          0
+rb5                                          0
+pwpl5                                        0
+clk5                                         1
+pwpclk5                                      0
+outa5                                 1.02e-09
+xsaa5.cs                                  0.33
+outab5                                1.02e-09
+outb5                                 1.02e-09
+xsab5.cs                                  0.33
+outbb5                                1.02e-09
+outl5                                 1.02e-09
+xsal5.cs                                  0.33
+outlb5                                1.02e-09
+vda5                                         0
+vdb5                                         0
+vdl5                                         0
+bdl5#branch                                  0
+bdb5#branch                                  0
+bda5#branch                                  0
+bpclk5#branch                                0
+vclk5#branch                                 0
+bpl5#branch                                  0
+vs5#branch                                   0
+bdl4#branch                                  0
+bdb4#branch                                  0
+bda4#branch                                  0
+bpclkb4#branch                               0
+vclkb4#branch                                0
+bpclk4#branch                                0
+vclk4#branch                                 0
+bpl4#branch                                  0
+vs4#branch                                   0
+bqg4#branch                                  0
+vgn4#branch                                  0
+bpg4#branch                                  0
+bdl3#branch                                  0
+bdb3#branch                                  0
+bda3#branch                                  0
+bpclkb3#branch                               0
+vclkb3#branch                                0
+bpclk3#branch                                0
+vclk3#branch                                 0
+bpl3#branch                                  0
+vs3#branch                                   0
+bqg3#branch                                  0
+vgn3#branch                                  0
+bpg3#branch                                  0
+bdl2#branch                                  0
+bdb2#branch                                  0
+bda2#branch                                  0
+bpclk2#branch                                0
+vclk2#branch                                 0
+bpl2#branch                                  0
+vs2#branch                                   0
+bqg2#branch                                  0
+vgp2#branch                                  0
+bpg2#branch                                  0
+bdl1#branch                                  0
+bdb1#branch                                  0
+bda1#branch                                  0
+bpclk1#branch                                0
+vclk1#branch                                 0
+bpl1#branch                                  0
+vs1#branch                                   0
+bqg1#branch                                  0
+vgp1#branch                                  0
+bpg1#branch                                  0
+bpsan#branch                                 0
+vsssa#branch                       2.69333e-12
+bpsap#branch                                 0
+vddsa#branch                      -1.15333e-11
+bpsa#branch                                  0
+bpsup#branch                                 0
+vdd#branch                           -5.05e-12
+vss#branch                            5.05e-12
+vgn5#branch                                  0
+vgp5#branch                                  0
+vgp4#branch                                  0
+vgp3#branch                                  0
+vgn2#branch                                  0
+vgn1#branch                                  0
+vthrn#branch                                 0
+vthrp#branch                                 0
+
+ Reference value :  0.00000e+00 Reference value :  3.94656e-08 Reference value :  7.88256e-08 Reference value :  1.18566e-07 Reference value :  1.58026e-07 Reference value :  1.93406e-07 Reference value :  2.30710e-07 Reference value :  2.68390e-07 Reference value :  3.06050e-07
+No. of Data Rows : 15866
+
+  Measurements for Transient Analysis
+
+e1_drv              =   1.13072e-12 from=  1.59000e-07 to=  1.66000e-07
+e1_line             =   5.21025e-13 from=  1.59000e-07 to=  1.66000e-07
+qg1                 =   -2.33671e-14 from=  1.61100e-07 to=  1.62100e-07
+e1_rec              =   1.06752e-13 from=  1.58000e-07 to=  1.65200e-07
+e1_recp             =   1.06752e-13 from=  1.58000e-07 to=  1.65200e-07
+e1_recn             =   1.93920e-20 from=  1.58000e-07 to=  1.65200e-07
+raila1              =  2.500358e-01 at=  1.612300e-07
+raila1e             =  1.422554e-01
+areaa1              =   3.36436e-10 from=  1.60000e-07 to=  1.63200e-07
+linea1              =  6.155553e-01 at=  1.612300e-07
+dema1               =  7.260288e-01
+demb1               =  6.595071e-01
+deml1               =  7.227304e-01
+da1                 =  5.712012e-01
+db1                 =  1.354501e-01
+dl1                 =  5.589843e-01
+da1pk               =  6.017920e-01 at=  1.623100e-07
+dl1pk               =  5.602253e-01 at=  1.627500e-07
+e2_drv              =   6.46123e-13 from=  1.89000e-07 to=  1.96618e-07
+e2_line             =   1.57410e-13 from=  1.89000e-07 to=  1.96618e-07
+qg2                 =   -7.24230e-15 from=  1.91718e-07 to=  1.92718e-07
+e2_rec              =   1.06177e-13 from=  1.88000e-07 to=  1.95200e-07
+e2_recp             =   1.06177e-13 from=  1.88000e-07 to=  1.95200e-07
+e2_recn             =   1.93920e-20 from=  1.88000e-07 to=  1.95200e-07
+raila2              =  6.098755e-02 at=  1.918596e-07
+raila2e             =  4.845093e-02
+areaa2              =   1.08970e-10 from=  1.90000e-07 to=  1.93200e-07
+linea2              =  3.910120e-01 at=  1.918596e-07
+dema2               =  7.064064e-01
+demb2               =  5.631158e-01
+deml2               =  1.178531e-01
+da2                 =  5.167389e-01
+db2                 =  -7.226853e-02
+dl2                 =  -6.377408e-01
+da2pk               =  5.206783e-01 at=  1.925680e-07
+dl2pk               =  0.000000e+00 at=  1.917060e-07
+e3_drv              =   6.46120e-13 from=  2.19000e-07 to=  2.26618e-07
+e3_line             =   1.57396e-13 from=  2.19000e-07 to=  2.26618e-07
+qg3                 =   3.62170e-15 from=  2.21718e-07 to=  2.22718e-07
+e3_rec              =   3.35376e-13 from=  2.18000e-07 to=  2.25200e-07
+e3_recp             =   2.03459e-13 from=  2.18000e-07 to=  2.25200e-07
+e3_recn             =   1.31917e-13 from=  2.18000e-07 to=  2.25200e-07
+railb3              =  -6.078304e-02 at=  2.218596e-07
+railb3e             =  -4.844820e-02
+areab3              =   -1.08981e-10 from=  2.20000e-07 to=  2.23200e-07
+linea3              =  -3.909279e-01 at=  2.218596e-07
+dema3               =  5.623496e-01
+demb3               =  6.859000e-01
+deml3               =  -8.509651e-01
+da3                 =  -7.331441e-02
+db3                 =  2.450906e-01
+dl3                 =  -1.649749e+00
+db3pk               =  2.628579e-01 at=  2.231880e-07
+dl3pk               =  0.000000e+00 at=  2.217700e-07
+e4_drv              =   1.13034e-12 from=  2.49000e-07 to=  2.56000e-07
+e4_line             =   5.20920e-13 from=  2.49000e-07 to=  2.56000e-07
+qg4                 =   1.16579e-14 from=  2.51100e-07 to=  2.52100e-07
+e4_rec              =   3.58225e-13 from=  2.48000e-07 to=  2.55200e-07
+e4_recp             =   2.14554e-13 from=  2.48000e-07 to=  2.55200e-07
+e4_recn             =   1.43671e-13 from=  2.48000e-07 to=  2.55200e-07
+railb4              =  -2.498845e-01 at=  2.512300e-07
+railb4e             =  -1.421006e-01
+areab4              =   -3.36223e-10 from=  2.50000e-07 to=  2.53200e-07
+linea4              =  -6.152774e-01 at=  2.512300e-07
+dema4               =  6.963900e-01
+demb4               =  6.890791e-01
+deml4               =  7.636025e-01
+da4                 =  3.096407e-01
+db4                 =  3.750736e-01
+dl4                 =  1.592992e+00
+db4pk               =  3.750860e-01 at=  2.526500e-07
+dl4pk               =  1.640194e+00 at=  2.521300e-07
+e5_drv              =   7.07000e-20 from=  2.79000e-07 to=  2.86000e-07
+e5_rec              =   1.07632e-13 from=  2.78000e-07 to=  2.85200e-07
+e5_recp             =   1.07632e-13 from=  2.78000e-07 to=  2.85200e-07
+e5_recn             =   8.78185e-21 from=  2.78000e-07 to=  2.85200e-07
+raila5              =  2.229921e-03 at=  2.818500e-07
+railb5              =  -1.274373e-03 at=  2.834140e-07
+dema5               =  6.086140e-01
+demb5               =  5.994392e-01
+deml5               =  1.179789e-01
+da5                 =  1.267178e-02
+db5                 =  -5.851336e-03
+dl5                 =  -6.385228e-01
+
+
+Total analysis time (seconds) = 4.17577
+
+Total elapsed time (seconds) = 10.564 
+
+Total DRAM available = 62177.336 MB.
+DRAM currently available = 10357.617 MB.
+Maximum ngspice program size =  128.637 MB.
+Current ngspice program size =  118.652 MB.
+
+Shared ngspice pages =   11.469 MB.
+Text (code) pages =    7.578 MB.
+Stack = 0 bytes.
+Library pages =  107.230 MB.
+

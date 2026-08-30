@@ -1,0 +1,16 @@
+# secrets — never commit
+.env
+
+# Lean build artifacts
+.lake/
+*.olean
+*.ilean
+*.olean.hash
+
+# prover run outputs
+results/
+
+# editor/OS noise
+.idea/
+.vscode/
+*.swp

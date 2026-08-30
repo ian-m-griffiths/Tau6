@@ -1,0 +1,38 @@
+// GA-instruction test program for the balanced-ternary CPU (16-bit binary words).
+// Loaded by cpu_ga_tb.v (PROGRAM_FILE override); cross-checked against a TB-built
+// image.  Exercises TCONJ / TDOT / TWEDGE / TSYMDOT (opcodes 6-9) plus the
+// Lean-theorem identities conj_involutive, wedge_antisymm, symdot_comm.
+//
+//   addr  op              effect                              expected
+//   0     LDI r0,#2       r0 = (2, 0)
+//   1     LDI r1,#3       r1 = (3, 0)
+//   2     TROT r1,r1,#1   r1 = (0, 3)     [w^1: (a,b)->(-b, a+b)]
+//   3     TADD r0,r0,r1   r0 = (2, 3)     = z
+//   4     LDI r1,#1       r1 = (1, 0)
+//   5     LDI r2,#-2      r2 = (-2, 0)
+//   6     TROT r2,r2,#1   r2 = (0, -2)
+//   7     TADD r1,r1,r2   r1 = (1, -2)    = w
+//   8     TCONJ r3,r0     r3 = (5, -3)    [conj(a,b)=(a+b,-b)]
+//   9     TDOT r4,r0,r1   r4 = (-8, 0)    [ac+ad+bd = 2-4-6]
+//   A     TWEDGE r5,r0,r1 r5 = (7, 0)     [bc-ad = 3+4]
+//   B     TSYMDOT r6,r0,r1 r6 = (-9, 0)   [2ac+ad+bc+2bd = 4-4+3-12]
+//   C     TWEDGE r7,r1,r0 r7 = (-7, 0)    [antisymm: wedge(w,z) = -wedge(z,w)]
+//   D     TCONJ r3,r3     r3 = (2, 3)     [involution: conj(conj z)=z]
+//   E     TSYMDOT r6,r1,r0 r6 = (-9, 0)   [symmetry: symdot(z,w)=symdot(w,z)]
+//   F     HLT
+4002
+4203
+2248
+0008
+4201
+45FE
+2488
+0250
+6600
+7808
+8A08
+9C08
+8E40
+66C0
+9C40
+F000

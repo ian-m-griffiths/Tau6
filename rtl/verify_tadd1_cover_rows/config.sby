@@ -1,0 +1,44 @@
+# ============================================================================
+# verify_tadd1.sby — formal verification of the balanced-ternary full adder
+# tadd1 (rtl/trit_functions.vh) against its 27-row truth table.
+#
+# Proof strategy (PDR / property-directed reachability, SymbiYosys mode prove):
+#   * The DUT is the actual `tadd1 function from trit_functions.vh, wrapped as
+#     a module in verify_tadd1.sv (the real RTL, not a re-implementation).
+#   * The spec is two independent formulations of the 27-row table:
+#       (A) the header's boolean form   (cout=+1 <=> s>=2, ...),
+#       (B) the numeric invariant       s == 3*cout + sum.
+#   * Inputs with the forbidden 2'b11 state are don't-care: the assertions
+#     are implications (!inputs_valid || spec), so the solver is free on the
+#     37 never-produced input rows and must hold on exactly the 27 valid rows
+#     -- the formal counterpart of the synthesis "11 is free" trick.
+#   * 27 explicit covers prove non-vacuity (every table row is reachable).
+#
+# Two independent engines, both in prove mode (a second opinion):
+#   prove_smt  : smtbmc + z3   (BMC base + k-induction)
+#   prove_pdr  : abc pdr       (property-directed reachability proper)
+#   cover_rows : smtbmc + z3   (cover mode: all 27 rows reachable)
+#
+# NOTE on the solver: the machine's boolector is 1.5.118 (2015), which this
+# yosys's smtio cannot drive (it has no --smt2 flag and aborts on SMT-LIB
+# set-option), so the smtbmc tasks use z3 4.13.3 (on $PATH) instead; abc pdr
+# uses the SAT solver built into yosys-abc.  Both are independent engines.
+#
+# Run:  cd rtl && sby -f verify_tadd1.sby
+# ============================================================================
+
+[options]
+mode cover
+depth 1
+expect pass
+
+[engines]
+smtbmc z3
+
+[script]
+read_verilog -sv verify_tadd1.sv
+prep -top tadd1_verify
+
+[files]
+trit_functions.vh
+verify_tadd1.sv

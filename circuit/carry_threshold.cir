@@ -1,0 +1,167 @@
+* =====================================================================
+* carry_threshold.cir  --  the CARRY THRESHOLD of the polar ternary adder:
+* the "detect magnitude >= 2 -> carry" device.  This is where "free" ends.
+*
+* THE HONEST QUESTION
+*   Kirchhoff current summing gives the magnitude |S| = |Ia + Ib| in
+*   {0, 1, 2} units for FREE (it is just two wires tied together).  But
+*   turning the magnitude-2 case back into a ternary digit +/-1 WITH a
+*   carry requires DETECTING "is |S| >= 2 ?" -- and that detection is a
+*   THRESHOLD: a device that conducts only above ~2 units.  The threshold
+*   is a real device.  The magnitude is free; the >=2 DETECTION is not.
+*
+* THE DEVICE (stated): a ZENER DIODE, used in reverse breakdown.
+*   A zener conducts (reverse breakdown) only when the voltage across it
+*   exceeds its breakdown voltage Vz.  Set Vz ~ 1.5 units (strictly
+*   between 1 unit and 2 units), and it is a MAGNITUDE-2 threshold:
+*   - |S| = 2 units  ->  Vsum ~ 2.0 V > Vz+Vf  ->  conducts  ->  CARRY
+*   - |S| = 1 unit   ->  Vsum ~ 1.0 V < Vz+Vf  ->  ~0 current  ->  no carry
+*   - |S| = 0        ->  Vsum = 0               ->  0 current  ->  no carry
+*   A single zener is UNIDIRECTIONAL (it forward-clamps at ~0.7 V on the
+*   opposite polarity), so it detects ONE sign of the carry.  The SIGNED
+*   +/-carry needs TWO of them, wired back-to-back (anti-series) -- which
+*   is exactly what is instantiated below.  THAT is the "2-threshold tax":
+*   two zener devices for the signed +/-carry.
+*
+* REPRESENTATION (matches diode_gates.cir / ternary_transistor.cir)
+*   1 ternary unit = 1 mA of wire current.  The summed current flows
+*   through a sense resistor Rs=1k, so 1 unit = 1.0 V and 2 units = 2.0 V.
+*   (Rs is the magnitude READOUT -- it dissipates on every addition, and
+*   is counted separately from the threshold device itself.)
+*
+* MEASURED RESULT SUMMARY (ngspice 44.2, carry_threshold.log):
+*   see docs/compute/polar_adder/carry_threshold_result.md
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param Iunit  = 1m        ; 1 ternary unit = 1 mA
+.param Rsense = 1k        ; 1 unit -> 1.0 V, 2 units -> 2.0 V
+.param Tp     = 10n       ; one carry-detection event is held for 10 ns
+.param Tstep  = 100n      ; stagger the 6 truth-table cases by 100 ns
+
+* ---------------- models ---------------------------------------------
+* zener: reverse breakdown at BV, soft-exponential knee (ngspice D model).
+* Anti-series pair conduction threshold = BV + Vf ~ 1.0 + 0.55 = 1.55 V,
+* i.e. ~1.5 units, cleanly between 1 unit (1.0 V) and 2 units (2.0 V).
+.model DZ D (IS=1e-12 N=1 RS=1 BV=1.0 IBV=1e-3)
+
+* ---------------- the magnitude-2 threshold (back-to-back zener pair) --
+* sum   : KCL node where the two input currents sum (magnitude, free).
+* carry : carry node -- ~0 when |S|<2, ~ +/-0.6..1.4 V when |S|=2 fires.
+* Rs  = current->voltage readout (magnitude appears here).
+* D1,D2 = TWO zener thresholds (one per sign) in anti-series (cathodes
+*         joined at `carry`).  Each zener breaks down on its own polarity's
+*         >=2 and blocks the other's forward clamp.  2 diodes total.
+.subckt mag2thr sum carry
+Rs sum 0 {Rsense}
+D1 sum carry DZ
+D2 0   carry DZ
+Rk carry 0 1meg
+.ends
+
+* =====================================================================
+* TRUTH-TABLE CASES: two input currents Ia, Ib (each +/-1,0 units) summed
+* at a node, driving one mag2thr.  6 cases, staggered 100 ns apart.
+* =====================================================================
+* case 1: +2 (both push)  -> CARRY, 100..110 ns
+Ia1 0 sum1 PULSE(0 {Iunit} 100n 0.2n 0.2n {Tp} 200n)
+Ib1 0 sum1 PULSE(0 {Iunit} 100n 0.2n 0.2n {Tp} 200n)
+X1 sum1 car1 mag2thr
+
+* case 2: +1 (one push, one null) -> no carry, 200..210 ns
+Ia2 0 sum2 PULSE(0 {Iunit} 200n 0.2n 0.2n {Tp} 200n)
+Ib2 0 sum2 PULSE(0 0      200n 0.2n 0.2n {Tp} 200n)
+X2 sum2 car2 mag2thr
+
+* case 3: 0 (both null) -> no carry, 300..310 ns
+Ia3 0 sum3 PULSE(0 0 300n 0.2n 0.2n {Tp} 200n)
+Ib3 0 sum3 PULSE(0 0 300n 0.2n 0.2n {Tp} 200n)
+X3 sum3 car3 mag2thr
+
+* case 4: 0 by cancellation (+1 and -1) -> no carry, 400..410 ns
+Ia4 0 sum4 PULSE(0 {Iunit} 400n 0.2n 0.2n {Tp} 200n)
+Ib4 0 sum4 PULSE(0 {-Iunit} 400n 0.2n 0.2n {Tp} 200n)
+X4 sum4 car4 mag2thr
+
+* case 5: -1 (one pull, one null) -> no carry, 500..510 ns
+Ia5 0 sum5 PULSE(0 {-Iunit} 500n 0.2n 0.2n {Tp} 200n)
+Ib5 0 sum5 PULSE(0 0        500n 0.2n 0.2n {Tp} 200n)
+X5 sum5 car5 mag2thr
+
+* case 6: -2 (both pull) -> CARRY, 600..610 ns
+Ia6 0 sum6 PULSE(0 {-Iunit} 600n 0.2n 0.2n {Tp} 200n)
+Ib6 0 sum6 PULSE(0 {-Iunit} 600n 0.2n 0.2n {Tp} 200n)
+X6 sum6 car6 mag2thr
+
+* ---------------- carry-current probes (KCL: excess over the sense R) ---
+* I_carry = (Ia + Ib) - Vsum/Rs   (only top-level references)
+Bic1 ic1 0 V = I(Ia1)+I(Ib1) - V(sum1)/{Rsense}
+Bic2 ic2 0 V = I(Ia2)+I(Ib2) - V(sum2)/{Rsense}
+Bic3 ic3 0 V = I(Ia3)+I(Ib3) - V(sum3)/{Rsense}
+Bic4 ic4 0 V = I(Ia4)+I(Ib4) - V(sum4)/{Rsense}
+Bic5 ic5 0 V = I(Ia5)+I(Ib5) - V(sum5)/{Rsense}
+Bic6 ic6 0 V = I(Ia6)+I(Ib6) - V(sum6)/{Rsense}
+
+* ---------------- power probes ----------------------------------------
+* threshold (zener) power  = Vsum * I_carry   (the "2-threshold tax")
+Bpthr1 pthr1 0 V = V(sum1)*V(ic1)
+Bpthr2 pthr2 0 V = V(sum2)*V(ic2)
+Bpthr3 pthr3 0 V = V(sum3)*V(ic3)
+Bpthr4 pthr4 0 V = V(sum4)*V(ic4)
+Bpthr5 pthr5 0 V = V(sum5)*V(ic5)
+Bpthr6 pthr6 0 V = V(sum6)*V(ic6)
+* sense-resistor power = Vsum^2 / Rs  (magnitude READOUT, every addition)
+BpRs1 pRs1 0 V = V(sum1)^2/{Rsense}
+BpRs2 pRs2 0 V = V(sum2)^2/{Rsense}
+BpRs3 pRs3 0 V = V(sum3)^2/{Rsense}
+BpRs4 pRs4 0 V = V(sum4)^2/{Rsense}
+BpRs5 pRs5 0 V = V(sum5)^2/{Rsense}
+BpRs6 pRs6 0 V = V(sum6)^2/{Rsense}
+
+* =====================================================================
+* SIMULATION + MEASUREMENTS
+* =====================================================================
+.tran 20p 620n
+
+* --- truth table: carry current at mid-window (5 ns into each 10 ns case)
+.meas tran icar_p2  FIND V(ic1) AT=105n
+.meas tran icar_p1  FIND V(ic2) AT=205n
+.meas tran icar_0   FIND V(ic3) AT=305n
+.meas tran icar_c0  FIND V(ic4) AT=405n
+.meas tran icar_m1  FIND V(ic5) AT=505n
+.meas tran icar_m2  FIND V(ic6) AT=605n
+
+* --- magnitude readout Vsum at mid-window (the free |S|, before threshold)
+.meas tran vsum_p2  FIND V(sum1) AT=105n
+.meas tran vsum_p1  FIND V(sum2) AT=205n
+.meas tran vsum_0   FIND V(sum3) AT=305n
+.meas tran vsum_c0  FIND V(sum4) AT=405n
+.meas tran vsum_m1  FIND V(sum5) AT=505n
+.meas tran vsum_m2  FIND V(sum6) AT=605n
+
+* --- carry node voltage at mid-window
+.meas tran vcar_p2  FIND V(car1) AT=105n
+.meas tran vcar_p1  FIND V(car2) AT=205n
+.meas tran vcar_0   FIND V(car3) AT=305n
+.meas tran vcar_c0  FIND V(car4) AT=405n
+.meas tran vcar_m1  FIND V(car5) AT=505n
+.meas tran vcar_m2  FIND V(car6) AT=605n
+
+* --- ENERGY: threshold (zener) dissipation over each 10 ns detection window
+.meas tran ethr_p2 INTEG V(pthr1) FROM=100n TO=110n
+.meas tran ethr_p1 INTEG V(pthr2) FROM=200n TO=210n
+.meas tran ethr_0  INTEG V(pthr3) FROM=300n TO=310n
+.meas tran ethr_c0 INTEG V(pthr4) FROM=400n TO=410n
+.meas tran ethr_m1 INTEG V(pthr5) FROM=500n TO=510n
+.meas tran ethr_m2 INTEG V(pthr6) FROM=600n TO=610n
+
+* --- ENERGY: sense resistor (magnitude readout) over the same windows
+.meas tran ers_p2 INTEG V(pRs1) FROM=100n TO=110n
+.meas tran ers_p1 INTEG V(pRs2) FROM=200n TO=210n
+.meas tran ers_0  INTEG V(pRs3) FROM=300n TO=310n
+.meas tran ers_c0 INTEG V(pRs4) FROM=400n TO=410n
+.meas tran ers_m1 INTEG V(pRs5) FROM=500n TO=510n
+.meas tran ers_m2 INTEG V(pRs6) FROM=600n TO=610n
+
+.end

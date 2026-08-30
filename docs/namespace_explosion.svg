@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="580" viewBox="0 0 920 580" font-family="Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="920" height="580" fill="#ffffff"/>
+  <text x="78" y="30" font-size="20" font-weight="bold" fill="#111">Names: 3&#8319; vs 2&#8319; &#8212; the addressing win</text>
+  <text x="78" y="50" font-size="13" fill="#555">log&#8321;&#8320;(addressable names) vs number of symbols n &#8212; both exponential, but the gap grows as (3/2)&#8319;</text>
+
+  <line x1="78" y1="516.00" x2="872" y2="516.00" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="70.00" y="520.00" font-size="12" fill="#666" text-anchor="end">1</text>
+  <line x1="78" y1="450.57" x2="872" y2="450.57" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="70.00" y="454.57" font-size="12" fill="#666" text-anchor="end">10^5</text>
+  <line x1="78" y1="385.14" x2="872" y2="385.14" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="70.00" y="389.14" font-size="12" fill="#666" text-anchor="end">10^10</text>
+  <line x1="78" y1="319.71" x2="872" y2="319.71" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="70.00" y="323.71" font-size="12" fill="#666" text-anchor="end">10^15</text>
+  <line x1="78" y1="254.29" x2="872" y2="254.29" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="70.00" y="258.29" font-size="12" fill="#666" text-anchor="end">10^20</text>
+  <line x1="78" y1="188.86" x2="872" y2="188.86" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="70.00" y="192.86" font-size="12" fill="#666" text-anchor="end">10^25</text>
+  <line x1="78" y1="123.43" x2="872" y2="123.43" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="70.00" y="127.43" font-size="12" fill="#666" text-anchor="end">10^30</text>
+  <line x1="78" y1="58.00" x2="872" y2="58.00" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="70.00" y="62.00" font-size="12" fill="#666" text-anchor="end">10^35</text>
+  <line x1="78.00" y1="58" x2="78.00" y2="516" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="78.00" y="534.00" font-size="12" fill="#666" text-anchor="middle">0</text>
+  <line x1="177.25" y1="58" x2="177.25" y2="516" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="177.25" y="534.00" font-size="12" fill="#666" text-anchor="middle">8</text>
+  <line x1="276.50" y1="58" x2="276.50" y2="516" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="276.50" y="534.00" font-size="12" fill="#666" text-anchor="middle">16</text>
+  <line x1="375.75" y1="58" x2="375.75" y2="516" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="375.75" y="534.00" font-size="12" fill="#666" text-anchor="middle">24</text>
+  <line x1="475.00" y1="58" x2="475.00" y2="516" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="475.00" y="534.00" font-size="12" fill="#666" text-anchor="middle">32</text>
+  <line x1="574.25" y1="58" x2="574.25" y2="516" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="574.25" y="534.00" font-size="12" fill="#666" text-anchor="middle">40</text>
+  <line x1="673.50" y1="58" x2="673.50" y2="516" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="673.50" y="534.00" font-size="12" fill="#666" text-anchor="middle">48</text>
+  <line x1="772.75" y1="58" x2="772.75" y2="516" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="772.75" y="534.00" font-size="12" fill="#666" text-anchor="middle">56</text>
+  <line x1="872.00" y1="58" x2="872.00" y2="516" stroke="#e2e2e2" stroke-width="1"/>
+  <text x="872.00" y="534.00" font-size="12" fill="#666" text-anchor="middle">64</text>
+
+  <polyline points="78.00,516.00 90.41,512.06 102.81,508.12 115.22,504.18 127.62,500.24 140.03,496.30 152.44,492.36 164.84,488.43 177.25,484.49 189.66,480.55 202.06,476.61 214.47,472.67 226.88,468.73 239.28,464.79 251.69,460.85 264.09,456.91 276.50,452.97 288.91,449.03 301.31,445.09 313.72,441.16 326.12,437.22 338.53,433.28 350.94,429.34 363.34,425.40 375.75,421.46 388.16,417.52 400.56,413.58 412.97,409.64 425.38,405.70 437.78,401.76 450.19,397.82 462.59,393.89 475.00,389.95 487.41,386.01 499.81,382.07 512.22,378.13 524.62,374.19 537.03,370.25 549.44,366.31 561.84,362.37 574.25,358.43 586.66,354.49 599.06,350.55 611.47,346.61 623.88,342.68 636.28,338.74 648.69,334.80 661.09,330.86 673.50,326.92 685.91,322.98 698.31,319.04 710.72,315.10 723.12,311.16 735.53,307.22 747.94,303.28 760.34,299.34 772.75,295.41 785.16,291.47 797.56,287.53 809.97,283.59 822.38,279.65 834.78,275.71 847.19,271.77 859.59,267.83 872.00,263.89" fill="none" stroke="#2b6cb0" stroke-width="2.5"/>
+  <polyline points="78.00,516.00 90.41,509.76 102.81,503.51 115.22,497.27 127.62,491.03 140.03,484.78 152.44,478.54 164.84,472.30 177.25,466.05 189.66,459.81 202.06,453.57 214.47,447.32 226.88,441.08 239.28,434.83 251.69,428.59 264.09,422.35 276.50,416.10 288.91,409.86 301.31,403.62 313.72,397.37 326.12,391.13 338.53,384.89 350.94,378.64 363.34,372.40 375.75,366.16 388.16,359.91 400.56,353.67 412.97,347.43 425.38,341.18 437.78,334.94 450.19,328.70 462.59,322.45 475.00,316.21 487.41,309.97 499.81,303.72 512.22,297.48 524.62,291.23 537.03,284.99 549.44,278.75 561.84,272.50 574.25,266.26 586.66,260.02 599.06,253.77 611.47,247.53 623.88,241.29 636.28,235.04 648.69,228.80 661.09,222.56 673.50,216.31 685.91,210.07 698.31,203.83 710.72,197.58 723.12,191.34 735.53,185.10 747.94,178.85 760.34,172.61 772.75,166.37 785.16,160.12 797.56,153.88 809.97,147.64 822.38,141.39 834.78,135.15 847.19,128.90 859.59,122.66 872.00,116.42" fill="none" stroke="#c05621" stroke-width="2.5"/>
+
+  <text x="549.4375" y="356.31" font-size="13" fill="#2b6cb0">binary 2&#8319;</text>
+  <text x="549.4375" y="300.75" font-size="13" fill="#c05621">ternary 3&#8319;</text>
+
+  <line x1="872.0" y1="116.42" x2="872.0" y2="263.89" stroke="#c05621" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="864.00" y="194.15" font-size="14" font-weight="bold" fill="#c05621" text-anchor="end">3&#8319;/2&#8319; = 1.86&#215;10&#185;&#185; at n=64</text>
+
+  <line x1="78" y1="516" x2="872" y2="516" stroke="#333" stroke-width="1.5"/>
+  <line x1="78" y1="58" x2="78" y2="516" stroke="#333" stroke-width="1.5"/>
+  <text x="475.00" y="566" font-size="12" fill="#333" text-anchor="middle">n (symbols per address)</text>
+</svg>

@@ -1,0 +1,368 @@
+* =====================================================================
+* pam4.cir  --  fair-fight PAM-4 cell: does "more levels per symbol"
+* beat binary (0.748 pJ/bit) and ternary (0.515 pJ/bit, null-carrying)?
+*
+* The claim under test (Ian's "more levels per symbol" idea):
+*   PAM-4 packs 2 bits into ONE driver activation, so the ~1.2 pJ driver
+*   cost is amortized over 2 bits -> ~0.6 pJ/symbol -> ~0.3 pJ/bit IF the
+*   receiver is cheap. Ternary's edge is the FREE null (0.05 pJ); PAM-4's
+*   edge is density (2 bits/symbol). Which wins?
+*
+* Same honesty rules as ternary_fairfight.cir (which found the ternary
+* driver's REAL cost is 1.20 pJ/transfer, not the 0.562 pJ ideal-source
+* claim):
+*   1. REAL DRIVER  -- CMOS push-pull on +/-1.0 V rails, binary-weighted
+*      legs (strong/weak x PMOS/NMOS) producing 4 levels (target
+*      +/-0.66 V / +/-0.22 V at the receiver node). Channel dissipation,
+*      gate charge, supply energy all counted.
+*   2. REAL RECEIVER -- THREE identical comparators (line vs +thr / 0 /
+*      -thr, thermometer code -> 2 bits), each = clocked PMOS diff-pair
+*      PREAMP (recenters the comparison to ~0.25 V common mode) + the
+*      ternary's sense amp (latches). Supply energy per symbol measured.
+*      WHY A PREAMP (measured, hard-won): the ternary's sense amp CANNOT
+*      resolve PAM-4's +/-0.43 V midpoint comparisons on its own -- the
+*      references put the PMOS input pair in triode (out ~ cs), the
+*      cross-coupled loop gain drops below 1, and the latch sticks at a
+*      stable ~13-46 mV differential FOREVER (verified with 4x cross
+*      coupling and 8 ns eval). Only the 0-referenced comparator (the
+*      ternary's own case) latches directly. The receiver is therefore
+*      NOT cheap for PAM-4: 3 comparators with references far from the
+*      latch's operating point cost ~5-10x the ternary's receiver.
+*   3. WIRE + LOAD matching the ternary cell input: rwire=100, cline=1p,
+*      rterm=1Meg (verbatim values from tcell4) + 0.2p receiver input cap
+*      (matches the ternary rails' cload=0.2p).
+*
+* Energy accounting per SYMBOL (one driver activation, measured per case):
+*   E_drain = energy from the driver supply pair (+VDDR,-VDDR) during the
+*             symbol  = line energy + driver channel dissipation
+*   E_gate  = |Q_gate| x VG  (pulsing gate's charge, same convention as
+*             the ternary harness's qg_push x VG = 0.023 pJ)
+*   E_rec   = sense-amp supply energy for the 3-comparator evaluation
+*   E_fair(symbol) = E_drain + E_gate + E_rec
+*   E_bit   = E_fair(symbol) / 2        (2 bits per symbol)
+*
+* Symbols (uniform 4-level, each driven from rest, like the ternary
+* harness measures each trit from rest):
+*   +3 = +0.66 V : strong PMOS leg only
+*   +1 = +0.22 V : weak   PMOS leg only
+*   -1 = -0.22 V : weak   NMOS leg only
+*   -3 = -0.66 V : strong NMOS leg only
+*
+* Reference voltages (thrHI/thrLO): ideal sources -- the SA inputs are
+* MOSFET gates, so the references source ~0 current (the ternary harness
+* gave the SA's ground reference away for free too; a real chip shares
+* one reference generator across many lanes). Thresholds are set at the
+* measured midpoints of the actual levels (real receivers calibrate).
+*
+* REAL-PROCESS CAVEAT (same as ternary_fairfight.cir): these LEVEL=1
+* models have NO bulk diodes. A real PMOS body diode (body->vdd) would
+* clamp the negative swings and a real NMOS body diode (body->vss) the
+* positive ones; a real implementation needs body-isolated devices or
+* current steering. This model keeps the fight on the same idealizations
+* as the ternary fair fight.
+*
+* MEASURED (final config VDDR=1.0, WPS=7.5u, RATIO=3, THR=0.447,
+* TEVAL=2n; levels +0.659/+0.236/-0.233/-0.657 V at the receiver node;
+* all 12 comparator outputs resolve with 0.58-0.86 V differential
+* margins -- see pam4.log):
+*   +3: E_drv=0.795 pJ  E_gate=0.016 pJ  E_rec=0.231 pJ
+*   +1: E_drv=0.282 pJ  E_gate=0.005 pJ  E_rec=0.244 pJ
+*   -1: E_drv=0.282 pJ  E_gate=0.002 pJ  E_rec=0.273 pJ
+*   -3: E_drv=0.794 pJ  E_gate=0.008 pJ  E_rec=0.279 pJ
+*   E_fair(symbol) avg (uniform) = 0.803 pJ -> 0.401 pJ/bit (2 bits).
+*   vs binary 0.748 pJ/bit: 1.86x BETTER; vs ternary 0.515 pJ/bit
+*   (null-carrying): 1.28x BETTER (+22%). "More levels" beats "free
+*   null" -- but NOT by the naive ~0.3 pJ/bit: the receiver is 4x the
+*   ternary's per bit (0.128 vs 0.032 pJ/bit) and needs a preamp front
+*   end (the ternary's sense amp alone cannot resolve the +/-0.43 V
+*   midpoints -- see the preamp comment). The win is the driver:
+*   0.273 pJ/bit vs ternary's 0.504 pJ/bit (2 bits per activation).
+*   Stream-average (iid uniform) correction: ~0.47 pJ/bit -- still a
+*   win, thinner. 8-level extrapolation: ~0.33 pJ/bit but spacing
+*   halves to ~0.18 V and 7 comparators make the receiver dominate.
+* =====================================================================
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+* ------------------------------------------------------------------
+* DRIVER PARAMS. Measured sizing logic (v1 run): the legs charge the
+* line as SATURATION current sources for most of the 1 ns pulse
+* (I_sat = KP/2*(W/L)*Vov^2, Vov = VG-|VT| = 0.6 V), so the level
+* reached scales ~LINEARLY with leg width (not as RC-to-VDD):
+*   WPS = 4.5u -> +0.42 V at 1 ns. To land +0.66 V: WPS ~ 7.5u
+*   (I_sat ~ 0.75 mA; the top of the ramp rides into triode, softening
+*    the final level). Weak:strong level ratio = width ratio in the
+*   saturation regime -> RATIO = 3 for a 3:1 level ratio.
+* Thresholds (THR) are set at the measured midpoints after the run.
+* ------------------------------------------------------------------
+.param VDDR  = 1.0
+.param WPS   = 7.5u      ; strong PMOS leg width
+.param WNS   = {WPS/2}   ; strong NMOS leg (KP_N = 2x KP_P -> same Ron)
+.param RATIO = 3.0       ; weak:strong WIDTH ratio -> 3:1 levels
+.param WPW   = {WPS/RATIO}
+.param WNW   = {WNS/RATIO}
+.param T3    = 160n      ; +3 symbol
+.param T1    = 190n      ; +1 symbol
+.param TM1   = 220n      ; -1 symbol
+.param TM3   = 250n      ; -3 symbol
+.param THR   = 0.447     ; comparator thresholds = measured midpoints of the
+                         ; actual levels ((+0.660+0.236)/2 = +0.448,
+                         ; (-0.657-0.234)/2 = -0.445) -- a real receiver
+                         ; calibrates thresholds to the levels it sees.
+.param TEVAL = 2.0n      ; receiver eval window (preamp settle + SA latch).
+                         ; The same-SA-only receiver never resolves the
+                         ; +/-0.43 V midpoints (stable stuck state, see
+                         ; header); with the preamp front end 2 ns is
+                         ; enough for ~0.6-0.9 V differential margins.
+                         ; PAM-4 symbol = 1 ns pulse + 2 ns eval = 3 ns,
+                         ; vs ~2 ns for the ternary's 1-receiver trit.
+.param SAMP  = {1n+TEVAL} ; sample time after symbol start (just before clk rise)
+
+* ---------------- models (verbatim from binary_baseline) ------------
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4 KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+
+* ---------------- REAL RECEIVER: PMOS-input clocked sense amp ---------
+* (VERBATIM from ternary_fairfight.cir; 7 MOS + 2 output caps)
+* out = high when inP < inM (PMOS conducts more on the lower input).
+* Used with inP = preamp outP, inM = preamp outM  ->  out high when
+* line > thr (see the preamp polarity note below).
+.subckt sensamp inP inM clk vddsa out outb
+M1 out  inP cs cs PMOS1 W=1u  L=0.18u
+M2 outb inM cs cs PMOS1 W=1u  L=0.18u
+M5 cs   clk vddsa vddsa PMOS1 W=0.3u L=0.18u
+M3 out  outb 0 0 NMOS1 W=0.5u L=0.18u
+M4 outb out  0 0 NMOS1 W=0.5u L=0.18u
+M6 out  clk  0 0 NMOS1 W=0.5u L=0.18u
+M7 outb clk  0 0 NMOS1 W=0.5u L=0.18u
+CLo  out  0 5f
+CLob outb 0 5f
+.ends
+
+* ---------------- PREAMP stage (PAM-4 receiver front end) --------------
+* The ternary's sense amp cannot resolve PAM-4's midpoint comparisons
+* directly (measured: the +/-0.43 V references put the PMOS input pair
+* in triode -> latch loop gain < 1 -> stable stuck state, dL ~ 13-46 mV
+* forever, even with 4x cross-coupling and 8 ns eval). A real 4-level
+* receiver needs a front end that re-centers the comparison into the
+* latch's operating region. This preamp is a clocked PMOS diff pair with
+* resistive loads: it converts (line - thr) into a differential voltage
+* at ~0.25 V common mode (the sense amp's sweet spot, same regime as the
+* ternary's 0-vs-0.25 V rails). Tail gated by clkb (active low).
+* Polarity: outP (M1/line side) vs outM (M2/thr side); when line < thr,
+* M1 conducts more -> outP rises above outM. SA wired inP=outP, inM=outM
+* -> out high when line > thr (same convention as the direct hookup).
+.subckt preamp inP inM clkb vddsa outP outM
+M1 outP inP tp tp PMOS1 W=2u  L=0.18u
+M2 outM inM tp tp PMOS1 W=2u  L=0.18u
+M5 tp   clkb vddsa vddsa PMOS1 W=0.3u L=0.18u
+R1 outP 0 10k
+R2 outM 0 10k
+CLp1 outP 0 10f
+CLp2 outM 0 10f
+.ends
+
+* =====================================================================
+* SHARED SUPPLIES + POWER PROBES
+* =====================================================================
+VDD   vdd   0 DC {VDDR}
+VSS   vss   0 DC {-VDDR}
+VDDSA vddsa 0 DC 1.0
+BpSUP pwpSUP 0 V = -(V(vdd)*I(VDD) + V(vss)*I(VSS))
+BpSA  pwpSA  0 V = -(V(vddsa)*I(VDDSA))
+
+* comparator references (gate loads only; see header)
+VthrHI thrHI 0 DC {THR}
+VthrLO thrLO 0 DC {-THR}
+
+* =====================================================================
+* CASE +3: strong PMOS push at 160 ns  ->  line to +0.66 V
+* =====================================================================
+MP3S drv3 gP3S vdd vdd PMOS1 W={WPS} L=0.18u
+MP3W drv3 gP3W vdd vdd PMOS1 W={WPW} L=0.18u
+MN3S drv3 gN3S vss vss NMOS1 W={WNS} L=0.18u
+MN3W drv3 gN3W vss vss NMOS1 W={WNW} L=0.18u
+VgP3S gP3S 0 PULSE({VDDR} 0 {T3} 0.2n 0.2n 1n 200n)  ; strong PMOS on (gate 1->0)
+VgP3W gP3W 0 DC {VDDR}                                ; weak PMOS off
+VgN3S gN3S 0 DC {-VDDR}                               ; NMOS off
+VgN3W gN3W 0 DC {-VDDR}
+Vs3  drv3 wire3 DC 0                                  ; 0V sense: energy into line
+Rw3  wire3 ln3 100                                    ; wire, matches tcell4 rwire
+Cx3  ln3 0 1p                                         ; matches tcell4 cline
+Rterm3 ln3 0 1meg                                     ; matches tcell4 rterm
+Crecv3 ln3 0 0.2p                                     ; receiver input cap (cload eq.)
+BpL3 pwpL3 0 V = V(wire3)*I(Vs3)                      ; power into the line
+BpG3 pwpG3 0 V = V(gP3S)*I(VgP3S)                     ; gate-source power
+BqG3 qG3 0 V = I(VgP3S)                               ; gate charge probe
+Vclk3 clk3 0 PULSE(1 0 {T3+1.4n} 0.1n 0.1n {TEVAL} 200n) ; precharge..eval
+Vclkb3 clkb3 0 PULSE(1 0 {T3+1.4n} 0.1n 0.1n {TEVAL} 200n) ; preamp tail (active low)
+XpaH3 ln3 thrHI clkb3 vddsa paH3 paHb3 preamp
+XsaH3 paH3 paHb3 clk3 vddsa outH3 outHb3 sensamp       ; line > +thr ?
+XpaM3 ln3 0     clkb3 vddsa paM3 paMb3 preamp
+XsaM3 paM3 paMb3 clk3 vddsa outM3 outMb3 sensamp       ; line > 0 ?
+XpaL3 ln3 thrLO clkb3 vddsa paL3 paLb3 preamp
+XsaL3 paL3 paLb3 clk3 vddsa outL3 outLb3 sensamp       ; line > -thr ?
+BdH3 vdH3 0 V = V(outH3)-V(outHb3)
+BdM3 vdM3 0 V = V(outM3)-V(outMb3)
+BdL3 vdL3 0 V = V(outL3)-V(outLb3)
+
+* =====================================================================
+* CASE +1: weak PMOS push at 190 ns  ->  line to +0.22 V
+* =====================================================================
+MP1S drv1 gP1S vdd vdd PMOS1 W={WPS} L=0.18u
+MP1W drv1 gP1W vdd vdd PMOS1 W={WPW} L=0.18u
+MN1S drv1 gN1S vss vss NMOS1 W={WNS} L=0.18u
+MN1W drv1 gN1W vss vss NMOS1 W={WNW} L=0.18u
+VgP1S gP1S 0 DC {VDDR}                                ; strong PMOS off
+VgP1W gP1W 0 PULSE({VDDR} 0 {T1} 0.2n 0.2n 1n 200n)   ; weak PMOS on
+VgN1S gN1S 0 DC {-VDDR}
+VgN1W gN1W 0 DC {-VDDR}
+Vs1  drv1 wire1 DC 0
+Rw1  wire1 ln1 100
+Cx1  ln1 0 1p
+Rterm1 ln1 0 1meg
+Crecv1 ln1 0 0.2p
+BpL1 pwpL1 0 V = V(wire1)*I(Vs1)
+BpG1 pwpG1 0 V = V(gP1W)*I(VgP1W)
+BqG1 qG1 0 V = I(VgP1W)
+Vclk1 clk1 0 PULSE(1 0 {T1+1.4n} 0.1n 0.1n {TEVAL} 200n)
+Vclkb1 clkb1 0 PULSE(1 0 {T1+1.4n} 0.1n 0.1n {TEVAL} 200n)
+XpaH1 ln1 thrHI clkb1 vddsa paH1 paHb1 preamp
+XsaH1 paH1 paHb1 clk1 vddsa outH1 outHb1 sensamp
+XpaM1 ln1 0     clkb1 vddsa paM1 paMb1 preamp
+XsaM1 paM1 paMb1 clk1 vddsa outM1 outMb1 sensamp
+XpaL1 ln1 thrLO clkb1 vddsa paL1 paLb1 preamp
+XsaL1 paL1 paLb1 clk1 vddsa outL1 outLb1 sensamp
+BdH1 vdH1 0 V = V(outH1)-V(outHb1)
+BdM1 vdM1 0 V = V(outM1)-V(outMb1)
+BdL1 vdL1 0 V = V(outL1)-V(outLb1)
+
+* =====================================================================
+* CASE -1: weak NMOS pull at 220 ns  ->  line to -0.22 V
+* =====================================================================
+MPm1S drvm1 gPm1S vdd vdd PMOS1 W={WPS} L=0.18u
+MPm1W drvm1 gPm1W vdd vdd PMOS1 W={WPW} L=0.18u
+MNm1S drvm1 gNm1S vss vss NMOS1 W={WNS} L=0.18u
+MNm1W drvm1 gNm1W vss vss NMOS1 W={WNW} L=0.18u
+VgPm1S gPm1S 0 DC {VDDR}
+VgPm1W gPm1W 0 DC {VDDR}
+VgNm1S gNm1S 0 DC {-VDDR}
+VgNm1W gNm1W 0 PULSE({-VDDR} 0 {TM1} 0.2n 0.2n 1n 200n) ; weak NMOS on (gate -1->0)
+Vsm1  drvm1 wirem1 DC 0
+Rwm1  wirem1 lnm1 100
+Cxm1  lnm1 0 1p
+Rtermm1 lnm1 0 1meg
+Crecvm1 lnm1 0 0.2p
+BpLm1 pwpLm1 0 V = V(wirem1)*I(Vsm1)
+BpGm1 pwpGm1 0 V = V(gNm1W)*I(VgNm1W)
+BqGm1 qGm1 0 V = I(VgNm1W)
+Vclkm1 clkm1 0 PULSE(1 0 {TM1+1.4n} 0.1n 0.1n {TEVAL} 200n)
+Vclkbm1 clkbm1 0 PULSE(1 0 {TM1+1.4n} 0.1n 0.1n {TEVAL} 200n)
+XpaHm1 lnm1 thrHI clkbm1 vddsa paHm1 paHbm1 preamp
+XsaHm1 paHm1 paHbm1 clkm1 vddsa outHm1 outHbm1 sensamp
+XpaMm1 lnm1 0     clkbm1 vddsa paMm1 paMbm1 preamp
+XsaMm1 paMm1 paMbm1 clkm1 vddsa outMm1 outMbm1 sensamp
+XpaLm1 lnm1 thrLO clkbm1 vddsa paLm1 paLbm1 preamp
+XsaLm1 paLm1 paLbm1 clkm1 vddsa outLm1 outLbm1 sensamp
+BdHm1 vdHm1 0 V = V(outHm1)-V(outHbm1)
+BdMm1 vdMm1 0 V = V(outMm1)-V(outMbm1)
+BdLm1 vdLm1 0 V = V(outLm1)-V(outLbm1)
+
+* =====================================================================
+* CASE -3: strong NMOS pull at 250 ns  ->  line to -0.66 V
+* =====================================================================
+MPm3S drvm3 gPm3S vdd vdd PMOS1 W={WPS} L=0.18u
+MPm3W drvm3 gPm3W vdd vdd PMOS1 W={WPW} L=0.18u
+MNm3S drvm3 gNm3S vss vss NMOS1 W={WNS} L=0.18u
+MNm3W drvm3 gNm3W vss vss NMOS1 W={WNW} L=0.18u
+VgPm3S gPm3S 0 DC {VDDR}
+VgPm3W gPm3W 0 DC {VDDR}
+VgNm3S gNm3S 0 PULSE({-VDDR} 0 {TM3} 0.2n 0.2n 1n 200n) ; strong NMOS on
+VgNm3W gNm3W 0 DC {-VDDR}
+Vsm3  drvm3 wirem3 DC 0
+Rwm3  wirem3 lnm3 100
+Cxm3  lnm3 0 1p
+Rtermm3 lnm3 0 1meg
+Crecvm3 lnm3 0 0.2p
+BpLm3 pwpLm3 0 V = V(wirem3)*I(Vsm3)
+BpGm3 pwpGm3 0 V = V(gNm3S)*I(VgNm3S)
+BqGm3 qGm3 0 V = I(VgNm3S)
+Vclkm3 clkm3 0 PULSE(1 0 {TM3+1.4n} 0.1n 0.1n {TEVAL} 200n)
+Vclkbm3 clkbm3 0 PULSE(1 0 {TM3+1.4n} 0.1n 0.1n {TEVAL} 200n)
+XpaHm3 lnm3 thrHI clkbm3 vddsa paHm3 paHbm3 preamp
+XsaHm3 paHm3 paHbm3 clkm3 vddsa outHm3 outHbm3 sensamp
+XpaMm3 lnm3 0     clkbm3 vddsa paMm3 paMbm3 preamp
+XsaMm3 paMm3 paMbm3 clkm3 vddsa outMm3 outMbm3 sensamp
+XpaLm3 lnm3 thrLO clkbm3 vddsa paLm3 paLbm3 preamp
+XsaLm3 paLm3 paLbm3 clkm3 vddsa outLm3 outLbm3 sensamp
+BdHm3 vdHm3 0 V = V(outHm3)-V(outHbm3)
+BdMm3 vdMm3 0 V = V(outMm3)-V(outMbm3)
+BdLm3 vdLm3 0 V = V(outLm3)-V(outLbm3)
+
+* =====================================================================
+* SIMULATION + MEASUREMENTS
+* =====================================================================
+.tran 20p 270n
+
+* --- +3 (strong PMOS push, symbol at 160n) ---
+.meas tran e3_drv  INTEG V(pwpSUP) FROM={T3-1n} TO={T3+4n}
+.meas tran e3_line INTEG V(pwpL3)  FROM={T3-1n} TO={T3+4n}
+.meas tran qg3     INTEG V(qG3)    FROM={T3+1.1n} TO={T3+2.2n}
+.meas tran e3_rec  INTEG V(pwpSA)  FROM={T3-2n} TO={T3+8n}
+.meas tran lvl3    MAX V(ln3) FROM={T3} TO={T3+2n}
+.meas tran lvl3_s  FIND V(ln3) AT={T3+SAMP}
+.meas tran ipk3    MIN I(VDD) FROM={T3} TO={T3+2n}  ; peak delivery (<0)
+.meas tran demH3   FIND V(outH3) AT={T3+SAMP}
+.meas tran demM3   FIND V(outM3) AT={T3+SAMP}
+.meas tran demL3   FIND V(outL3) AT={T3+SAMP}
+.meas tran dH3     FIND V(vdH3) AT={T3+SAMP}
+.meas tran dM3     FIND V(vdM3) AT={T3+SAMP}
+.meas tran dL3     FIND V(vdL3) AT={T3+SAMP}
+
+* --- +1 (weak PMOS push, symbol at 190n) ---
+.meas tran e1_drv  INTEG V(pwpSUP) FROM={T1-1n} TO={T1+4n}
+.meas tran e1_line INTEG V(pwpL1)  FROM={T1-1n} TO={T1+4n}
+.meas tran qg1     INTEG V(qG1)    FROM={T1+1.1n} TO={T1+2.2n}
+.meas tran e1_rec  INTEG V(pwpSA)  FROM={T1-2n} TO={T1+8n}
+.meas tran lvl1    MAX V(ln1) FROM={T1} TO={T1+2n}
+.meas tran lvl1_s  FIND V(ln1) AT={T1+SAMP}
+.meas tran ipk1    MIN I(VDD) FROM={T1} TO={T1+2n}  ; peak delivery (<0)
+.meas tran demH1   FIND V(outH1) AT={T1+SAMP}
+.meas tran demM1   FIND V(outM1) AT={T1+SAMP}
+.meas tran demL1   FIND V(outL1) AT={T1+SAMP}
+.meas tran dH1     FIND V(vdH1) AT={T1+SAMP}
+.meas tran dM1     FIND V(vdM1) AT={T1+SAMP}
+.meas tran dL1     FIND V(vdL1) AT={T1+SAMP}
+
+* --- -1 (weak NMOS pull, symbol at 220n) ---
+.meas tran em1_drv  INTEG V(pwpSUP) FROM={TM1-1n} TO={TM1+4n}
+.meas tran em1_line INTEG V(pwpLm1)  FROM={TM1-1n} TO={TM1+4n}
+.meas tran qgm1     INTEG V(qGm1)    FROM={TM1+1.1n} TO={TM1+2.2n}
+.meas tran em1_rec  INTEG V(pwpSA)   FROM={TM1-2n} TO={TM1+8n}
+.meas tran lvlm1    MIN V(lnm1) FROM={TM1} TO={TM1+2n}
+.meas tran lvlm1_s  FIND V(lnm1) AT={TM1+SAMP}
+.meas tran ipkm1    MAX I(VSS) FROM={TM1} TO={TM1+2n}
+.meas tran demHm1   FIND V(outHm1) AT={TM1+SAMP}
+.meas tran demMm1   FIND V(outMm1) AT={TM1+SAMP}
+.meas tran demLm1   FIND V(outLm1) AT={TM1+SAMP}
+.meas tran dHm1     FIND V(vdHm1) AT={TM1+SAMP}
+.meas tran dMm1     FIND V(vdMm1) AT={TM1+SAMP}
+.meas tran dLm1     FIND V(vdLm1) AT={TM1+SAMP}
+
+* --- -3 (strong NMOS pull, symbol at 250n) ---
+.meas tran em3_drv  INTEG V(pwpSUP) FROM={TM3-1n} TO={TM3+4n}
+.meas tran em3_line INTEG V(pwpLm3)  FROM={TM3-1n} TO={TM3+4n}
+.meas tran qgm3     INTEG V(qGm3)    FROM={TM3+1.1n} TO={TM3+2.2n}
+.meas tran em3_rec  INTEG V(pwpSA)   FROM={TM3-2n} TO={TM3+8n}
+.meas tran lvlm3    MIN V(lnm3) FROM={TM3} TO={TM3+2n}
+.meas tran lvlm3_s  FIND V(lnm3) AT={TM3+SAMP}
+.meas tran ipkm3    MAX I(VSS) FROM={TM3} TO={TM3+2n}
+.meas tran demHm3   FIND V(outHm3) AT={TM3+SAMP}
+.meas tran demMm3   FIND V(outMm3) AT={TM3+SAMP}
+.meas tran demLm3   FIND V(outLm3) AT={TM3+SAMP}
+.meas tran dHm3     FIND V(vdHm3) AT={TM3+SAMP}
+.meas tran dMm3     FIND V(vdMm3) AT={TM3+SAMP}
+.meas tran dLm3     FIND V(vdLm3) AT={TM3+SAMP}
+
+.end

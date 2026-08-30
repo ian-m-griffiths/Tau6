@@ -1,0 +1,38 @@
+* =====================================================================
+* binary_baseline.cir  —  CMOS inverter baseline (C*V^2 per cycle)
+* Apples-to-apples comparison for ternary_cell.cir.
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param VDD = 1.0
+
+VSUP  vdd  0    DC {VDD}
+Vin   in   0    PULSE(0 {VDD} 5n 0.5n 0.5n 15n 40n)
+
+M1    out  in   vdd vdd PMOS1  W=4u  L=0.18u
+M2    out  in   0   0    NMOS1  W=2u  L=0.18u
+
+Rw    out  load 500
+CL    load 0    1.5p
+
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4 KP=200u LAMBDA=0.05)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05)
+
+Bpwr  pwr 0 V = V(vdd)*I(VSUP)
+
+.tran 100p 60n
+
+.meas tran ecycle INTEG V(pwr) FROM=5n TO=35n
+.meas tran erise  INTEG V(pwr) FROM=5n TO=20n
+.meas tran efall  INTEG V(pwr) FROM=20n TO=35n
+
+.meas tran vout_hi  FIND V(load) AT=12n
+.meas tran vout_lo  FIND V(load) AT=30n
+.meas tran tr_rise  TRIG V(load) VAL=0.1 RISE=1 TARG V(load) VAL=0.9 RISE=1
+.meas tran tf_fall  TRIG V(load) VAL=0.9 FALL=1 TARG V(load) VAL=0.1 FALL=1
+
+.print tran v(in) v(out) v(load)
+.plot  tran v(in) v(out) v(load)
+
+.end

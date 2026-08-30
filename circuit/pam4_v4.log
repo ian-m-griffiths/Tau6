@@ -1,0 +1,275 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+vddsa                                        1
+pwpsup                               1.616e-11
+pwpsa                               1.4079e-11
+thrhi                                     0.43
+thrlo                                    -0.43
+drv3                                         0
+gp3s                                         1
+gp3w                                         1
+gn3s                                        -1
+gn3w                                        -1
+wire3                                        0
+ln3                                          0
+pwpl3                                        0
+pwpg3                                        0
+qg3                                          0
+clk3                                         1
+clkb3                                        1
+pah3                                   3.4e-09
+xpah3.tp                                  0.33
+pahb3                                  3.4e-09
+outh3                              9.14877e-10
+xsah3.cs                              0.400082
+outhb3                             9.14877e-10
+outm3                              9.14877e-10
+xsam3.cs                              0.400082
+outmb3                             9.14877e-10
+pal3                               5.60196e-16
+xpal3.tp                              4.04e-08
+palb3                                 1.01e-08
+outl3                              9.15579e-10
+xsal3.cs                              0.400082
+outlb3                             9.14176e-10
+vdh3                               1.80935e-21
+vdm3                              -2.00808e-21
+vdl3                               1.40337e-12
+drv1                                         0
+gp1s                                         1
+gp1w                                         1
+gn1s                                        -1
+gn1w                                        -1
+wire1                                        0
+ln1                                          0
+pwpl1                                        0
+pwpg1                                        0
+qg1                                          0
+clk1                                         1
+clkb1                                        1
+pah1                                   3.4e-09
+xpah1.tp                                  0.33
+pahb1                                  3.4e-09
+outh1                              9.14877e-10
+xsah1.cs                              0.400082
+outhb1                             9.14877e-10
+outm1                              9.14877e-10
+xsam1.cs                              0.400082
+outmb1                             9.14877e-10
+pal1                               5.60196e-16
+xpal1.tp                              4.04e-08
+palb1                                 1.01e-08
+outl1                              9.15579e-10
+xsal1.cs                              0.400082
+outlb1                             9.14176e-10
+vdh1                              -1.23664e-21
+vdm1                                         0
+vdl1                               1.40337e-12
+drvm1                                        0
+gpm1s                                        1
+gpm1w                                        1
+gnm1s                                       -1
+gnm1w                                       -1
+wirem1                                       0
+lnm1                                         0
+pwplm1                                       0
+pwpgm1                                       0
+qgm1                                         0
+clkm1                                        1
+clkbm1                                       1
+pahm1                                  3.4e-09
+xpahm1.tp                                 0.33
+pahbm1                                 3.4e-09
+outhm1                             9.14877e-10
+xsahm1.cs                             0.400082
+outhbm1                            9.14877e-10
+outmm1                             9.14877e-10
+xsamm1.cs                             0.400082
+outmbm1                            9.14877e-10
+palm1                              5.60196e-16
+xpalm1.tp                             4.04e-08
+palbm1                                1.01e-08
+outlm1                             9.15579e-10
+xsalm1.cs                             0.400082
+outlbm1                            9.14176e-10
+vdhm1                             -2.71051e-20
+vdmm1                                        0
+vdlm1                              1.40337e-12
+drvm3                                        0
+gpm3s                                        1
+gpm3w                                        1
+gnm3s                                       -1
+gnm3w                                       -1
+wirem3                                       0
+lnm3                                         0
+pwplm3                                       0
+pwpgm3                                       0
+qgm3                                         0
+clkm3                                        1
+clkbm3                                       1
+pahm3                                  3.4e-09
+xpahm3.tp                                 0.33
+pahbm3                                 3.4e-09
+outhm3                             9.14877e-10
+xsahm3.cs                             0.400082
+outhbm3                            9.14877e-10
+outmm3                             9.14877e-10
+xsamm3.cs                             0.400082
+outmbm3                            9.14877e-10
+palm3                              5.60196e-16
+xpalm3.tp                             4.04e-08
+palbm3                                1.01e-08
+outlm3                             9.15579e-10
+xsalm3.cs                             0.400082
+outlbm3                            9.14176e-10
+vdhm3                              1.80935e-21
+vdmm3                                        0
+vdlm3                              1.40337e-12
+bdlm3#branch                                 0
+bdmm3#branch                                 0
+bdhm3#branch                                 0
+bqgm3#branch                                 0
+vgnm3s#branch                                0
+bpgm3#branch                                 0
+bplm3#branch                                 0
+vsm3#branch                                  0
+bdlm1#branch                                 0
+bdmm1#branch                                 0
+bdhm1#branch                                 0
+bqgm1#branch                                 0
+vgnm1w#branch                                0
+bpgm1#branch                                 0
+bplm1#branch                                 0
+vsm1#branch                                  0
+bdl1#branch                                  0
+bdm1#branch                                  0
+bdh1#branch                                  0
+bqg1#branch                                  0
+vgp1w#branch                                 0
+bpg1#branch                                  0
+bpl1#branch                                  0
+vs1#branch                                   0
+bdl3#branch                                  0
+bdm3#branch                                  0
+bdh3#branch                                  0
+bqg3#branch                                  0
+vgp3s#branch                                 0
+bpg3#branch                                  0
+bpl3#branch                                  0
+vs3#branch                                   0
+bpsa#branch                                  0
+vddsa#branch                       -1.4079e-11
+bpsup#branch                                 0
+vdd#branch                           -8.08e-12
+vss#branch                            8.08e-12
+vclkbm3#branch                               0
+vclkm3#branch                                0
+vgnm3w#branch                                0
+vgpm3w#branch                                0
+vgpm3s#branch                                0
+vclkbm1#branch                               0
+vclkm1#branch                                0
+vgnm1s#branch                                0
+vgpm1w#branch                                0
+vgpm1s#branch                                0
+vclkb1#branch                                0
+vclk1#branch                                 0
+vgn1w#branch                                 0
+vgn1s#branch                                 0
+vgp1s#branch                                 0
+vclkb3#branch                                0
+vclk3#branch                                 0
+vgn3w#branch                                 0
+vgn3s#branch                                 0
+vgp3w#branch                                 0
+vthrlo#branch                                0
+vthrhi#branch                                0
+
+ Reference value :  4.15456e-08 Reference value :  8.67056e-08 Reference value :  1.31786e-07 Reference value :  1.74810e-07 Reference value :  2.17630e-07 Reference value :  2.50830e-07
+No. of Data Rows : 13623
+
+  Measurements for Transient Analysis
+
+e3_drv              =   7.94677e-13 from=  1.59000e-07 to=  1.64000e-07
+e3_line             =   3.18423e-13 from=  1.59000e-07 to=  1.64000e-07
+qg3                 =   9.29439e-17 from=  1.59000e-07 to=  1.64000e-07
+e3_rec              =   2.63475e-13 from=  1.58000e-07 to=  1.68000e-07
+lvl3                =  6.611829e-01 at=  1.619900e-07
+lvl3_s              =  6.602557e-01
+ipk3                =  7.764939e-05 at=  1.614000e-07
+demh3               =  7.473911e-01
+demm3               =  9.999892e-01
+deml3               =  9.726939e-01
+dh3                 =  6.200859e-01
+dm3                 =  9.999892e-01
+dl3                 =  9.642365e-01
+e1_drv              =   2.81613e-13 from=  1.89000e-07 to=  1.94000e-07
+e1_line             =   3.99834e-14 from=  1.89000e-07 to=  1.94000e-07
+qg1                 =   8.02137e-18 from=  1.89000e-07 to=  1.94000e-07
+e1_rec              =   3.24427e-13 from=  1.88000e-07 to=  1.98000e-07
+lvl1                =  2.367884e-01 at=  1.919900e-07
+lvl1_s              =  2.364494e-01
+ipk1                =  2.589857e-05 at=  1.914000e-07
+demh1               =  5.683870e-02
+demm1               =  8.502736e-01
+deml1               =  9.726992e-01
+dh1                 =  -7.919784e-01
+dm1                 =  7.941404e-01
+dl1                 =  9.642434e-01
+em1_drv             =   2.81606e-13 from=  2.19000e-07 to=  2.24000e-07
+em1_line            =   4.00501e-14 from=  2.19000e-07 to=  2.24000e-07
+qgm1                =   -4.01068e-18 from=  2.19000e-07 to=  2.24000e-07
+em1_rec             =   4.25335e-13 from=  2.18000e-07 to=  2.28000e-07
+lvlm1               =  -2.338195e-01 at=  2.213300e-07
+lvlm1_s             =  -2.289502e-01
+ipkm1               =  2.751734e-04 at=  2.202000e-07
+demhm1              =  1.006920e-02
+demmm1              =  3.054613e-01
+demlm1              =  8.875271e-01
+dhm1                =  -9.576213e-01
+dmm1                =  -3.823839e-01
+dlm1                =  8.481702e-01
+em3_drv             =   7.94080e-13 from=  2.49000e-07 to=  2.54000e-07
+em3_line            =   3.18636e-13 from=  2.49000e-07 to=  2.54000e-07
+qgm3                =   -5.52680e-17 from=  2.49000e-07 to=  2.54000e-07
+em3_rec             =   4.34510e-13 from=  2.48000e-07 to=  2.58000e-07
+lvlm3               =  -6.576687e-01 at=  2.513300e-07
+lvlm3_s             =  -6.501786e-01
+ipkm3               =  8.229051e-04 at=  2.502000e-07
+demhm3              =  7.693884e-03
+demmm3              =  3.042475e-01
+demlm3              =  4.628396e-02
+dhm3                =  -9.673931e-01
+dmm3                =  -3.835976e-01
+dlm3                =  -8.251446e-01
+
+
+Total analysis time (seconds) = 1.60995
+
+Total elapsed time (seconds) = 1.618 
+
+Total DRAM available = 62177.336 MB.
+DRAM currently available = 11326.035 MB.
+Maximum ngspice program size =   28.480 MB.
+Current ngspice program size =   18.551 MB.
+
+Shared ngspice pages =   11.523 MB.
+Text (code) pages =    7.578 MB.
+Stack = 0 bytes.
+Library pages =    7.074 MB.
+

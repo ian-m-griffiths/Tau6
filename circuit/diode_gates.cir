@@ -1,0 +1,377 @@
+* =====================================================================
+* diode_gates.cir  --  polar ternary GATES with a DIODE-DIRECTION
+* receiver (rectifier), NOT a sense amp.  Measured, fair-fight vs binary.
+*
+* THE REFRAME (why this netlist exists)
+*   Polar ternary is 1 voltage MAGNITUDE x 2 DIRECTIONS, not "3 ordered
+*   levels needing 2 thresholds".  push = current OUT, pull = current IN,
+*   null = no current.  A DIODE is a direction detector (conducts one
+*   way, blocks the other): two opposite diodes fire on push and on
+*   pull respectively, and NEITHER fires on null (no current -> free).
+*   A SENSE AMP is a LEVEL detector (compares vs 0 V), which is exactly
+*   why the null was meta-stable and drew continuous shoot-through in
+*   polar_gates.cir / gate_energy.cir (which lost 4.9-14.3x per bit).
+*
+* THE DESIGN (the honest minimum a direction receiver forces)
+*   Receiver (per input wire): two opposite diodes split the wire into
+*     rA = "push rail"  (0 -> +Vrail on push)
+*     rB = "pull rail"  (0 -> -Vrail on pull)
+*     null = neither rail charged (both stay 0).  Passive, no supply.
+*   Logic + driver: the rails directly gate an ELEVATED-threshold
+*     push-pull output stage.  The elevated |Vt| (= 1.4 V, between VDD
+*     and VDD+Vrail) is what makes the null a DEAD ZONE: a device whose
+*     source is -VDD sees Vgs = +VDD when its gate is at 0 (null) and is
+*     therefore OFF, but sees Vgs = VDD+Vrail when the rail fires and is
+*     ON.  So:
+*       P_HI (src=+VDD, gate=rB): fires on PULL  -> drives +1
+*       N_HI (src=-VDD, gate=rA): fires on PUSH  -> drives -1
+*     That cross-coupling is exactly NOT (negation): the diode receiver +
+*     elevated-Vt driver IS a self-restoring ternary inverter with a
+*     dead-zone null, NO sense amp, NO clock, NO level shifter.
+*   Two-input primitives (series/parallel stacks of the same 2 devices):
+*     dd_nand = NOT(MIN): +1 iff either pulls (parallel P_HI on rB),
+*                         -1 iff both push (series N_HI on rA).
+*     dd_nor  = NOT(MAX): +1 iff both pull (series P_HI),
+*                         -1 iff either pushes (parallel N_HI).
+*   MIN/MAX are lattice-derived:  MIN = NOT(NAND), MAX = NOT(NOR), each a
+*     clean 2-stage gate (NAND/NOR stage + one NOT).  The mod-3 SUM is a
+*     FIELD op (F3), not a lattice op, so it is NOT reachable from
+*     {NOT,NAND,NOR}: it needs explicit null detection (NOT(push OR
+*     pull)), which the direction receiver does not produce as an
+*     input -- "null" is the ABSENCE of a rail, not a signal.  It is
+*     therefore NOT built here (declared intractable in pure diode-
+*     direction form; see the doc's TODO tail for the regeneration path).
+*
+* FAIR-FIGHT HONESTY (same rules as ternary_fairfight.cir / polar_gates.cir)
+*   - REAL output driver (elevated-Vt push-pull, supply V*I counted over
+*     a FULL output cycle: assert + release).  No ideal current sources.
+*   - REAL (passive) receiver: the next stage's diode rectifier is an
+*     explicit load the output driver must charge.  It has NO supply, so
+*     its "energy" is already inside E_gate (the driver's delivered
+*     charge).  This is the honest contrast with the sense-amp receiver
+*     whose clocked supply (E_rec) polar_gates.cir added separately.
+*   - Inputs are IDEAL voltage sources (previous stage's output is
+*     abstracted; its cost is symmetric to this gate's own output
+*     driver) -- exactly polar_gates.cir's convention.
+*   - LEVEL=1 models, no body diodes, no device mismatch.  Binary runs
+*     on the SAME +/-VDD = +/-1.0 V rails (2 V swing) so the comparison
+*     is at identical rails and common mode (generous to ternary).
+*   - Toggle = cheapest ternary toggle (null <-> +1) -- generous to
+*     ternary; a +1<->-1 toggle swings the full +/-V and costs ~2x.
+*
+* DEVICE COUNTING: "diode" = the rectifier diode (D); "transistor" = a
+*   MOSFET.  Keepers (R,C) are passive and not counted as devices.
+*
+* MEASURED RESULT SUMMARY (ngspice 44.2, diode_gates.log; per-toggle =
+* full-cycle/2, cheapest toggle null<->+1; null-idle = quiet-window supply):
+*   gate        devices      energy/toggle   null-idle(75ns)   truth table
+*   binary NOT  2 T          54.0 fJ         0.30 aJ           OK
+*   binary NAND 4 T          79.3 fJ         0.60 aJ           OK
+*   binary NOR  4 T          63.5 fJ         0.30 aJ           OK
+*   dd_not      2 D + 2 T    54.2 fJ         0.15 aJ           OK (null ~0)
+*   dd_nand     4 D + 4 T    60.8 fJ         0.23 aJ           OK (null ~0)
+*   dd_nor      4 D + 4 T    58.6 fJ         0.23 aJ           OK (null ~0)
+*   dd_min      6 D + 6 T   122.2 fJ         0.38 aJ           OK (null ~0)
+*   dd_max      6 D + 6 T   109.4 fJ         0.38 aJ           OK (null ~0)
+*   The diode receiver makes the null ~FREE (idle supply ~1e-19 J class)
+*   and the passive receiver adds no clocked supply: the "2-threshold tax"
+*   of the sense-amp receiver (4.9-14.3x per bit, polar_gates.cir) is gone.
+*   Per-bit (divide toggle energy by log2 3 = 1.585): ternary NOT 0.63x,
+*   NAND 0.48x, NOR 0.58x, MIN 0.97x, MAX 0.87x of the binary analog.
+*   BUT: device count is 2-3x binary, the elevated-|Vt| dead zone is a
+*   multi-Vt fabrication ask, and the null-return speed is Schottky-limited
+*   (stored charge).  See docs/compute/ground_up/diode_gates.md.
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param VDD   = 1.0
+.param Rwire = 100
+.param CL    = 10f          ; one output wire drives ~1 next-gate input
+.param Rterm = 100k         ; null-return termination on every polar wire
+.param T_C0 = 95n           ; full-cycle window: assert @100n, release @120n
+.param T_C1 = 135n
+.param T_Q0 = 10n           ; quiet (held-null / idle) window
+.param T_Q1 = 85n
+
+* ---------------- models ---------------------------------------------
+* standard CMOS (binary controls + output driver), verbatim ternary_fairfight
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+* elevated-Vt dead-zone devices: |Vt|=1.1 V sits BETWEEN VDD (off at null,
+* gate=0 vs source=-VDD gives |Vgs|=VDD) and VDD+Vrail (on when the rail
+* fires).  LEVEL=1 has a hard cutoff below VTO (no subthreshold), so the
+* null is a true dead zone.
+.model N_HI  NMOS(LEVEL=1 VTO=1.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model P_HI  PMOS(LEVEL=1 VTO=-1.4 KP=100u LAMBDA=0.05 TOX=2n)
+* low-Vt devices (regeneration for the mod-3 sum only)
+.model NLV   NMOS(LEVEL=1 VTO=0.15 KP=200u LAMBDA=0.05 TOX=2n)
+.model PLV   PMOS(LEVEL=1 VTO=-0.15 KP=100u LAMBDA=0.05 TOX=2n)
+* rectifier diode (Schottky-ish, low forward drop ~0.43 V at 1 mA so the
+* rail asserts high enough for the dead zone)
+.model DD D (IS=1e-9 RS=200 CJO=2f TT=1p N=1.05)
+
+* ---------------- diode-direction receiver (passive, per input wire) ---
+* rA = push rail (0 -> +Vrail), rB = pull rail (0 -> -Vrail).
+.subckt dd_recv win rA rB
+D1 win rA DD
+D2 rB win DD
+RkA rA 0 100k
+RkB rB 0 100k
+CkA rA 0 2f
+CkB rB 0 2f
+.ends
+
+* ---------------- diode-direction NOT (negation) ----------------------
+* push-rail rA gates N_HI (to -VDD) -> output pulls on input push;
+* pull-rail rB gates P_HI (to +VDD) -> output pushes on input pull.
+* Null: both rails 0, both devices in the dead zone (off), wire -> 0
+* via the external Rterm.  2 diodes + 2 transistors, no clock, no amp.
+.subckt dd_not win wout vdd vss
+Xr win ra rb dd_recv
+Mp wout rb vdd vdd P_HI W=4u L=0.18u
+Mn wout ra vss vss N_HI W=4u L=0.18u
+.ends
+
+* ---------------- diode-direction NAND  (= NOT(MIN)) ------------------
+* +1 (push) iff EITHER input pulls: parallel P_HI (gate = rB).
+* -1 (pull) iff BOTH inputs push:  series N_HI (gate = rA).
+* 4 diodes + 4 transistors.
+.subckt dd_nand wa wb wout vdd vss
+Xra wa raa rba dd_recv
+Xrb wb rab rbb dd_recv
+* +1 branch (parallel P_HI, low-active on the pull rails)
+MpA wout rba vdd vdd P_HI W=4u L=0.18u
+MpB wout rbb vdd vdd P_HI W=4u L=0.18u
+* -1 branch (series N_HI, high-active on the push rails)
+MnA mid raa vss vss N_HI W=8u L=0.18u
+MnB wout rab mid vss N_HI W=8u L=0.18u
+Cmid mid 0 1f
+.ends
+
+* ---------------- diode-direction NOR  (= NOT(MAX)) -------------------
+* +1 (push) iff BOTH inputs pull:  series P_HI (gate = rB).
+* -1 (pull) iff EITHER input pushes: parallel N_HI (gate = rA).
+* 4 diodes + 4 transistors.
+.subckt dd_nor wa wb wout vdd vss
+Xra wa raa rba dd_recv
+Xrb wb rab rbb dd_recv
+* +1 branch (series P_HI, low-active on the pull rails)
+MpA midp rba vdd vdd P_HI W=8u L=0.18u
+MpB wout rbb midp vdd P_HI W=8u L=0.18u
+Cmidp midp 0 1f
+* -1 branch (parallel N_HI, high-active on the push rails)
+MnA wout raa vss vss N_HI W=4u L=0.18u
+MnB wout rab vss vss N_HI W=4u L=0.18u
+.ends
+
+* ---------------- MIN = NOT(NAND), MAX = NOT(NOR) ---------------------
+* Two-stage lattice gates (NAND/NOR + one NOT).  6 diodes + 6 transistors.
+.subckt dd_min wa wb wout vdd vss
+Xn wa wb mid vdd vss dd_nand
+Rmid mid 0 100k
+Xi mid wout vdd vss dd_not
+.ends
+
+.subckt dd_max wa wb wout vdd vss
+Xn wa wb mid vdd vss dd_nor
+Rmid mid 0 100k
+Xi mid wout vdd vss dd_not
+.ends
+
+* ---------------- binary primitives (bipolar +/-VDD rails) -------------
+* (verbatim polar_gates.cir) -- these ARE the "real driver" for binary.
+.subckt inv in out vdd vss
+Mp out in vdd vdd PMOS1 W=4u  L=0.18u
+Mn out in vss vss NMOS1 W=2u  L=0.18u
+.ends
+
+.subckt nand2 a b out vdd vss
+Mp1 out a vdd vdd PMOS1 W=4u  L=0.18u
+Mp2 out b vdd vdd PMOS1 W=4u  L=0.18u
+Mn1 out a mid vss NMOS1 W=4u  L=0.18u
+Mn2 mid b vss vss NMOS1 W=4u  L=0.18u
+Cmid mid 0 1f
+.ends
+
+.subckt nor2 a b out vdd vss
+Mp1 mid a vdd vdd PMOS1 W=8u  L=0.18u
+Mp2 out b mid vdd PMOS1 W=8u  L=0.18u
+Mn1 out a vss vss NMOS1 W=2u  L=0.18u
+Mn2 out b vss vss NMOS1 W=2u  L=0.18u
+Cmid mid 0 1f
+.ends
+
+* =====================================================================
+* GATE 1: BINARY NOT  in: +1 -> -1 -> +1  =>  out: -1 -> +1 -> -1
+* =====================================================================
+VDDg1 vdd1 0 DC {VDD}
+VSSg1 vss1 0 DC {-VDD}
+Vin1 in1 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xg1 in1 out1 vdd1 vss1 inv
+Rw1 out1 l1 {Rwire}
+Cl1 l1 0 {CL}
+Bpg1 pg1 0 V = -(V(vdd1)*I(VDDg1) + V(vss1)*I(VSSg1))
+
+* =====================================================================
+* GATE 2: BINARY NAND  a=+1 const, b: +1 -> -1 -> +1 => out: -1 -> +1 -> -1
+* =====================================================================
+VDDg2 vdd2 0 DC {VDD}
+VSSg2 vss2 0 DC {-VDD}
+Va2 a2 0 DC {VDD}
+Vin2 in2 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xg2 a2 in2 out2 vdd2 vss2 nand2
+Rw2 out2 l2 {Rwire}
+Cl2 l2 0 {CL}
+Bpg2 pg2 0 V = -(V(vdd2)*I(VDDg2) + V(vss2)*I(VSSg2))
+
+* =====================================================================
+* GATE 3: BINARY NOR  a=0 const, b: +1 -> -1 -> +1 => out: -1 -> +1 -> -1
+* =====================================================================
+VDDg3 vdd3 0 DC {VDD}
+VSSg3 vss3 0 DC {-VDD}
+Va3 a3 0 DC {-VDD}
+Vin3 in3 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xg3 a3 in3 out3 vdd3 vss3 nor2
+Rw3 out3 l3 {Rwire}
+Cl3 l3 0 {CL}
+Bpg3 pg3 0 V = -(V(vdd3)*I(VDDg3) + V(vss3)*I(VSSg3))
+
+* =====================================================================
+* GATE 4: dd_not  in: null -> +1 -> null  =>  out: null -> -1 -> null
+* (next-stage diode receiver is the explicit load)
+* =====================================================================
+VDDg4 vdd4 0 DC {VDD}
+VSSg4 vss4 0 DC {-VDD}
+Vin4 in4 0 PULSE(0 {VDD} 100n 0.2n 0.2n 5n 200n)
+Xg4 in4 out4 vdd4 vss4 dd_not
+Rw4 out4 l4 {Rwire}
+Cl4 l4 0 {CL}
+Rterm4 l4 0 {Rterm}
+Xrec4 l4 ra4 rb4 dd_recv          ; next gate's input (passive load)
+Bpg4 pg4 0 V = -(V(vdd4)*I(VDDg4) + V(vss4)*I(VSSg4))
+
+* =====================================================================
+* GATE 5: dd_nand  a=+1 const, b: null -> +1 -> null => out: null -> -1 -> null
+* =====================================================================
+VDDg5 vdd5 0 DC {VDD}
+VSSg5 vss5 0 DC {-VDD}
+Va5 a5 0 DC {VDD}
+Vin5 in5 0 PULSE(0 {VDD} 100n 0.2n 0.2n 5n 200n)
+Xg5 a5 in5 out5 vdd5 vss5 dd_nand
+Rw5 out5 l5 {Rwire}
+Cl5 l5 0 {CL}
+Rterm5 l5 0 {Rterm}
+Xrec5 l5 ra5 rb5 dd_recv
+Bpg5 pg5 0 V = -(V(vdd5)*I(VDDg5) + V(vss5)*I(VSSg5))
+
+* =====================================================================
+* GATE 6: dd_nor  a=-1 const (pull), b: null -> -1 -> null => out: null -> +1 -> null
+* =====================================================================
+VDDg6 vdd6 0 DC {VDD}
+VSSg6 vss6 0 DC {-VDD}
+Va6 a6 0 DC {-VDD}
+Vin6 in6 0 PULSE(0 {-VDD} 100n 0.2n 0.2n 5n 200n)
+Xg6 a6 in6 out6 vdd6 vss6 dd_nor
+Rw6 out6 l6 {Rwire}
+Cl6 l6 0 {CL}
+Rterm6 l6 0 {Rterm}
+Xrec6 l6 ra6 rb6 dd_recv
+Bpg6 pg6 0 V = -(V(vdd6)*I(VDDg6) + V(vss6)*I(VSSg6))
+
+* =====================================================================
+* GATE 7: dd_min  a=+1 const, b: null -> +1 -> null => out: null -> +1 -> null
+* =====================================================================
+VDDg7 vdd7 0 DC {VDD}
+VSSg7 vss7 0 DC {-VDD}
+Va7 a7 0 DC {VDD}
+Vin7 in7 0 PULSE(0 {VDD} 100n 0.2n 0.2n 5n 200n)
+Xg7 a7 in7 out7 vdd7 vss7 dd_min
+Rw7 out7 l7 {Rwire}
+Cl7 l7 0 {CL}
+Rterm7 l7 0 {Rterm}
+Xrec7 l7 ra7 rb7 dd_recv
+Bpg7 pg7 0 V = -(V(vdd7)*I(VDDg7) + V(vss7)*I(VSSg7))
+
+* =====================================================================
+* GATE 8: dd_max  a=null const, b: null -> +1 -> null => out: null -> +1 -> null
+* =====================================================================
+VDDg8 vdd8 0 DC {VDD}
+VSSg8 vss8 0 DC {-VDD}
+Va8 a8 0 DC 0
+Vin8 in8 0 PULSE(0 {VDD} 100n 0.2n 0.2n 5n 200n)
+Xg8 a8 in8 out8 vdd8 vss8 dd_max
+Rw8 out8 l8 {Rwire}
+Cl8 l8 0 {CL}
+Rterm8 l8 0 {Rterm}
+Xrec8 l8 ra8 rb8 dd_recv
+Bpg8 pg8 0 V = -(V(vdd8)*I(VDDg8) + V(vss8)*I(VSSg8))
+
+* =====================================================================
+* SIMULATION + MEASUREMENTS  (full cycle 95..135 ns, quiet 10..85 ns)
+* =====================================================================
+.tran 20p 140n
+
+* --- E_gate: supply energy over one full output cycle (J) ---
+.meas tran egate_1 INTEG V(pg1) FROM={T_C0} TO={T_C1}
+.meas tran egate_2 INTEG V(pg2) FROM={T_C0} TO={T_C1}
+.meas tran egate_3 INTEG V(pg3) FROM={T_C0} TO={T_C1}
+.meas tran egate_4 INTEG V(pg4) FROM={T_C0} TO={T_C1}
+.meas tran egate_5 INTEG V(pg5) FROM={T_C0} TO={T_C1}
+.meas tran egate_6 INTEG V(pg6) FROM={T_C0} TO={T_C1}
+.meas tran egate_7 INTEG V(pg7) FROM={T_C0} TO={T_C1}
+.meas tran egate_8 INTEG V(pg8) FROM={T_C0} TO={T_C1}
+
+* --- per-toggle = full cycle / 2 ---
+.meas tran ept_1 PARAM = 'egate_1/2'
+.meas tran ept_2 PARAM = 'egate_2/2'
+.meas tran ept_3 PARAM = 'egate_3/2'
+.meas tran ept_4 PARAM = 'egate_4/2'
+.meas tran ept_5 PARAM = 'egate_5/2'
+.meas tran ept_6 PARAM = 'egate_6/2'
+.meas tran ept_7 PARAM = 'egate_7/2'
+.meas tran ept_8 PARAM = 'egate_8/2'
+
+* --- truth-table checkpoints ---
+* binary: assert @100n (mid 111n), release @120n (mid 131n)
+* ternary: pulse @100n (mid 103n), null after release @110n
+.meas tran vw_1_r FIND V(l1) AT=111n
+.meas tran vw_1_f FIND V(l1) AT=131n
+.meas tran vw_2_r FIND V(l2) AT=111n
+.meas tran vw_2_f FIND V(l2) AT=131n
+.meas tran vw_3_r FIND V(l3) AT=111n
+.meas tran vw_3_f FIND V(l3) AT=131n
+.meas tran vw_4_r FIND V(l4) AT=103n
+.meas tran vw_4_f FIND V(l4) AT=110n
+.meas tran vw_5_r FIND V(l5) AT=103n
+.meas tran vw_5_f FIND V(l5) AT=110n
+.meas tran vw_6_r FIND V(l6) AT=103n
+.meas tran vw_6_f FIND V(l6) AT=110n
+.meas tran vw_7_r FIND V(l7) AT=103n
+.meas tran vw_7_f FIND V(l7) AT=110n
+.meas tran vw_8_r FIND V(l8) AT=103n
+.meas tran vw_8_f FIND V(l8) AT=110n
+
+* --- next-receiver rail checkpoints (demux resolved, mid-pulse @103n) ---
+.meas tran vrA_4 FIND V(ra4) AT=103n
+.meas tran vrB_4 FIND V(rb4) AT=103n
+.meas tran vrA_5 FIND V(ra5) AT=103n
+.meas tran vrB_5 FIND V(rb5) AT=103n
+.meas tran vrA_6 FIND V(ra6) AT=103n
+.meas tran vrB_6 FIND V(rb6) AT=103n
+.meas tran vrA_7 FIND V(ra7) AT=103n
+.meas tran vrB_7 FIND V(rb7) AT=103n
+.meas tran vrA_8 FIND V(ra8) AT=103n
+.meas tran vrB_8 FIND V(rb8) AT=103n
+
+* --- null-idle (quiet-window) energy: the whole point -- expect ~0 ---
+.meas tran eq_1 INTEG V(pg1) FROM={T_Q0} TO={T_Q1}
+.meas tran eq_2 INTEG V(pg2) FROM={T_Q0} TO={T_Q1}
+.meas tran eq_3 INTEG V(pg3) FROM={T_Q0} TO={T_Q1}
+.meas tran eq_4 INTEG V(pg4) FROM={T_Q0} TO={T_Q1}
+.meas tran eq_5 INTEG V(pg5) FROM={T_Q0} TO={T_Q1}
+.meas tran eq_6 INTEG V(pg6) FROM={T_Q0} TO={T_Q1}
+.meas tran eq_7 INTEG V(pg7) FROM={T_Q0} TO={T_Q1}
+.meas tran eq_8 INTEG V(pg8) FROM={T_Q0} TO={T_Q1}
+
+.end

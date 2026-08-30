@@ -1,0 +1,99 @@
+* =====================================================================
+* _2d_probe2.cir -- width sweep of the push driver at PW=1.0 ns
+* (amplitude axis at the RC floor) and at PW=1.618 ns, to map the
+* achievable rail@eval range for the 2D constellation. W swept via
+* control block. THR=0.10 threshold for the L comparator (fixed).
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param VDDR  = 1.0
+.param W     = 11u
+.param WN    = {W/2}
+.param PW    = 1.0n
+.param WLB   = 300
+.param LEN   = 0.18u
+
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4 KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+.model NMOSDIODEB NMOS(LEVEL=1 VTO=0.30 KP=200u LAMBDA=0.05 GAMMA=0 PHI=0.7 TOX=2n IS=0)
+
+.subckt tcell4 in rA rB rwire=100 cline=1p rload=500 cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+M1  x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1B x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1C x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1D x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M2  rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2B rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2C rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2D rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+.subckt sensamp inP inM clk vddsa out outb
+M1 out  inP cs cs PMOS1 W=1u  L=0.18u
+M2 outb inM cs cs PMOS1 W=1u  L=0.18u
+M5 cs   clk vddsa vddsa PMOS1 W=0.3u L=0.18u
+M3 out  outb 0 0 NMOS1 W=0.5u L=0.18u
+M4 outb out  0 0 NMOS1 W=0.5u L=0.18u
+M6 out  clk  0 0 NMOS1 W=0.5u L=0.18u
+M7 outb clk  0 0 NMOS1 W=0.5u L=0.18u
+CLo  out  0 5f
+CLob outb 0 5f
+.ends
+
+VDD   vdd   0 DC {VDDR}
+VSS   vss   0 DC {-VDDR}
+VDDSA vddsa 0 DC 1.0
+BpSUP pwpSUP 0 V = -(V(vdd)*I(VDD) + V(vss)*I(VSS))
+VthrP thrP 0 DC 0.10
+
+* --- push driver case (PW at 100n), width W swept ---
+MP1 drv1 gP1 vdd vdd PMOS1 W={W} L=0.18u
+MN1 drv1 gN1 vss vss NMOS1 W={WN} L=0.18u
+VgP1 gP1 0 PULSE({VDDR} 0 100n 0.2n 0.2n {PW} 200n)
+VgN1 gN1 0 DC {-VDDR}
+Vs1  drv1 cell1 DC 0
+Xc1  cell1 rA1 rB1 tcell4
+BpG1 pwpG1 0 V = V(gP1)*I(VgP1)
+BqG1 qG1 0 V = I(VgP1)
+Vclk1 clk1 0 PULSE(1 0 101.7n 0.1n 0.1n 1.5n 200n)
+XsaA1 0 rA1 clk1 vddsa outA1 outAb1 sensamp
+XsaL1 thrP rA1 clk1 vddsa outL1 outLb1 sensamp
+BdA1 vdA1 0 V = V(outA1)-V(outAb1)
+BdL1 vdL1 0 V = V(outL1)-V(outLb1)
+
+.tran 20p 110n
+
+.meas tran e1 INTEG V(pwpSUP) FROM=99n TO=107n
+.meas tran l1 MAX V(Xc1.x) FROM=100n TO=103n
+.meas tran r1p MAX V(rA1) FROM=100n TO=103n
+.meas tran r1e FIND V(rA1) AT=101.7n
+.meas tran dA1 FIND V(vdA1) AT=102.7n
+.meas tran dL1 FIND V(vdL1) AT=102.7n
+.meas tran dA1pk MAX V(vdA1) FROM=101.7n TO=103.2n
+.meas tran dL1pk MAX V(vdL1) FROM=101.7n TO=103.2n
+
+.control
+echo "===== PW = 1.0 ns, W sweep ====="
+foreach w 11u 14u 17u 21u 25u
+  alterparam W = $w
+  reset
+  run
+end
+echo "===== PW = 1.618 ns, W sweep ====="
+alterparam PW = 1.618n
+foreach w 3.67u 5u 6.5u 8u 11u
+  alterparam W = $w
+  reset
+  run
+end
+.endc
+
+.end

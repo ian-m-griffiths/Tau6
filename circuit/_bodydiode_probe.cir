@@ -1,0 +1,18 @@
+* Probe: does LEVEL=1 MOS have a conducting bulk diode?
+* PMOS off, drain forced to 0V -> bulk diode forward V = VDD - 0 = 1.0V.
+* If I(Vout) ~ mA, the body diode conducts. If ~0, it does not.
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4 KP=200u LAMBDA=0.05)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05)
+
+VDD vdd 0 DC 1.0
+VIN in  0 DC 1.0          ; PMOS gate at VDD -> off
+VOUT out 0 DC 0.0         ; force drain to 0 (bulk diode forward 1.0 V)
+
+M1 out in vdd vdd PMOS1 W=4u L=0.18u
+M2 out in 0   0   NMOS1 W=2u L=0.18u
+
+.op
+.print op i(vout) i(vdd)
+.end

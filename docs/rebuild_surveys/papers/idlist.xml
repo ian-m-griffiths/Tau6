@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/p+a1j8jHBA0UeWe0F1AShkugO8E</id>
+  <title>arXiv Query: search_query=&amp;id_list=2411.03198,2309.01615,1108.5527&amp;start=0&amp;max_results=10</title>
+  <updated>2026-08-29T07:25:44Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=&amp;start=0&amp;max_results=10&amp;id_list=2411.03198,2309.01615,1108.5527" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>3</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1108.5527v1</id>
+    <title>Balanced ternary addition using a gated silicon nanowire</title>
+    <updated>2011-08-29T12:58:03Z</updated>
+    <link href="https://arxiv.org/abs/1108.5527v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1108.5527v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We demonstrate the proof of principle for a ternary adder using silicon metal-on-insulator single electron transistors (SET). Gate dependent rectifying behavior of a single electron transistor results in a robust three-valued output as a function of the potential of the SET island. Mapping logical, ternary inputs to the three gates controlling the potential of the SET island allows us to perform complex, inherently ternary operations, on a single transistor.</summary>
+    <category term="cond-mat.mes-hall" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2011-08-29T12:58:03Z</published>
+    <arxiv:primary_category term="cond-mat.mes-hall"/>
+    <author>
+      <name>J. A. Mol</name>
+    </author>
+    <author>
+      <name>J. van der Heijden</name>
+    </author>
+    <author>
+      <name>J. Verduijn</name>
+    </author>
+    <author>
+      <name>M. Klein</name>
+    </author>
+    <author>
+      <name>F. Remacle</name>
+    </author>
+    <author>
+      <name>S. Rogge</name>
+    </author>
+    <arxiv:doi>10.1063/1.3669536</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1063/1.3669536" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2411.03198v1</id>
+    <title>Reconfigurable SWCNT ferroelectric field-effect transistor arrays</title>
+    <updated>2024-11-05T15:43:51Z</updated>
+    <link href="https://arxiv.org/abs/2411.03198v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2411.03198v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Reconfigurable devices have garnered significant attention for alleviating the scaling requirements of conventional CMOS technology, as they require fewer components to construct circuits with similar function. Prior works required continuous voltage application for programming gate terminal(s) in addition to the primary gate terminal, which undermines the advantages of reconfigurable devices in realizing compact and power-efficient integrated circuits. Here, we realize reconfigurable devices based on a single-gate field-effect transistor (FET) architecture by integrating semiconducting channels consisting of a monolayer film of highly aligned SWCNTs with a ferroelectric AlScN gate dielectric, all compatible with CMOS back-end-of-line (BEOL) processing. We demonstrated these SWCNT ferroelectric FETs (FeFETs) in a centimeter-scale array (~1 cm^2) comprising ~735 devices, with high spatial uniformity in device characteristics across the array. The devices exhibited ambipolar transfer characteristics with high on-state currents and current on/off ratios exceeding 10^5, demonstrating an excellent balance between electron and hole conduction (~270 μA/μm at a drain voltage of 3 V. When functioning as a non-volatile memory, the SWCNT FeFETs demonstrated large memory windows of 0.26 V/nm and 0.08 V/nm in the hole and electron conduction regions, respectively, combined with excellent retention behavior for up to 10^4 s. Repeated reconfiguration between p-FET and n-FET modes was also enabled by switching the spontaneous polarization in AlScN and operating the transistor within a voltage range below the coercive voltage. We revealed through circuit simulations that reconfigurable SWCNT transistors can realize ternary content-addressable memory (TCAM) with far fewer devices compared to circuits based on silicon CMOS technology or based on resistive non-volatile devices.</summary>
+    <category term="cond-mat.mtrl-sci" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.app-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-11-05T15:43:51Z</published>
+    <arxiv:comment>37 pages, 16 figures (5 main and 11 supplementary figures)</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.mtrl-sci"/>
+    <author>
+      <name>Dongjoon Rhee</name>
+    </author>
+    <author>
+      <name>Kwan-Ho Kim</name>
+    </author>
+    <author>
+      <name>Jeffrey Zheng</name>
+    </author>
+    <author>
+      <name>Seunguk Song</name>
+    </author>
+    <author>
+      <name>Lian-Mao Peng</name>
+    </author>
+    <author>
+      <name>Roy H. Olsson</name>
+    </author>
+    <author>
+      <name>Joohoon Kang</name>
+    </author>
+    <author>
+      <name>Deep Jariwala</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2309.01615v1</id>
+    <title>A balanced Memristor-CMOS ternary logic family and its application</title>
+    <updated>2023-09-04T13:57:51Z</updated>
+    <link href="https://arxiv.org/abs/2309.01615v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2309.01615v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The design of balanced ternary digital logic circuits based on memristors and conventional CMOS devices is proposed. First, balanced ternary minimum gate TMIN, maximum gate TMAX and ternary inverters are systematically designed and verified by simulation, and then logic circuits such as ternary encoders, decoders and multiplexers are designed on this basis. Two different schemes are then used to realize the design of functional combinational logic circuits such as a balanced ternary half adder, multiplier, and numerical comparator. Finally, we report a series of comparisons and analyses of the two design schemes, which provide a reference for subsequent research and development of three-valued logic circuits.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.ET" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-09-04T13:57:51Z</published>
+    <arxiv:comment>15 pages, 30 figures</arxiv:comment>
+    <arxiv:primary_category term="eess.SP"/>
+    <author>
+      <name>Xiao-Yuan Wang</name>
+    </author>
+    <author>
+      <name>Jia-Wei Zhou</name>
+    </author>
+    <author>
+      <name>Chuan-Tao Dong</name>
+    </author>
+    <author>
+      <name>Xin-Hui Chen</name>
+    </author>
+    <author>
+      <name>Sanjoy Kumar Nandi</name>
+    </author>
+    <author>
+      <name>Robert G. Elliman</name>
+    </author>
+    <author>
+      <name>Sung-Mo Kang</name>
+    </author>
+    <author>
+      <name>Herbert Ho-Ching Iu</name>
+    </author>
+  </entry>
+</feed>

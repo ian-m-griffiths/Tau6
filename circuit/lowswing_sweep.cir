@@ -1,0 +1,373 @@
+* LSWSWEEP vd=1.000 mode=FAIR vtd=0.4 wp=11u
+* =====================================================================
+* lowswing_sweep.cir  --  LOW-SWING (PARTIAL-POWERING) SWEEP of the
+* ternary AC-polarity cell, fair-fight honesty rules.
+*
+* The question (Ian's insight): "partially powered interface -- reduce
+* what goes through the bus (low swing), power the receiver locally."
+* Physics: wire energy ~ swing^2 (line charge ~ C*V^2 plus driver channel
+* loss (Vrail-Vline)*I*t), while the receiver must resolve a smaller and
+* smaller differential. The pam4.cir cautionary tale: below some swing the
+* ternary sense amp cannot resolve and a preamp front end is required
+* (receiver cost x3-4). Is there a sweet-spot swing where total energy is
+* minimized, and where is the crossover where wire savings == receiver cost?
+*
+* This file is the MASTER netlist for the sweep. ngspice-44.2 here does
+* NOT support .step (verified), so the sweep is run EXTERNALLY by
+* run_lowswing_sweep.sh: it substitutes the three .param lines below
+* (VDDR / VTD / WP), runs one ngspice -b job per point, and concatenates
+* the per-point logs into lowswing_sweep.log. As shipped, `ngspice -b
+* lowswing_sweep.cir` runs the VDDR=1.0 fair-fight point cleanly (exit 0).
+*
+* HARNESS (one full link per case, 6 cases per point):
+*   Driver: real CMOS push-pull on +VDDR/-VDDR rails (bipolar line),
+*           models NDRV/PDRV (VTO=+/-VTD, KP 200u/100u -- the fair-fight
+*           driver at VTD=0.4; pass 2 lowers VTD for VT-engineered drive).
+*   Wire:   verbatim ternary cell input load -- rwire=100, cline=1p,
+*           rterm=1Meg -- inside tcell4 (UNCHANGED from ternary_fairfight.
+*           cir: N=4 paralleled NMOSDIODEB legs, VTONB=0.30, RLA=RLB=500,
+*           CLA=CLB=0.2p). The 0.2p receiver cap = the cell's rail caps.
+*   Receiver A (SA-only): the ternary fair-fight receiver -- 2x PMOS-input
+*           clocked sense amp (7 MOS each), reading rA vs 0 (push detect)
+*           and rB vs 0 (pull detect). Supply vddsa=1.0 V LOCAL (this is
+*           the "power the receiver locally" part: vddsa never sags with
+*           the bus rail).
+*   Receiver B (preamp+SA): the pam4.cir fix -- clocked PMOS diff-pair
+*           preamp (resistive loads, re-centers the comparison into the
+*           latch's operating region) + the SAME sense amp, reading the
+*           same rA/rB rails. Used where the SA alone cannot resolve.
+*   Null:   driver idle, rails ~0, receiver evaluates (the ~free trit).
+*
+* ENERGY ACCOUNTING (all measured, one window each, per case):
+*   E_drv   = INTEG V(pwpSUP) over the transfer window  = driver supply
+*             energy = line charge + driver channel dissipation
+*             (this is the WIRE/TRANSMISSION bucket).
+*   E_gate  = |Q_gate| x VDDR (gate-charge convention of the fair fight;
+*             Q_gate = INTEG I(VgP|VgN) over the off-edge).
+*   E_rec   = INTEG V(pwpSA) over the eval window       = receiver supply
+*             energy (the INTERFACE bucket). VDDSA is shared; the
+*             per-case window isolates each case's evaluation (idle
+*             receivers precharge with ~0 supply current).
+*   E_trit  = (E_drv+E_gate push + E_drv+E_gate pull + 0 null)/3 + E_rec_avg
+*   pJ/bit  = E_trit / log2(3) = /1.585.
+*   RESOLUTION: latch differentials dA/dB at the demux time; null baseline
+*             is ~+/-4 mV (measured) so <10 mV or wrong sign = FAIL.
+*   PEAK I  = driver supply peak current (MIN I(VDD) push, MAX I(VSS) pull)
+*   di/dt   = MAX ddt(-I(VDD)) / ddt(I(VSS)) over the pulse (A/s).
+*
+* HONESTY NOTES (same idealizations as the fair fight): LEVEL=1 models,
+* no bulk diodes, no device mismatch (so offsets below are latch/settling
+* artifacts, not process mismatch -- a real chip would be worse), no
+* subthreshold leakage (so a low-VT driver below ~0.1 V overdrive is
+* flattered; flag in the verdict).
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+* ------------------------------------------------------------------
+* SWEEP PARAMS (substituted per point by run_lowswing_sweep.sh)
+*   VDDR : driver rail = target swing  (1.0 ... 0.05 V)
+*   VTD  : driver |VTO|  (0.4 = fair-fight devices; 0.1 = VT-engineered)
+*   WP   : driver PMOS width (11u fair-fight; resized in pass 2)
+* ------------------------------------------------------------------
+.param VDDR = 1.0
+.param VTD  = 0.4
+.param WP   = 11u
+.param WN   = {WP/2}
+.param WLB  = 300
+.param LEN  = 0.18u
+.param TEVALB = 2.0n   ; preamp+SA eval (pam4.cir value); SA-only uses 1.0n
+
+* ---------------- models -------------------------------------------
+* Driver devices (VTO parametrized; NDRV/PDRV == NMOS1/PMOS1 at VTD=0.4)
+.model NDRV NMOS(LEVEL=1 VTO={VTD}   KP=200u LAMBDA=0.05 TOX=2n)
+.model PDRV PMOS(LEVEL=1 VTO={-VTD}  KP=100u LAMBDA=0.05 TOX=2n)
+* Receiver devices (VERBATIM fair-fight; identical at every swing)
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+* Cell diode-connected NMOS (verbatim from ternary_fairfight.cir)
+.model NMOSDIODEB NMOS(LEVEL=1 VTO=0.30 KP=200u LAMBDA=0.05 GAMMA=0 PHI=0.7 TOX=2n IS=0)
+
+* ---------------- cell: verbatim tcell4 ----------------------------
+.subckt tcell4 in rA rB rwire=100 cline=1p rload=500 cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+M1  x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1B x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1C x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1D x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M2  rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2B rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2C rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2D rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+* ---------------- REAL RECEIVER: sense amp (verbatim) ---------------
+* PMOS diff pair (M1/M2) reads inP vs inM; PMOS tail (M5, gate=CLK,
+* active low); NMOS cross-coupled loads (M3/M4) regenerate; NMOS
+* precharge (M6/M7, gate=CLK) resets outputs to 0.
+* out = high when inP < inM (PMOS conducts more on the lower input).
+.subckt sensamp inP inM clk vddsa out outb
+M1 out  inP cs cs PMOS1 W=1u  L=0.18u
+M2 outb inM cs cs PMOS1 W=1u  L=0.18u
+M5 cs   clk vddsa vddsa PMOS1 W=0.3u L=0.18u
+M3 out  outb 0 0 NMOS1 W=0.5u L=0.18u
+M4 outb out  0 0 NMOS1 W=0.5u L=0.18u
+M6 out  clk  0 0 NMOS1 W=0.5u L=0.18u
+M7 outb clk  0 0 NMOS1 W=0.5u L=0.18u
+CLo  out  0 5f
+CLob outb 0 5f
+.ends
+
+* ---------------- PREAMP front end (pam4.cir fix, verbatim) ---------
+* Clocked PMOS diff pair with resistive loads; tail gated by clkb
+* (active low). Re-centers a small (rail vs 0) comparison into the SA's
+* operating region and pre-amplifies it by ~gm*R (R=10k).
+* Polarity: inP=line side, inM=thr side -> outP > outM when line < thr;
+* with SA wired inP=outP, inM=outM -> SA out high when line > thr.
+.subckt preamp inP inM clkb vddsa outP outM
+M1 outP inP tp tp PMOS1 W=2u  L=0.18u
+M2 outM inM tp tp PMOS1 W=2u  L=0.18u
+M5 tp   clkb vddsa vddsa PMOS1 W=0.3u L=0.18u
+R1 outP 0 10k
+R2 outM 0 10k
+CLp1 outP 0 10f
+CLp2 outM 0 10f
+.ends
+
+* =====================================================================
+* SHARED SUPPLIES + POWER / di/dt PROBES (windows isolate each case)
+* =====================================================================
+VDD   vdd   0 DC {VDDR}
+VSS   vss   0 DC {-VDDR}
+VDDSA vddsa 0 DC 1.0          ; receiver powered LOCALLY, fixed at 1.0 V
+BpSUP pwpSUP 0 V = -(V(vdd)*I(VDD) + V(vss)*I(VSS))
+BpSA  pwpSA  0 V = -(V(vddsa)*I(VDDSA))
+BdidtP didtP 0 V = -ddt(I(VDD))   ; push: I(VDD) goes negative, -ddt is +max
+BdidtN didtN 0 V =  ddt(I(VSS))   ; pull: I(VSS) goes positive, ddt is +max
+
+* =====================================================================
+* CASE PA: PUSH (+1), CHANNEL A -- SA-ONLY receiver -- at 160 ns
+* =====================================================================
+MPpa drv_pa gP_pa vdd vdd PDRV W={WP} L=0.18u
+MNpa drv_pa gN_pa vss vss NDRV W={WN} L=0.18u
+VgP_pa gP_pa 0 PULSE({VDDR} 0 160n 0.2n 0.2n 1n 200n)  ; PMOS on (gate low)
+VgN_pa gN_pa 0 DC {-VDDR}                              ; NMOS off
+Vs_pa  drv_pa cell_pa DC 0                             ; 0V sense: energy into cell
+Xc_pa  cell_pa rA_pa rB_pa tcell4
+BpL_pa pwpL_pa 0 V = V(cell_pa)*I(Vs_pa)               ; power into the cell
+BpG_pa pwpG_pa 0 V = V(gP_pa)*I(VgP_pa)                ; gate-source power
+BqG_pa qG_pa 0 V = I(VgP_pa)                           ; gate charge probe
+Vclk_pa clk_pa 0 PULSE(1 0 161.4n 0.1n 0.1n 1.0n 200n) ; precharge..eval
+XsaA_pa 0 rA_pa clk_pa vddsa outAp_pa outApb_pa sensamp ; rA > 0 ?
+XsaB_pa rB_pa 0 clk_pa vddsa outBp_pa outBpb_pa sensamp ; rB < 0 ?
+BdA_pa vdA_pa 0 V = V(outAp_pa)-V(outApb_pa)
+BdB_pa vdB_pa 0 V = V(outBp_pa)-V(outBpb_pa)
+
+* =====================================================================
+* CASE NA: PULL (-1), CHANNEL A -- SA-ONLY receiver -- at 180 ns
+* =====================================================================
+MPna drv_na gP_na vdd vdd PDRV W={WP} L=0.18u
+MNna drv_na gN_na vss vss NDRV W={WN} L=0.18u
+VgP_na gP_na 0 DC {VDDR}                               ; PMOS off
+VgN_na gN_na 0 PULSE({-VDDR} 0 180n 0.2n 0.2n 1n 200n) ; NMOS on (gate high)
+Vs_na  drv_na cell_na DC 0
+Xc_na  cell_na rA_na rB_na tcell4
+BpL_na pwpL_na 0 V = V(cell_na)*I(Vs_na)
+BpG_na pwpG_na 0 V = V(gN_na)*I(VgN_na)
+BqG_na qG_na 0 V = I(VgN_na)
+Vclk_na clk_na 0 PULSE(1 0 181.4n 0.1n 0.1n 1.0n 200n)
+XsaA_na 0 rA_na clk_na vddsa outAp_na outApb_na sensamp
+XsaB_na rB_na 0 clk_na vddsa outBp_na outBpb_na sensamp
+BdA_na vdA_na 0 V = V(outAp_na)-V(outApb_na)
+BdB_na vdB_na 0 V = V(outBp_na)-V(outBpb_na)
+
+* =====================================================================
+* CASE PB: PUSH (+1), CHANNEL B -- PREAMP+SA receiver -- at 210 ns
+* =====================================================================
+MPpb drv_pb gP_pb vdd vdd PDRV W={WP} L=0.18u
+MNpb drv_pb gN_pb vss vss NDRV W={WN} L=0.18u
+VgP_pb gP_pb 0 PULSE({VDDR} 0 210n 0.2n 0.2n 1n 200n)
+VgN_pb gN_pb 0 DC {-VDDR}
+Vs_pb  drv_pb cell_pb DC 0
+Xc_pb  cell_pb rA_pb rB_pb tcell4
+BpL_pb pwpL_pb 0 V = V(cell_pb)*I(Vs_pb)
+BpG_pb pwpG_pb 0 V = V(gP_pb)*I(VgP_pb)
+BqG_pb qG_pb 0 V = I(VgP_pb)
+Vclk_pb clk_pb 0 PULSE(1 0 211.4n 0.1n 0.1n {TEVALB} 200n)  ; preamp+SA eval
+Vclkb_pb clkb_pb 0 PULSE(1 0 211.4n 0.1n 0.1n {TEVALB} 200n) ; preamp tail (active low)
+XpaA_pb rA_pb 0    clkb_pb vddsa paA_pb paAb_pb preamp   ; rA > 0 ?
+XsaA_pb paA_pb paAb_pb clk_pb vddsa outAp_pb outApb_pb sensamp
+XpaB_pb 0    rB_pb clkb_pb vddsa paB_pb paBb_pb preamp   ; rB < 0 ? (inputs swapped
+XsaB_pb paB_pb paBb_pb clk_pb vddsa outBp_pb outBpb_pb sensamp ;  so out high when rB<0)
+BdA_pb vdA_pb 0 V = V(outAp_pb)-V(outApb_pb)
+BdB_pb vdB_pb 0 V = V(outBp_pb)-V(outBpb_pb)
+
+* =====================================================================
+* CASE NB: PULL (-1), CHANNEL B -- PREAMP+SA receiver -- at 230 ns
+* =====================================================================
+MPnb drv_nb gP_nb vdd vdd PDRV W={WP} L=0.18u
+MNnb drv_nb gN_nb vss vss NDRV W={WN} L=0.18u
+VgP_nb gP_nb 0 DC {VDDR}
+VgN_nb gN_nb 0 PULSE({-VDDR} 0 230n 0.2n 0.2n 1n 200n)
+Vs_nb  drv_nb cell_nb DC 0
+Xc_nb  cell_nb rA_nb rB_nb tcell4
+BpL_nb pwpL_nb 0 V = V(cell_nb)*I(Vs_nb)
+BpG_nb pwpG_nb 0 V = V(gN_nb)*I(VgN_nb)
+BqG_nb qG_nb 0 V = I(VgN_nb)
+Vclk_nb clk_nb 0 PULSE(1 0 231.4n 0.1n 0.1n {TEVALB} 200n)
+Vclkb_nb clkb_nb 0 PULSE(1 0 231.4n 0.1n 0.1n {TEVALB} 200n)
+XpaA_nb rA_nb 0    clkb_nb vddsa paA_nb paAb_nb preamp
+XsaA_nb paA_nb paAb_nb clk_nb vddsa outAp_nb outApb_nb sensamp
+XpaB_nb 0    rB_nb clkb_nb vddsa paB_nb paBb_nb preamp
+XsaB_nb paB_nb paBb_nb clk_nb vddsa outBp_nb outBpb_nb sensamp
+BdA_nb vdA_nb 0 V = V(outAp_nb)-V(outApb_nb)
+BdB_nb vdB_nb 0 V = V(outBp_nb)-V(outBpb_nb)
+
+* =====================================================================
+* CASE NLA: NULL (0), CHANNEL A -- SA-ONLY receiver -- at 260 ns
+* (driver idle; rails should stay ~0; measures the null receiver cost)
+* =====================================================================
+MPnla drv_nla gP_nla vdd vdd PDRV W={WP} L=0.18u
+MNnla drv_nla gN_nla vss vss NDRV W={WN} L=0.18u
+VgP_nla gP_nla 0 DC {VDDR}
+VgN_nla gN_nla 0 DC {-VDDR}
+Vs_nla  drv_nla cell_nla DC 0
+Xc_nla  cell_nla rA_nla rB_nla tcell4
+BpL_nla pwpL_nla 0 V = V(cell_nla)*I(Vs_nla)
+Vclk_nla clk_nla 0 PULSE(1 0 261.4n 0.1n 0.1n 1.0n 200n)
+XsaA_nla 0 rA_nla clk_nla vddsa outAp_nla outApb_nla sensamp
+XsaB_nla rB_nla 0 clk_nla vddsa outBp_nla outBpb_nla sensamp
+BdA_nla vdA_nla 0 V = V(outAp_nla)-V(outApb_nla)
+BdB_nla vdB_nla 0 V = V(outBp_nla)-V(outBpb_nla)
+
+* =====================================================================
+* CASE NLB: NULL (0), CHANNEL B -- PREAMP+SA receiver -- at 280 ns
+* =====================================================================
+MPnlb drv_nlb gP_nlb vdd vdd PDRV W={WP} L=0.18u
+MNnlb drv_nlb gN_nlb vss vss NDRV W={WN} L=0.18u
+VgP_nlb gP_nlb 0 DC {VDDR}
+VgN_nlb gN_nlb 0 DC {-VDDR}
+Vs_nlb  drv_nlb cell_nlb DC 0
+Xc_nlb  cell_nlb rA_nlb rB_nlb tcell4
+BpL_nlb pwpL_nlb 0 V = V(cell_nlb)*I(Vs_nlb)
+Vclk_nlb clk_nlb 0 PULSE(1 0 281.4n 0.1n 0.1n {TEVALB} 200n)
+Vclkb_nlb clkb_nlb 0 PULSE(1 0 281.4n 0.1n 0.1n {TEVALB} 200n)
+XpaA_nlb rA_nlb 0    clkb_nlb vddsa paA_nlb paAb_nlb preamp
+XsaA_nlb paA_nlb paAb_nlb clk_nlb vddsa outAp_nlb outApb_nlb sensamp
+XpaB_nlb 0    rB_nlb clkb_nlb vddsa paB_nlb paBb_nlb preamp
+XsaB_nlb paB_nlb paBb_nlb clk_nlb vddsa outBp_nlb outBpb_nlb sensamp
+BdA_nlb vdA_nlb 0 V = V(outAp_nlb)-V(outApb_nlb)
+BdB_nlb vdB_nlb 0 V = V(outBp_nlb)-V(outBpb_nlb)
+
+* =====================================================================
+* SIMULATION
+* =====================================================================
+.tran 20p 290n
+
+* =====================================================================
+* MEASUREMENTS -- CASE PA (push, SA-only)
+* =====================================================================
+.meas tran e_drv_pa  INTEG V(pwpSUP) FROM=159n TO=164n
+.meas tran e_line_pa INTEG V(pwpL_pa) FROM=159n TO=164n
+.meas tran qg_pa     INTEG V(qG_pa)  FROM=161.1n TO=162.2n   ; off-edge gate charge
+.meas tran e_rec_pa  INTEG V(pwpSA)  FROM=158n TO=168n
+.meas tran e_pump_pa INTEG V(pwpSUP) FROM=161.1n TO=161.6n   ; turn-off window (negative
+                                                             ; = charge returned to the
+                                                             ; supply via Cgd -- big for
+                                                             ; huge-W low-VT drivers)
+.meas tran lvl_pa    MAX V(cell_pa) FROM=160n TO=162.5n      ; absolute peak (may include
+                                                             ; turn-off injection bump)
+.meas tran lvl_pl_pa MAX V(cell_pa) FROM=160.5n TO=161.1n    ; delivered swing (plateau)
+.meas tran railA_pa  MAX V(rA_pa) FROM=160n TO=162.5n
+.meas tran railA_pl_pa MAX V(rA_pa) FROM=160.5n TO=161.1n
+.meas tran railB_pa  MIN V(rB_pa) FROM=160n TO=162.5n
+.meas tran demA_pa   FIND V(outAp_pa) AT=162.2n
+.meas tran demB_pa   FIND V(outBp_pa) AT=162.2n
+.meas tran dA_pa     FIND V(vdA_pa) AT=162.2n
+.meas tran dB_pa     FIND V(vdB_pa) AT=162.2n
+.meas tran dApk_pa   MAX V(vdA_pa) FROM=161.4n TO=162.4n     ; best latch diff in eval
+.meas tran dBpk_pa   MAX V(vdB_pa) FROM=161.4n TO=162.4n
+.meas tran ipk_pa    MIN I(VDD) FROM=160n TO=162n
+.meas tran didt_pa   MAX V(didtP) FROM=160n TO=160.95n   ; driver turn-on slew only
+
+* -- CASE NA (pull, SA-only) --
+.meas tran e_drv_na  INTEG V(pwpSUP) FROM=179n TO=184n
+.meas tran e_line_na INTEG V(pwpL_na) FROM=179n TO=184n
+.meas tran qg_na     INTEG V(qG_na)  FROM=181.1n TO=182.2n
+.meas tran e_rec_na  INTEG V(pwpSA)  FROM=178n TO=188n
+.meas tran e_pump_na INTEG V(pwpSUP) FROM=181.1n TO=181.6n
+.meas tran lvl_na    MIN V(cell_na) FROM=180n TO=182.5n
+.meas tran lvl_pl_na MIN V(cell_na) FROM=180.5n TO=181.1n
+.meas tran railA_na  MAX V(rA_na) FROM=180n TO=182.5n
+.meas tran railB_na  MIN V(rB_na) FROM=180n TO=182.5n
+.meas tran railB_pl_na MIN V(rB_na) FROM=180.5n TO=181.1n
+.meas tran demA_na   FIND V(outAp_na) AT=182.2n
+.meas tran demB_na   FIND V(outBp_na) AT=182.2n
+.meas tran dA_na     FIND V(vdA_na) AT=182.2n
+.meas tran dB_na     FIND V(vdB_na) AT=182.2n
+.meas tran dApk_na   MAX V(vdA_na) FROM=181.4n TO=182.4n
+.meas tran dBpk_na   MAX V(vdB_na) FROM=181.4n TO=182.4n
+.meas tran ipk_na    MAX I(VSS) FROM=180n TO=182n
+.meas tran didt_na   MAX V(didtN) FROM=180n TO=180.95n
+
+* -- CASE PB (push, preamp+SA) --
+.meas tran e_drv_pb  INTEG V(pwpSUP) FROM=209n TO=214n
+.meas tran e_line_pb INTEG V(pwpL_pb) FROM=209n TO=214n
+.meas tran qg_pb     INTEG V(qG_pb)  FROM=211.1n TO=212.2n
+.meas tran e_rec_pb  INTEG V(pwpSA)  FROM=208n TO=218n
+.meas tran lvl_pb    MAX V(cell_pb) FROM=210n TO=212.5n
+.meas tran railA_pb  MAX V(rA_pb) FROM=210n TO=212.5n
+.meas tran railB_pb  MIN V(rB_pb) FROM=210n TO=212.5n
+.meas tran demA_pb   FIND V(outAp_pb) AT=213.0n
+.meas tran demB_pb   FIND V(outBp_pb) AT=213.0n
+.meas tran dA_pb     FIND V(vdA_pb) AT=213.0n
+.meas tran dB_pb     FIND V(vdB_pb) AT=213.0n
+.meas tran dApk_pb   MAX V(vdA_pb) FROM=211.4n TO=213.4n
+.meas tran dBpk_pb   MAX V(vdB_pb) FROM=211.4n TO=213.4n
+.meas tran ipk_pb    MIN I(VDD) FROM=210n TO=212n
+.meas tran didt_pb   MAX V(didtP) FROM=210n TO=210.95n
+
+* -- CASE NB (pull, preamp+SA) --
+.meas tran e_drv_nb  INTEG V(pwpSUP) FROM=229n TO=234n
+.meas tran e_line_nb INTEG V(pwpL_nb) FROM=229n TO=234n
+.meas tran qg_nb     INTEG V(qG_nb)  FROM=231.1n TO=232.2n
+.meas tran e_rec_nb  INTEG V(pwpSA)  FROM=228n TO=238n
+.meas tran lvl_nb    MIN V(cell_nb) FROM=230n TO=232.5n
+.meas tran railA_nb  MAX V(rA_nb) FROM=230n TO=232.5n
+.meas tran railB_nb  MIN V(rB_nb) FROM=230n TO=232.5n
+.meas tran demA_nb   FIND V(outAp_nb) AT=233.0n
+.meas tran demB_nb   FIND V(outBp_nb) AT=233.0n
+.meas tran dA_nb     FIND V(vdA_nb) AT=233.0n
+.meas tran dB_nb     FIND V(vdB_nb) AT=233.0n
+.meas tran dApk_nb   MAX V(vdA_nb) FROM=231.4n TO=233.4n
+.meas tran dBpk_nb   MAX V(vdB_nb) FROM=231.4n TO=233.4n
+.meas tran ipk_nb    MAX I(VSS) FROM=230n TO=232n
+.meas tran didt_nb   MAX V(didtN) FROM=230n TO=230.95n
+
+* -- CASE NLA (null, SA-only) --
+.meas tran e_drv_nla  INTEG V(pwpSUP) FROM=259n TO=264n
+.meas tran e_rec_nla  INTEG V(pwpSA)  FROM=258n TO=268n
+.meas tran railA_nla  MAX V(rA_nla) FROM=260n TO=266n
+.meas tran railB_nla  MAX V(rB_nla) FROM=260n TO=266n
+.meas tran demA_nla   FIND V(outAp_nla) AT=262.2n
+.meas tran demB_nla   FIND V(outBp_nla) AT=262.2n
+.meas tran dA_nla     FIND V(vdA_nla) AT=262.2n
+.meas tran dB_nla     FIND V(vdB_nla) AT=262.2n
+
+* -- CASE NLB (null, preamp+SA) --
+.meas tran e_drv_nlb  INTEG V(pwpSUP) FROM=279n TO=284n
+.meas tran e_rec_nlb  INTEG V(pwpSA)  FROM=278n TO=288n
+.meas tran railA_nlb  MAX V(rA_nlb) FROM=280n TO=286n
+.meas tran railB_nlb  MAX V(rB_nlb) FROM=280n TO=286n
+.meas tran demA_nlb   FIND V(outAp_nlb) AT=283.0n
+.meas tran demB_nlb   FIND V(outBp_nlb) AT=283.0n
+.meas tran dA_nlb     FIND V(vdA_nlb) AT=283.0n
+.meas tran dB_nlb     FIND V(vdB_nlb) AT=283.0n
+
+.end

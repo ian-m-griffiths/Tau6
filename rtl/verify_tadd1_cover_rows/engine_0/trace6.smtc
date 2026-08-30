@@ -1,0 +1,6 @@
+initial
+
+state 0
+assume (= [a] #b10)
+assume (= [b] #b01)
+assume (= [cin] #b10)

@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/QlUcOc2tykI8O7idFzUTLceLp+A</id>
+  <title>arXiv Query: search_query=all:tunnel OR all:ternary OR all:adder&amp;id_list=&amp;start=0&amp;max_results=8</title>
+  <updated>2026-08-29T07:27:21Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=all:tunnel+OR+(all:ternary+OR+all:adder)&amp;start=0&amp;max_results=8&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>8</opensearch:itemsPerPage>
+  <opensearch:totalResults>32390</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1902.06742v1</id>
+    <title>Applicability of Partial Ternary Full Adder in Ternary Arithmetic Units</title>
+    <updated>2019-02-17T20:34:42Z</updated>
+    <link href="https://arxiv.org/abs/1902.06742v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1902.06742v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper explores whether or not a complete ternary full adder, whose input variables can independently be '0', '1', or '2', is indispensable in the arithmetic blocks of adder, subtractor, and multiplier. Our investigations show that none of the mentioned arithmetic units require a complete ternary full adder. Instead, they can be designed by use of partial ternary full adder, whose input carry never becomes '2'. Furthermore, some new ternary compressors are proposed in this paper without the requirement of complete ternary full adder. The usage of partial ternary full adder can help circuit designers to simplify their designs, especially in transistor level.</summary>
+    <category term="cs.AR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-02-17T20:34:42Z</published>
+    <arxiv:comment>11 pages, 5 figures, 5 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.AR"/>
+    <author>
+      <name>Aida Ghorbani Asibelagh</name>
+    </author>
+    <author>
+      <name>Reza Faghih Mirzaee</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.11684v2</id>
+    <title>DNA Ternary Full Adder</title>
+    <updated>2026-04-27T10:36:09Z</updated>
+    <link href="https://arxiv.org/abs/2603.11684v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.11684v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>As transistor dimensions continue to shrink, binary devices are rapidly approaching their fundamental limits in power density. In response, multi-valued systems have attracted significant attention due to their enhanced information density. Among these, the ternary system stands out as the most practical option, being the closest integer base to (e), which is considered optimal for information efficiency. Despite the intrinsic advantages of DNA nanomaterials, such as programmability, energy efficiency, and massive parallelism, their application in ternary logic remains largely unexplored, particularly in the realm of ternary addition circuits. This gap can be attributed to a fundamental challenge: ternary logic requires circuits capable of recognizing and processing a far larger set of input combinations than binary systems, a task that existing models and techniques often struggle to accomplish. In this work, we propose a novel architecture for a ternary full adder. Our design includes a competitive blocking (CB) circuit that enables the recognition and computation of all possible three-input ternary combinations. Coupled with a dynamic concentration adjustment (CA) strategy, this approach significantly enhances the number of trits that can be processed. Biochemical experiments demonstrate that the CB circuit successfully yields the correct output digits for a ternary full adder, achieving 17-trit ternary addition. To our knowledge, this work represents the first successful DNA-based ternary adder, establishing a new methodological foundation for DNA computing and highlighting its considerable potential for scalable digital information processing.</summary>
+    <category term="q-bio.MN" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-12T08:49:18Z</published>
+    <arxiv:primary_category term="q-bio.MN"/>
+    <author>
+      <name>Enqiang Zhu</name>
+    </author>
+    <author>
+      <name>Peize Qiu</name>
+    </author>
+    <author>
+      <name>Xianhang Luo</name>
+    </author>
+    <author>
+      <name>Chanjuan Liu</name>
+    </author>
+    <author>
+      <name>Jin Xu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1510.07955v1</id>
+    <title>The ternary operations of groupoids</title>
+    <updated>2015-10-12T15:22:45Z</updated>
+    <link href="https://arxiv.org/abs/1510.07955v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1510.07955v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We investigate ternary products of groupoids and prove that there is a one-to-one correspondence between the collection of right modular groupoids with a left identity element l and laterally commutative, l-bi-unital semiheaps. This result is applied to prove that the natural ternary product induced by a right modular groupoid S with left identity is isomorphic to the natural ternary product of a groupoid T if and only if S and T are isomorphic groupoids. Ternary products of other classes of groupoids are also characterised, including the natural and standard ternary products of inverse semigroups. These two classes of ternary products are proved to be varieties of type (3,1,1).</summary>
+    <category term="math.GM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2015-10-12T15:22:45Z</published>
+    <arxiv:comment>The paper is 28 pages, with one table listing the characterisations of various ternary products</arxiv:comment>
+    <arxiv:primary_category term="math.GM"/>
+    <author>
+      <name>R. A. R. Monzo</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2101.01516v1</id>
+    <title>Best CNTFET Ternary Adders?</title>
+    <updated>2021-01-05T14:06:43Z</updated>
+    <link href="https://arxiv.org/abs/2101.01516v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2101.01516v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The MUX implementation of ternary half adders and full adders using predecessor and successor functions lead to the most efficient efficient implementation using the smallest transistor count. These designs are compared with the binary implementation of the corresponding half adders and full adders using the MUX technique or the typical complementary CMOS circuit style. The transistor count ratio between ternary and binary implementations is always greater than the information ratio ($log_2(3)/log_2(2)$ = 1.585) between ternary and binary wires.</summary>
+    <category term="cs.AR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-01-05T14:06:43Z</published>
+    <arxiv:comment>5 pages, 11 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.AR"/>
+    <author>
+      <name>Daniel Etiemble</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1908.07299v1</id>
+    <title>Comparing ternary and binary adders and multipliers</title>
+    <updated>2019-08-20T12:27:06Z</updated>
+    <link href="https://arxiv.org/abs/1908.07299v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1908.07299v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>While many papers have proposed implementations of ternary adders and ternary multipliers, no comparisons have generally been done with the corresponding binary ones. We compare the implementations of binary and ternary adders and multipliers with the same computing capability according to the basic blocks that are 1-bit and 1-trit adders and 1-bit and 1-trit multipliers. Then we compare the complexity of these basic blocks by using the same CNTFET technology to evaluate the overall complexity of N-bit adders and M-trit adders on one side, and NxN bit multipliers and MxM trits multipliers with M = N/IR (IR = log(3)/log(2) is the information ratio). While ternary adders and multipliers have less input and output connections and use less basic building blocks, the complexity of the ternary building blocks is too high and the ternary adders and multipliers cannot compete with the binary ones.</summary>
+    <category term="cs.AR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-08-20T12:27:06Z</published>
+    <arxiv:comment>7 pages, 11 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.AR"/>
+    <author>
+      <name>Daniel Etiemble</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2203.09665v1</id>
+    <title>A Cost-Efficient Look-Up Table Based Binary Coded Decimal Adder Design</title>
+    <updated>2022-03-18T00:21:32Z</updated>
+    <link href="https://arxiv.org/abs/2203.09665v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2203.09665v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The BCD (Binary Coded Decimal) being the more accurate and human-readable representation with ease of conversion, is prevailing in the computing and electronic communication.In this paper, a tree-structured parallel BCD addition algorithm is proposed with the reduced time complexity. BCD adder is more effective with a LUT (Look-Up Table)-based design, due to FPGA (Field Programmable Gate Array) technology's enumerable benefits and applications. A size-minimal and depth-minimal LUT-based BCD adder circuit construction is the main contribution of this paper.</summary>
+    <category term="cs.AR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-03-18T00:21:32Z</published>
+    <arxiv:comment>Sworna, Z.T., Haque, M.U., Babu, H.M.H. and Jamal, L., 2017. A cost-efficient look-up table based binary coded decimal adder design. In IEEE FTC (pp. 874-882)</arxiv:comment>
+    <arxiv:primary_category term="cs.AR"/>
+    <author>
+      <name>Zarrin Tasnim Sworna</name>
+    </author>
+    <author>
+      <name>Mubin Ul Haque</name>
+    </author>
+    <author>
+      <name>Hafiz Md. Hasan Babu</name>
+    </author>
+    <author>
+      <name>Lafifa Jamal</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1701.00307v1</id>
+    <title>High Performance CNFET-based Ternary Full Adders</title>
+    <updated>2017-01-02T02:37:37Z</updated>
+    <link href="https://arxiv.org/abs/1701.00307v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1701.00307v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper investigates the use of carbon nanotube field effect transistors (CNFETs) for the design of ternary full adder cells. The proposed circuits have been designed based on the unique properties of CNFETs such as having desired threshold voltages by adjusting diameter of the CNFETs gate nanotubes. The proposed circuits are examined using HSPICE simulator with the standard 32 nm CNFET technology. The proposed methods are simulated at different conditions such as different supply voltages, different temperature and operational frequencies. Simulation results show that the proposed designs are faster than the state of the art CNFET based ternary full adders.</summary>
+    <category term="cs.ET" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-01-02T02:37:37Z</published>
+    <arxiv:primary_category term="cs.ET"/>
+    <author>
+      <name>Fazel Sharifi</name>
+    </author>
+    <author>
+      <name>Atiyeh Panahi</name>
+    </author>
+    <author>
+      <name>Mohammad Hossein Moaiyeri</name>
+    </author>
+    <author>
+      <name>Keivan Navi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2110.02223v1</id>
+    <title>CNFET-based design of efficient ternary half adder and 1-trit multiplier circuits using dynamic logic</title>
+    <updated>2021-10-05T11:26:06Z</updated>
+    <link href="https://arxiv.org/abs/2110.02223v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2110.02223v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper presents a ternary half adder and a 1-trit multiplier using carbon nanotube transistors. The proposed circuits are designed using pass transistor logic and dynamic logic. Ternary logic uses less connections than binary logic, and less voltage changes are required for the same amount of data transmission. Carbon nanotube transistors have advantages over MOSFETs, such as the same mobility for electrons and holes, the ability to adjust the threshold voltage by changing the nanotube diameter, and less leakage power. The proposed half adder has lower power consumption, delay, and fewer transistors compared to recent ternary half adders that use similar design methods. The proposed 1-trit multiplier also has a lower delay than other designs. Moreover, these advantages are achieved over a wide supply voltage range, operating temperatures, and output loads. The design is also more robust to process variations than the nearest design in terms of PDP.</summary>
+    <category term="cs.ET" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-10-05T11:26:06Z</published>
+    <arxiv:primary_category term="cs.ET"/>
+    <arxiv:journal_ref>Microelectronics Journal, 113, 105105</arxiv:journal_ref>
+    <author>
+      <name>Farzin Mahboob-Sardroudi</name>
+    </author>
+    <author>
+      <name>Mehdi Habibi</name>
+    </author>
+    <author>
+      <name>Mohammad-Hossein Moaiyeri</name>
+    </author>
+    <arxiv:doi>10.1016/j.mejo.2021.105105</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.mejo.2021.105105" title="doi"/>
+  </entry>
+</feed>

@@ -1,0 +1,195 @@
+SBY 22:22:24 [verify_tadd1_prove_smt] Removing directory '/home/ian/dsh/projects/lattice/rtl/verify_tadd1_prove_smt'.
+SBY 22:22:24 [verify_tadd1_prove_pdr] Removing directory '/home/ian/dsh/projects/lattice/rtl/verify_tadd1_prove_pdr'.
+SBY 22:22:24 [verify_tadd1_cover_rows] Removing directory '/home/ian/dsh/projects/lattice/rtl/verify_tadd1_cover_rows'.
+SBY 22:22:24 [verify_tadd1_cover_rows] Copy '/home/ian/dsh/projects/lattice/rtl/trit_functions.vh' to '/home/ian/dsh/projects/lattice/rtl/verify_tadd1_cover_rows/src/trit_functions.vh'.
+SBY 22:22:24 [verify_tadd1_cover_rows] Copy '/home/ian/dsh/projects/lattice/rtl/verify_tadd1.sv' to '/home/ian/dsh/projects/lattice/rtl/verify_tadd1_cover_rows/src/verify_tadd1.sv'.
+SBY 22:22:24 [verify_tadd1_cover_rows] engine_0: smtbmc z3
+SBY 22:22:24 [verify_tadd1_cover_rows] base: starting process "cd verify_tadd1_cover_rows/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY 22:22:24 [verify_tadd1_cover_rows] base: finished (returncode=0)
+SBY 22:22:24 [verify_tadd1_cover_rows] prep: starting process "cd verify_tadd1_cover_rows/model; yosys -ql design_prep.log design_prep.ys"
+SBY 22:22:24 [verify_tadd1_cover_rows] prep: finished (returncode=0)
+SBY 22:22:24 [verify_tadd1_cover_rows] smt2: starting process "cd verify_tadd1_cover_rows/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY 22:22:24 [verify_tadd1_cover_rows] smt2: finished (returncode=0)
+SBY 22:22:24 [verify_tadd1_cover_rows] engine_0: starting process "cd verify_tadd1_cover_rows; yosys-smtbmc -s z3 --presat -c --noprogress -t 1  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2"
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Solver: z3
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_305)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace0.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace0.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace0.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_251)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace1.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace1_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace1.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace1.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_317)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace2.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace2_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace2.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace2.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_197)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace3.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace3_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace3.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace3.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_209)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace4.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace4_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace4.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace4.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_263)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace5.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace5_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace5.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace5.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_335)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace6.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace6_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace6.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace6.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_227)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace7.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace7_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace7.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace7.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_281)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace8.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace8_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace8.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace8.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_299)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace9.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace9_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace9.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace9.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_245)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace10.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace10_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace10.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace10.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_353)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace11.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace11_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace11.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace11.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_341)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace12.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace12_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace12.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace12.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_233)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace13.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace13_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace13.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace13.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_287)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace14.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace14_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace14.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace14.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_215)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace15.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace15_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace15.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace15.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_269)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace16.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace16_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace16.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace16.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_323)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace17.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace17_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace17.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace17.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_329)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace18.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace18_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace18.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace18.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_221)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace19.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace19_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace19.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace19.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_275)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace20.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace20_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace20.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace20.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_257)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace21.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace21_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace21.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace21.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_203)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace22.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace22_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace22.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace22.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_311)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace23.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace23_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace23.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace23.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_239)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace24.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace24_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace24.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace24.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_293)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace25.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace25_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace25.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace25.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Reached cover statement in step 0 at tadd1_verify: verify_tadd1.sv:97.85-98.55 (_witness_.check_cover_verify_tadd1_sv_97_347)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace26.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace26_tb.v
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace26.smtc
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace26.yw
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: ##   0:00:00  Status: passed
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: finished (returncode=0)
+SBY 22:22:25 [verify_tadd1_cover_rows] engine_0: Status returned by engine: pass
+SBY 22:22:25 [verify_tadd1_cover_rows] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 22:22:25 [verify_tadd1_cover_rows] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 22:22:25 [verify_tadd1_cover_rows] summary: engine_0 (smtbmc z3) returned pass
+SBY 22:22:25 [verify_tadd1_cover_rows] summary: cover trace: verify_tadd1_cover_rows/engine_0/trace0.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] summary:   reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_305 at verify_tadd1.sv:97.85-98.55
+SBY 22:22:25 [verify_tadd1_cover_rows] summary: cover trace: verify_tadd1_cover_rows/engine_0/trace1.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] summary:   reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_251 at verify_tadd1.sv:97.85-98.55
+SBY 22:22:25 [verify_tadd1_cover_rows] summary: cover trace: verify_tadd1_cover_rows/engine_0/trace10.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] summary:   reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_245 at verify_tadd1.sv:97.85-98.55
+SBY 22:22:25 [verify_tadd1_cover_rows] summary: cover trace: verify_tadd1_cover_rows/engine_0/trace11.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] summary:   reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_353 at verify_tadd1.sv:97.85-98.55
+SBY 22:22:25 [verify_tadd1_cover_rows] summary: cover trace: verify_tadd1_cover_rows/engine_0/trace12.vcd
+SBY 22:22:25 [verify_tadd1_cover_rows] summary:   reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_341 at verify_tadd1.sv:97.85-98.55
+SBY 22:22:25 [verify_tadd1_cover_rows] summary: and 22 further traces
+SBY 22:22:25 [verify_tadd1_cover_rows] summary: see verify_tadd1_cover_rows/PASS for a complete summary
+SBY 22:22:25 [verify_tadd1_cover_rows] DONE (PASS, rc=0)

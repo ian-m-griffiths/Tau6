@@ -1,0 +1,374 @@
+=========================================================================
+WORD-LEVEL FAIR-FIGHT AREA BENCHMARK  (2026-08-28T23:28Z)
+  6 trits (729 states)  vs  10 bits (1024 states)  — equal state count
+yosys: Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+liberty: rtl/sky130_fd_sc_hd.lib
+cells: rtl/word_fairfight_cells.v  (+ rtl/tmul_opt.v)
+=========================================================================
+
+Normalization: state-pairs = states^2 (2 operands); bits = log2(state-pairs);
+  area/state = area / state-pairs;  area/bit = area / log2(state-pairs).
+
+
+=======================================================================
+DATAPATH: wf_tadd6  (6-trit ripple-carry adder (6 x tadd1))
+-----------------------------------------------------------------------
+9. Printing statistics.
+
+=== wf_tadd6 ===
+
+   Number of wires:                751
+   Number of wire bits:            851
+   Number of public wires:          85
+   Number of public wire bits:     170
+   Number of ports:                  5
+   Number of port bits:             40
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                167
+     sky130_fd_sc_hd__a2111o_1       1
+     sky130_fd_sc_hd__a211o_1        1
+     sky130_fd_sc_hd__a21o_1         1
+     sky130_fd_sc_hd__a21oi_1        7
+     sky130_fd_sc_hd__a22o_1         1
+     sky130_fd_sc_hd__a22oi_1        6
+     sky130_fd_sc_hd__a2bb2oi_1      1
+     sky130_fd_sc_hd__a31o_1         2
+     sky130_fd_sc_hd__a31oi_1        5
+     sky130_fd_sc_hd__a32o_1         1
+     sky130_fd_sc_hd__a32oi_1        3
+     sky130_fd_sc_hd__and2_0         4
+     sky130_fd_sc_hd__and4_1         1
+     sky130_fd_sc_hd__and4b_1        1
+     sky130_fd_sc_hd__clkinv_1       3
+     sky130_fd_sc_hd__lpflow_inputiso1p_1      8
+     sky130_fd_sc_hd__mux2_1         1
+     sky130_fd_sc_hd__nand2_1       25
+     sky130_fd_sc_hd__nand2b_1       6
+     sky130_fd_sc_hd__nand3_1       11
+     sky130_fd_sc_hd__nand4_1        4
+     sky130_fd_sc_hd__nor2_1        24
+     sky130_fd_sc_hd__nor2b_1        1
+     sky130_fd_sc_hd__nor3_1         6
+     sky130_fd_sc_hd__nor3b_1        4
+     sky130_fd_sc_hd__o2111ai_1      2
+     sky130_fd_sc_hd__o211ai_1       4
+     sky130_fd_sc_hd__o21a_1         1
+     sky130_fd_sc_hd__o21ai_0        6
+     sky130_fd_sc_hd__o22a_1         2
+     sky130_fd_sc_hd__o22ai_1        7
+     sky130_fd_sc_hd__o31a_1         3
+     sky130_fd_sc_hd__o31ai_1        8
+     sky130_fd_sc_hd__or3_1          4
+     sky130_fd_sc_hd__xor2_1         2
+
+   Chip area for module '\wf_tadd6': 969.680000
+     of which used for sequential elements: 0.000000 (0.00%)
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: a6e476c448, CPU: user 0.80s system 0.04s, MEM: 61.11 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 51% 4x read_verilog (0 sec), 30% 1x abc (0 sec), ...
+-----------------------------------------------------------------------
+ROW: wf_tadd6	969.680000	167	531441	19.019550	0.001824624	50.983330
+
+=======================================================================
+DATAPATH: wf_badd10  (10-bit ripple-carry adder (10 x binary FA))
+-----------------------------------------------------------------------
+9. Printing statistics.
+
+=== wf_badd10 ===
+
+   Number of wires:                165
+   Number of wire bits:            201
+   Number of public wires:          56
+   Number of public wire bits:      92
+   Number of ports:                  5
+   Number of port bits:             32
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 48
+     $scopeinfo                     10
+     sky130_fd_sc_hd__a21oi_1        1
+     sky130_fd_sc_hd__maj3_1        10
+     sky130_fd_sc_hd__nand3_1        9
+     sky130_fd_sc_hd__nor3_1         9
+     sky130_fd_sc_hd__o21ai_0        8
+     sky130_fd_sc_hd__xor3_1         1
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\wf_badd10': 258.998400
+     of which used for sequential elements: 0.000000 (0.00%)
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: e133035ba9, CPU: user 0.77s system 0.04s, MEM: 61.19 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 60% 4x read_verilog (0 sec), 25% 1x abc (0 sec), ...
+-----------------------------------------------------------------------
+ROW: wf_badd10	258.998400	48	1048576	20.000000	0.000247000	12.949920
+
+=======================================================================
+DATAPATH: wf_tmul6  (6-trit multiplier (tmul_trits_opt, Karatsuba))
+-----------------------------------------------------------------------
+9. Printing statistics.
+
+=== wf_tmul6 ===
+
+   Number of wires:               8203
+   Number of wire bits:          10244
+   Number of public wires:        1816
+   Number of public wire bits:    3510
+   Number of ports:                  3
+   Number of port bits:             48
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               1096
+     $scopeinfo                     10
+     sky130_fd_sc_hd__a2111o_1       7
+     sky130_fd_sc_hd__a2111oi_0     24
+     sky130_fd_sc_hd__a211o_1       14
+     sky130_fd_sc_hd__a211oi_1      19
+     sky130_fd_sc_hd__a21boi_0       8
+     sky130_fd_sc_hd__a21o_1        12
+     sky130_fd_sc_hd__a21oi_1       76
+     sky130_fd_sc_hd__a221oi_1       6
+     sky130_fd_sc_hd__a222oi_1       1
+     sky130_fd_sc_hd__a22o_1        28
+     sky130_fd_sc_hd__a22oi_1       44
+     sky130_fd_sc_hd__a2bb2oi_1      4
+     sky130_fd_sc_hd__a311o_1        2
+     sky130_fd_sc_hd__a311oi_1       6
+     sky130_fd_sc_hd__a31o_1         1
+     sky130_fd_sc_hd__a31oi_1       12
+     sky130_fd_sc_hd__a32o_1         6
+     sky130_fd_sc_hd__a32oi_1        7
+     sky130_fd_sc_hd__a41o_1         1
+     sky130_fd_sc_hd__and2_0        23
+     sky130_fd_sc_hd__and3_1        17
+     sky130_fd_sc_hd__and4_1         7
+     sky130_fd_sc_hd__clkinv_1       8
+     sky130_fd_sc_hd__lpflow_inputiso1p_1     29
+     sky130_fd_sc_hd__lpflow_isobufsrc_1      7
+     sky130_fd_sc_hd__maj3_1         2
+     sky130_fd_sc_hd__mux2i_1        3
+     sky130_fd_sc_hd__nand2_1      126
+     sky130_fd_sc_hd__nand2b_1      17
+     sky130_fd_sc_hd__nand3_1       47
+     sky130_fd_sc_hd__nand3b_1       3
+     sky130_fd_sc_hd__nand4_1       19
+     sky130_fd_sc_hd__nand4b_1       2
+     sky130_fd_sc_hd__nand4bb_1      4
+     sky130_fd_sc_hd__nor2_1       123
+     sky130_fd_sc_hd__nor2b_1        2
+     sky130_fd_sc_hd__nor3_1        45
+     sky130_fd_sc_hd__nor3b_1        6
+     sky130_fd_sc_hd__nor4_1        32
+     sky130_fd_sc_hd__nor4b_1        2
+     sky130_fd_sc_hd__nor4bb_1       4
+     sky130_fd_sc_hd__o2111a_1       7
+     sky130_fd_sc_hd__o2111ai_1     12
+     sky130_fd_sc_hd__o211a_1        4
+     sky130_fd_sc_hd__o211ai_1      14
+     sky130_fd_sc_hd__o21a_1         9
+     sky130_fd_sc_hd__o21ai_0       82
+     sky130_fd_sc_hd__o21ba_1        1
+     sky130_fd_sc_hd__o21bai_1       2
+     sky130_fd_sc_hd__o221ai_1       2
+     sky130_fd_sc_hd__o22a_1        19
+     sky130_fd_sc_hd__o22ai_1       52
+     sky130_fd_sc_hd__o2bb2ai_1      4
+     sky130_fd_sc_hd__o311a_1        1
+     sky130_fd_sc_hd__o311ai_0       2
+     sky130_fd_sc_hd__o31a_1         5
+     sky130_fd_sc_hd__o31ai_1       17
+     sky130_fd_sc_hd__o32a_1         1
+     sky130_fd_sc_hd__o32ai_1        7
+     sky130_fd_sc_hd__o41a_1         1
+     sky130_fd_sc_hd__o41ai_1        4
+     sky130_fd_sc_hd__or3_1         19
+     sky130_fd_sc_hd__or3b_1         1
+     sky130_fd_sc_hd__or4_1          8
+     sky130_fd_sc_hd__or4b_1         2
+     sky130_fd_sc_hd__xnor2_1        1
+     sky130_fd_sc_hd__xor2_1         3
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\wf_tmul6': 6618.848000
+     of which used for sequential elements: 0.000000 (0.00%)
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: a3ffc5c66b, CPU: user 1.96s system 0.07s, MEM: 78.99 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 56% 1x abc (2 sec), 13% 4x read_verilog (0 sec), ...
+-----------------------------------------------------------------------
+ROW: wf_tmul6	6618.848000	1096	531441	19.019550	0.012454530	348.002345
+
+=======================================================================
+DATAPATH: wf_tmul6_sa  (6-trit multiplier (tmul_sa, plain shift-add))
+-----------------------------------------------------------------------
+9. Printing statistics.
+
+=== wf_tmul6_sa ===
+
+   Number of wires:               4305
+   Number of wire bits:           5066
+   Number of public wires:        1097
+   Number of public wire bits:    1606
+   Number of ports:                  3
+   Number of port bits:             48
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                855
+     $scopeinfo                      1
+     sky130_fd_sc_hd__a2111o_1       1
+     sky130_fd_sc_hd__a2111oi_0      5
+     sky130_fd_sc_hd__a211o_1        4
+     sky130_fd_sc_hd__a211oi_1      17
+     sky130_fd_sc_hd__a21bo_1        1
+     sky130_fd_sc_hd__a21boi_0       3
+     sky130_fd_sc_hd__a21o_1         7
+     sky130_fd_sc_hd__a21oi_1       36
+     sky130_fd_sc_hd__a221o_1        3
+     sky130_fd_sc_hd__a221oi_1       3
+     sky130_fd_sc_hd__a222oi_1       1
+     sky130_fd_sc_hd__a22o_1        48
+     sky130_fd_sc_hd__a22oi_1       69
+     sky130_fd_sc_hd__a2bb2oi_1      4
+     sky130_fd_sc_hd__a311o_1        3
+     sky130_fd_sc_hd__a311oi_1       5
+     sky130_fd_sc_hd__a31o_1         6
+     sky130_fd_sc_hd__a31oi_1       29
+     sky130_fd_sc_hd__a32o_1         3
+     sky130_fd_sc_hd__a32oi_1        2
+     sky130_fd_sc_hd__a41o_1         1
+     sky130_fd_sc_hd__a41oi_1        5
+     sky130_fd_sc_hd__and2_0        14
+     sky130_fd_sc_hd__and3_1        15
+     sky130_fd_sc_hd__and3b_1        2
+     sky130_fd_sc_hd__and4_1         8
+     sky130_fd_sc_hd__and4b_1        1
+     sky130_fd_sc_hd__clkinv_1       4
+     sky130_fd_sc_hd__lpflow_inputiso1p_1     13
+     sky130_fd_sc_hd__lpflow_isobufsrc_1      4
+     sky130_fd_sc_hd__maj3_1         2
+     sky130_fd_sc_hd__mux2_1         1
+     sky130_fd_sc_hd__mux2i_1        2
+     sky130_fd_sc_hd__nand2_1       74
+     sky130_fd_sc_hd__nand2b_1       3
+     sky130_fd_sc_hd__nand3_1       45
+     sky130_fd_sc_hd__nand3b_1       4
+     sky130_fd_sc_hd__nand4_1       27
+     sky130_fd_sc_hd__nand4b_1       2
+     sky130_fd_sc_hd__nor2_1        73
+     sky130_fd_sc_hd__nor2b_1        2
+     sky130_fd_sc_hd__nor3_1        43
+     sky130_fd_sc_hd__nor3b_1        2
+     sky130_fd_sc_hd__nor4_1        35
+     sky130_fd_sc_hd__nor4b_1        4
+     sky130_fd_sc_hd__o2111a_1       4
+     sky130_fd_sc_hd__o2111ai_1      8
+     sky130_fd_sc_hd__o211a_1        6
+     sky130_fd_sc_hd__o211ai_1      17
+     sky130_fd_sc_hd__o21a_1        10
+     sky130_fd_sc_hd__o21ai_0       48
+     sky130_fd_sc_hd__o21ba_1        1
+     sky130_fd_sc_hd__o221a_1        1
+     sky130_fd_sc_hd__o22a_1         6
+     sky130_fd_sc_hd__o22ai_1       21
+     sky130_fd_sc_hd__o2bb2a_1       1
+     sky130_fd_sc_hd__o2bb2ai_1      5
+     sky130_fd_sc_hd__o311a_1        3
+     sky130_fd_sc_hd__o311ai_0       1
+     sky130_fd_sc_hd__o31a_1         4
+     sky130_fd_sc_hd__o31ai_1       30
+     sky130_fd_sc_hd__o32a_1         1
+     sky130_fd_sc_hd__o32ai_1        7
+     sky130_fd_sc_hd__o41a_1         3
+     sky130_fd_sc_hd__o41ai_1        7
+     sky130_fd_sc_hd__or3_1         19
+     sky130_fd_sc_hd__or4_1         10
+     sky130_fd_sc_hd__xnor2_1        5
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\wf_tmul6_sa': 5472.748800
+     of which used for sequential elements: 0.000000 (0.00%)
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: 74314397cd, CPU: user 2.03s system 0.07s, MEM: 90.95 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 36% 1x abc (1 sec), 18% 1x hierarchy (0 sec), ...
+-----------------------------------------------------------------------
+ROW: wf_tmul6_sa	5472.748800	855	531441	19.019550	0.010297942	287.743338
+
+=======================================================================
+DATAPATH: wf_bmul10  (10-bit binary shift-add multiplier)
+-----------------------------------------------------------------------
+9. Printing statistics.
+
+=== wf_bmul10 ===
+
+   Number of wires:               1238
+   Number of wire bits:          15455
+   Number of public wires:           6
+   Number of public wire bits:     102
+   Number of ports:                  3
+   Number of port bits:             40
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                367
+     sky130_fd_sc_hd__a2111oi_0      1
+     sky130_fd_sc_hd__a21boi_0       2
+     sky130_fd_sc_hd__a21o_1         2
+     sky130_fd_sc_hd__a21oi_1        4
+     sky130_fd_sc_hd__a22o_1         2
+     sky130_fd_sc_hd__a22oi_1        4
+     sky130_fd_sc_hd__and2_0        14
+     sky130_fd_sc_hd__and3_1         2
+     sky130_fd_sc_hd__and4_1         2
+     sky130_fd_sc_hd__clkinv_1      37
+     sky130_fd_sc_hd__lpflow_inputiso1p_1      3
+     sky130_fd_sc_hd__lpflow_isobufsrc_1      2
+     sky130_fd_sc_hd__maj3_1        74
+     sky130_fd_sc_hd__nand2_1       81
+     sky130_fd_sc_hd__nand3_1        2
+     sky130_fd_sc_hd__nand4_1        4
+     sky130_fd_sc_hd__nor2_1        11
+     sky130_fd_sc_hd__o211ai_1       1
+     sky130_fd_sc_hd__o21ai_0        5
+     sky130_fd_sc_hd__o22ai_1        1
+     sky130_fd_sc_hd__or3_1          2
+     sky130_fd_sc_hd__xnor2_1       35
+     sky130_fd_sc_hd__xnor3_1       40
+     sky130_fd_sc_hd__xor2_1        19
+     sky130_fd_sc_hd__xor3_1        17
+
+   Chip area for module '\wf_bmul10': 3344.457600
+     of which used for sequential elements: 0.000000 (0.00%)
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: 71e2693090, CPU: user 0.80s system 0.04s, MEM: 61.52 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 43% 4x read_verilog (0 sec), 42% 1x abc (0 sec), ...
+-----------------------------------------------------------------------
+ROW: wf_bmul10	3344.457600	367	1048576	20.000000	0.003189523	167.222880
+
+=========================================================================
+END OF LOG
+wf_tadd6       ternary        167      969.68       531441     19.020      50.983330
+      area/state = 0.001824624 um2 per input state-pair
+wf_badd10      binary          48      259.00      1048576     20.000      12.949920
+      area/state = 0.000247000 um2 per input state-pair
+wf_tmul6       ternary       1096     6618.85       531441     19.020     348.002345
+      area/state = 0.012454530 um2 per input state-pair
+wf_tmul6_sa    ternary        855     5472.75       531441     19.020     287.743338
+      area/state = 0.010297942 um2 per input state-pair
+wf_bmul10      binary         367     3344.46      1048576     20.000     167.222880
+      area/state = 0.003189523 um2 per input state-pair

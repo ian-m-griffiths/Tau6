@@ -1,0 +1,8 @@
+# running in verify_tadd1_cover_rows/src/
+read_verilog -sv verify_tadd1.sv
+prep -top tadd1_verify
+
+hierarchy -smtcheck
+rename -witness
+write_jny -no-connections ../model/design.json
+write_rtlil ../model/design.il

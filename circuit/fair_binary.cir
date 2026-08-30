@@ -1,0 +1,287 @@
+* =====================================================================
+* fair_binary.cir  --  FAIR single-ended binary controls for the "Nx vs
+* binary" leaderboard.  Re-measures binary at its NATURAL swing:
+*
+*    single-ended  0 -> VDD  (1 V swing),  NOT  +/-1 V bipolar (2 V swing).
+*
+* WHY (meta_assumptions.md A2 / test_suite_spec.md TODO): every "Nx vs
+* binary" number in ENERGY_RESULTS.md is against a binary reference that
+* is either (a) a 2-V *bipolar* link/gate ("share the rails", generous to
+* ternary) or (b) a 1.5 pF load when the ternary line is ~1 pF.  Binary's
+* natural CMOS swing is 0->VDD (single rail), so this file re-baselines it.
+*
+* WHAT THIS FILE MEASURES (all ngspice -b, real driver, no ideal sources):
+*   SECTION 1 -- single-ended binary TRANSPORT link (the "vs binary" for
+*                lowswing 0.092 / lowswing_resonant 0.081 pJ/bit):
+*                CMOS inverter 0->VDD -> rwire=100 -> cline=1p (+10f next
+*                gate).  Binary needs NO clocked receiver (the next gate IS
+*                the receiver), so there is no E_rec tax -- the honest
+*                contrast with ternary's 2 sense amps.
+*                Case BT1: VDD=1.00 V (natural full swing)
+*                Case BT2: VDD=0.65 V (the low-swing sweet spot, reference)
+*   SECTION 2 -- single-ended binary GATES (the "vs binary" for diode_gates
+*                / polar_gates): NOT/NAND/NOR on 0->1 V rails, same load
+*                (Rw=100, CL=10f).  Per-toggle = full-cycle / 2.
+*   SECTION 3 -- ternary diode-direction gates at the FULL-SWING +1<->-1
+*                toggle (diode_gates.cir only measured the cheapest
+*                null<->+1 toggle).  Same subckts, verbatim.
+*
+* CONVENTION (carried from binary_baseline.cir / diode_gates.cir):
+*   E_supply = INTEG -(V(vdd)*I(VDD) + V(vss)*I(VSS)) over the full cycle.
+*   per-bit (transport)   = full-cycle / 2   (1 bit = 1 transition)
+*   per-toggle (gates)    = full-cycle / 2   (1 cycle = 2 toggles)
+*   Load: transport rwire=100/cline=1p (the tcell4 wire); gates Rw=100/
+*         CL=10f (one next-gate input), verbatim diode_gates.cir.
+*   LEVEL=1, no body diodes, no mismatch (same caveat class as the corpus).
+*
+* MEASURED (ngspice 44.2, see fair_binary.log):
+*   SECTION 1 (transport, per-bit):
+*     BT1 (0->1 V)   : E_bit = 0.512 pJ  (natural binary, same wire)
+*     BT2 (0->0.65 V): E_bit = 0.216 pJ  (matched low-swing binary)
+*   SECTION 2 (binary gates, single-ended, per-toggle):
+*     NOT 6.94 fJ | NAND 11.36 fJ | NOR 8.65 fJ  (~7.5x CHEAPER than the
+*     +/-1 V bipolar numbers in diode_gates.cir: 54.0 / 79.3 / 63.5 fJ)
+*   SECTION 3 (ternary diode gates, FULL-SWING +1<->-1, per-toggle):
+*     dd_not 368.7 fJ | dd_nand 433.8 fJ | dd_nor 410.8 fJ  (~6.8x the
+*     null<->+1 toggle: 54.2 / 60.8 / 58.6 fJ -- the dead-zone crowbar)
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param VDD   = 1.0
+.param VDDS  = 0.65         ; low-swing binary reference
+.param Rwire = 100
+.param CLgate= 10f          ; one next-gate input (gate load)
+.param Cline = 1p           ; transport line cap (tcell4 cline)
+.param Rterm = 100k         ; null-return termination (ternary polar wires)
+
+* ---------------- models (verbatim from the corpus) --------------------
+* standard CMOS: binary controls + output driver (VTO=+/-0.4)
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+* elevated-Vt dead-zone devices for the diode-direction gates (VTO=+/-1.4)
+.model N_HI  NMOS(LEVEL=1 VTO=1.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model P_HI  PMOS(LEVEL=1 VTO=-1.4 KP=100u LAMBDA=0.05 TOX=2n)
+* rectifier diode (Schottky-ish, low forward drop; verbatim diode_gates.cir)
+.model DD D (IS=1e-9 RS=200 CJO=2f TT=1p N=1.05)
+
+* =====================================================================
+* SECTION 1: single-ended binary TRANSPORT link
+*   Driver: CMOS inverter (WP=11u, WN=5.5u -- the ternary fair-fight
+*   operating-point driver), rails 0..VDD.  Wire rwire=100/cline=1p, the
+*   SAME wire as tcell4 (the lowswing_sweep champion's cell).  A 10f cap
+*   models the next gate's input (binary's free "receiver").  NO clocked
+*   sense amp: binary's next inverter IS the receiver, contributing only
+*   gate capacitance (already in the load).  This is the honest contrast
+*   with ternary's two locally-powered sense amps (E_rec ~0.05 pJ/trit).
+* =====================================================================
+
+* ---------- Case BT1: VDD = 1.00 V (natural single-ended full swing) ---
+VDD_bt1 vdd_bt1 0 DC {VDD}
+Vin_bt1 in_bt1 0 PULSE(0 {VDD} 5n 0.2n 0.2n 15n 40n)
+MP_bt1 out_bt1 in_bt1 vdd_bt1 vdd_bt1 PMOS1 W=11u L=0.18u
+MN_bt1 out_bt1 in_bt1 0 0 NMOS1 W=5.5u L=0.18u
+Rw_bt1 out_bt1 line_bt1 {Rwire}
+Cline_bt1 line_bt1 0 {Cline}
+Cnext_bt1 line_bt1 0 {CLgate}
+Bp_bt1 pw_bt1 0 V = -(V(vdd_bt1)*I(VDD_bt1))
+
+* ---------- Case BT2: VDD = 0.65 V (matched low-swing reference) -------
+VDD_bt2 vdd_bt2 0 DC {VDDS}
+Vin_bt2 in_bt2 0 PULSE(0 {VDDS} 5n 0.2n 0.2n 15n 40n)
+MP_bt2 out_bt2 in_bt2 vdd_bt2 vdd_bt2 PMOS1 W=11u L=0.18u
+MN_bt2 out_bt2 in_bt2 0 0 NMOS1 W=5.5u L=0.18u
+Rw_bt2 out_bt2 line_bt2 {Rwire}
+Cline_bt2 line_bt2 0 {Cline}
+Cnext_bt2 line_bt2 0 {CLgate}
+Bp_bt2 pw_bt2 0 V = -(V(vdd_bt2)*I(VDD_bt2))
+
+* =====================================================================
+* SECTION 2: single-ended binary GATES (0 -> 1 V)
+*   Verbatim diode_gates.cir primitives (inv/nand2/nor2), but on a SINGLE
+*   rail vdd=+1.0 with vss=0 (ground).  Input swings 0<->1 (1 V swing),
+*   NOT the +/-1 V (2 V swing) of diode_gates.cir.  Load Rw=100/CL=10f.
+* =====================================================================
+
+.subckt inv in out vdd vss
+Mp out in vdd vdd PMOS1 W=4u  L=0.18u
+Mn out in vss vss NMOS1 W=2u  L=0.18u
+.ends
+
+.subckt nand2 a b out vdd vss
+Mp1 out a vdd vdd PMOS1 W=4u  L=0.18u
+Mp2 out b vdd vdd PMOS1 W=4u  L=0.18u
+Mn1 out a mid vss NMOS1 W=4u  L=0.18u
+Mn2 mid b vss vss NMOS1 W=4u  L=0.18u
+Cmid mid 0 1f
+.ends
+
+.subckt nor2 a b out vdd vss
+Mp1 mid a vdd vdd PMOS1 W=8u  L=0.18u
+Mp2 out b mid vdd PMOS1 W=8u  L=0.18u
+Mn1 out a vss vss NMOS1 W=2u  L=0.18u
+Mn2 out b vss vss NMOS1 W=2u  L=0.18u
+Cmid mid 0 1f
+.ends
+
+* ---------- GATE 1: binary NOT, 0->1->0 (single-ended) -----------------
+VDDg1 vdd1 0 DC {VDD}
+VSSg1 vss1 0 DC 0.0
+Vin1 in1 0 PULSE(0 {VDD} 100n 0.2n 0.2n 20n 200n)
+Xg1 in1 out1 vdd1 vss1 inv
+Rw1 out1 l1 {Rwire}
+Cl1 l1 0 {CLgate}
+Bpg1 pg1 0 V = -(V(vdd1)*I(VDDg1) + V(vss1)*I(VSSg1))
+
+* ---------- GATE 2: binary NAND  a=1 const, b: 0->1->0 -----------------
+VDDg2 vdd2 0 DC {VDD}
+VSSg2 vss2 0 DC 0.0
+Va2 a2 0 DC {VDD}
+Vin2 in2 0 PULSE(0 {VDD} 100n 0.2n 0.2n 20n 200n)
+Xg2 a2 in2 out2 vdd2 vss2 nand2
+Rw2 out2 l2 {Rwire}
+Cl2 l2 0 {CLgate}
+Bpg2 pg2 0 V = -(V(vdd2)*I(VDDg2) + V(vss2)*I(VSSg2))
+
+* ---------- GATE 3: binary NOR  a=0 const, b: 0->1->0 ------------------
+VDDg3 vdd3 0 DC {VDD}
+VSSg3 vss3 0 DC 0.0
+Va3 a3 0 DC 0.0
+Vin3 in3 0 PULSE(0 {VDD} 100n 0.2n 0.2n 20n 200n)
+Xg3 a3 in3 out3 vdd3 vss3 nor2
+Rw3 out3 l3 {Rwire}
+Cl3 l3 0 {CLgate}
+Bpg3 pg3 0 V = -(V(vdd3)*I(VDDg3) + V(vss3)*I(VSSg3))
+
+* =====================================================================
+* SECTION 3: ternary diode-direction gates, FULL-SWING +1 <-> -1 toggle
+*   Verbatim diode_gates.cir subckts (dd_recv/dd_not/dd_nand/dd_nor).
+*   Input swings +1 <-> -1 (the EXPENSIVE toggle; diode_gates.cir only
+*   measured null<->+1).  Rails +/-VDD = +/-1.0 V.  Load Rw=100/CL=10f +
+*   Rterm=100k + next-stage diode receiver (passive), verbatim.
+* =====================================================================
+
+.subckt dd_recv win rA rB
+D1 win rA DD
+D2 rB win DD
+RkA rA 0 100k
+RkB rB 0 100k
+CkA rA 0 2f
+CkB rB 0 2f
+.ends
+
+.subckt dd_not win wout vdd vss
+Xr win ra rb dd_recv
+Mp wout rb vdd vdd P_HI W=4u L=0.18u
+Mn wout ra vss vss N_HI W=4u L=0.18u
+.ends
+
+.subckt dd_nand wa wb wout vdd vss
+Xra wa raa rba dd_recv
+Xrb wb rab rbb dd_recv
+MpA wout rba vdd vdd P_HI W=4u L=0.18u
+MpB wout rbb vdd vdd P_HI W=4u L=0.18u
+MnA mid raa vss vss N_HI W=8u L=0.18u
+MnB wout rab mid vss N_HI W=8u L=0.18u
+Cmid mid 0 1f
+.ends
+
+.subckt dd_nor wa wb wout vdd vss
+Xra wa raa rba dd_recv
+Xrb wb rab rbb dd_recv
+MpA midp rba vdd vdd P_HI W=8u L=0.18u
+MpB wout rbb midp vdd P_HI W=8u L=0.18u
+Cmidp midp 0 1f
+MnA wout raa vss vss N_HI W=4u L=0.18u
+MnB wout rab vss vss N_HI W=4u L=0.18u
+.ends
+
+* ---------- GATE 4: dd_not, +1 -> -1 -> +1 (full swing) ----------------
+VDDg4 vdd4 0 DC {VDD}
+VSSg4 vss4 0 DC {-VDD}
+Vin4 in4 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xg4 in4 out4 vdd4 vss4 dd_not
+Rw4 out4 l4 {Rwire}
+Cl4 l4 0 {CLgate}
+Rterm4 l4 0 {Rterm}
+Xrec4 l4 ra4 rb4 dd_recv
+Bpg4 pg4 0 V = -(V(vdd4)*I(VDDg4) + V(vss4)*I(VSSg4))
+
+* ---------- GATE 5: dd_nand  a=+1 const, b: +1 -> -1 -> +1 -------------
+VDDg5 vdd5 0 DC {VDD}
+VSSg5 vss5 0 DC {-VDD}
+Va5 a5 0 DC {VDD}
+Vin5 in5 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xg5 a5 in5 out5 vdd5 vss5 dd_nand
+Rw5 out5 l5 {Rwire}
+Cl5 l5 0 {CLgate}
+Rterm5 l5 0 {Rterm}
+Xrec5 l5 ra5 rb5 dd_recv
+Bpg5 pg5 0 V = -(V(vdd5)*I(VDDg5) + V(vss5)*I(VSSg5))
+
+* ---------- GATE 6: dd_nor  a=-1 const (pull), b: -1 -> +1 -> -1 -------
+VDDg6 vdd6 0 DC {VDD}
+VSSg6 vss6 0 DC {-VDD}
+Va6 a6 0 DC {-VDD}
+Vin6 in6 0 PULSE({-VDD} {VDD} 100n 0.2n 0.2n 20n 200n)
+Xg6 a6 in6 out6 vdd6 vss6 dd_nor
+Rw6 out6 l6 {Rwire}
+Cl6 l6 0 {CLgate}
+Rterm6 l6 0 {Rterm}
+Xrec6 l6 ra6 rb6 dd_recv
+Bpg6 pg6 0 V = -(V(vdd6)*I(VDDg6) + V(vss6)*I(VSSg6))
+
+* =====================================================================
+* SIMULATION + MEASUREMENTS
+* =====================================================================
+.tran 20p 140n
+
+* --- SECTION 1: binary transport per-bit = full-cycle/2 (5n..35n) ----
+.meas tran ecyc_bt1 INTEG V(pw_bt1) FROM=0n TO=35n
+.meas tran ecyc_bt2 INTEG V(pw_bt2) FROM=0n TO=35n
+.meas tran ebit_bt1 PARAM = 'ecyc_bt1/2'
+.meas tran ebit_bt2 PARAM = 'ecyc_bt2/2'
+.meas tran vhi_bt1 FIND V(line_bt1) AT=12n
+.meas tran vlo_bt1 FIND V(line_bt1) AT=30n
+.meas tran vhi_bt2 FIND V(line_bt2) AT=12n
+.meas tran vlo_bt2 FIND V(line_bt2) AT=30n
+
+* --- SECTION 2 + 3: gate supply energy over one full cycle (95n..135n) -
+.meas tran egate_1 INTEG V(pg1) FROM=95n TO=135n
+.meas tran egate_2 INTEG V(pg2) FROM=95n TO=135n
+.meas tran egate_3 INTEG V(pg3) FROM=95n TO=135n
+.meas tran egate_4 INTEG V(pg4) FROM=95n TO=135n
+.meas tran egate_5 INTEG V(pg5) FROM=95n TO=135n
+.meas tran egate_6 INTEG V(pg6) FROM=95n TO=135n
+
+* --- per-toggle = full cycle / 2 ---
+.meas tran ept_1 PARAM = 'egate_1/2'
+.meas tran ept_2 PARAM = 'egate_2/2'
+.meas tran ept_3 PARAM = 'egate_3/2'
+.meas tran ept_4 PARAM = 'egate_4/2'
+.meas tran ept_5 PARAM = 'egate_5/2'
+.meas tran ept_6 PARAM = 'egate_6/2'
+
+* --- truth-table checkpoints (output resolved at mid-pulse) ---
+.meas tran vw_1_r FIND V(l1) AT=111n
+.meas tran vw_1_f FIND V(l1) AT=131n
+.meas tran vw_2_r FIND V(l2) AT=111n
+.meas tran vw_2_f FIND V(l2) AT=131n
+.meas tran vw_3_r FIND V(l3) AT=111n
+.meas tran vw_3_f FIND V(l3) AT=131n
+.meas tran vw_4_r FIND V(l4) AT=111n
+.meas tran vw_4_f FIND V(l4) AT=131n
+.meas tran vw_5_r FIND V(l5) AT=111n
+.meas tran vw_5_f FIND V(l5) AT=131n
+.meas tran vw_6_r FIND V(l6) AT=111n
+.meas tran vw_6_f FIND V(l6) AT=131n
+
+* --- ternary diode-gate rails (direction receiver resolved) ---
+.meas tran vrA_4 FIND V(ra4) AT=111n
+.meas tran vrB_4 FIND V(rb4) AT=111n
+.meas tran vrA_5 FIND V(ra5) AT=111n
+.meas tran vrB_5 FIND V(rb5) AT=111n
+.meas tran vrA_6 FIND V(ra6) AT=111n
+.meas tran vrB_6 FIND V(rb6) AT=111n
+
+.end

@@ -1,0 +1,258 @@
+=========================================================================
+GATE-LEVEL AREA BENCHMARK  (2026-08-28T23:05Z)
+yosys: Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+liberty: rtl/sky130_fd_sc_hd.lib
+cells: rtl/gate_area_cells.v
+=========================================================================
+
+TSV summary (module<TAB>area_um2<TAB>cell_count<TAB>cell_breakdown):
+
+
+=======================================================================
+GATE: gate_tneg  (tneg — ternary NOT (negation))
+-----------------------------------------------------------------------
+8. Printing statistics.
+
+=== gate_tneg ===
+
+   Number of wires:                  3
+   Number of wire bits:              6
+   Number of public wires:           3
+   Number of public wire bits:       6
+   Number of ports:                  2
+   Number of port bits:              4
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  0
+
+End of script. Logfile hash: 97c3b9dea4, CPU: user 0.15s system 0.02s, MEM: 38.52 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 72% 1x stat (0 sec), 17% 3x read_verilog (0 sec), ...
+-----------------------------------------------------------------------
+ROW: gate_tneg	0.000000	0	
+
+=======================================================================
+GATE: gate_tmin  (tmin — ternary MIN (meet))
+-----------------------------------------------------------------------
+8. Printing statistics.
+
+=== gate_tmin ===
+
+   Number of wires:                 11
+   Number of wire bits:             16
+   Number of public wires:           5
+   Number of public wire bits:      10
+   Number of ports:                  3
+   Number of port bits:              6
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  2
+     sky130_fd_sc_hd__and2_0         1
+     sky130_fd_sc_hd__lpflow_inputiso1p_1      1
+
+   Chip area for module '\gate_tmin': 12.512000
+     of which used for sequential elements: 0.000000 (0.00%)
+
+End of script. Logfile hash: 1662214511, CPU: user 0.15s system 0.03s, MEM: 39.12 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 60% 1x abc (0 sec), 31% 1x stat (0 sec), ...
+-----------------------------------------------------------------------
+ROW: gate_tmin	12.512000	2	sky130_fd_sc_hd__and2_0:1,sky130_fd_sc_hd__lpflow_inputiso1p_1:1
+
+=======================================================================
+GATE: gate_tmax  (tmax — ternary MAX (join))
+-----------------------------------------------------------------------
+8. Printing statistics.
+
+=== gate_tmax ===
+
+   Number of wires:                 11
+   Number of wire bits:             16
+   Number of public wires:           5
+   Number of public wire bits:      10
+   Number of ports:                  3
+   Number of port bits:              6
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  2
+     sky130_fd_sc_hd__and2_0         1
+     sky130_fd_sc_hd__lpflow_inputiso1p_1      1
+
+   Chip area for module '\gate_tmax': 12.512000
+     of which used for sequential elements: 0.000000 (0.00%)
+
+End of script. Logfile hash: 16cc6a6347, CPU: user 0.14s system 0.03s, MEM: 39.16 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 61% 1x abc (0 sec), 30% 1x stat (0 sec), ...
+-----------------------------------------------------------------------
+ROW: gate_tmax	12.512000	2	sky130_fd_sc_hd__and2_0:1,sky130_fd_sc_hd__lpflow_inputiso1p_1:1
+
+=======================================================================
+GATE: gate_tadd1  (tadd1 — ternary mod-3 sum (full adder))
+-----------------------------------------------------------------------
+8. Printing statistics.
+
+=== gate_tadd1 ===
+
+   Number of wires:                128
+   Number of wire bits:            139
+   Number of public wires:          19
+   Number of public wire bits:      30
+   Number of ports:                  5
+   Number of port bits:             10
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 25
+     sky130_fd_sc_hd__a21oi_1        2
+     sky130_fd_sc_hd__a222oi_1       1
+     sky130_fd_sc_hd__a22oi_1        1
+     sky130_fd_sc_hd__a32oi_1        1
+     sky130_fd_sc_hd__and2_0         1
+     sky130_fd_sc_hd__lpflow_inputiso1p_1      1
+     sky130_fd_sc_hd__nand2_1        4
+     sky130_fd_sc_hd__nand2b_1       2
+     sky130_fd_sc_hd__nand3_1        3
+     sky130_fd_sc_hd__nor2_1         2
+     sky130_fd_sc_hd__nor3_1         1
+     sky130_fd_sc_hd__nor4_1         2
+     sky130_fd_sc_hd__o211ai_1       1
+     sky130_fd_sc_hd__o22ai_1        1
+     sky130_fd_sc_hd__o31ai_1        1
+     sky130_fd_sc_hd__xnor2_1        1
+
+   Chip area for module '\gate_tadd1': 146.390400
+     of which used for sequential elements: 0.000000 (0.00%)
+
+End of script. Logfile hash: b21d148b52, CPU: user 0.16s system 0.04s, MEM: 39.41 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 58% 1x abc (0 sec), 31% 1x stat (0 sec), ...
+-----------------------------------------------------------------------
+ROW: gate_tadd1	146.390400	25	sky130_fd_sc_hd__a21oi_1:2,sky130_fd_sc_hd__a222oi_1:1,sky130_fd_sc_hd__a22oi_1:1,sky130_fd_sc_hd__a32oi_1:1,sky130_fd_sc_hd__and2_0:1,sky130_fd_sc_hd__lpflow_inputiso1p_1:1,sky130_fd_sc_hd__nand2_1:4,sky130_fd_sc_hd__nand2b_1:2,sky130_fd_sc_hd__nand3_1:3,sky130_fd_sc_hd__nor2_1:2,sky130_fd_sc_hd__nor3_1:1,sky130_fd_sc_hd__nor4_1:2,sky130_fd_sc_hd__o211ai_1:1,sky130_fd_sc_hd__o22ai_1:1,sky130_fd_sc_hd__o31ai_1:1,sky130_fd_sc_hd__xnor2_1:1
+
+=======================================================================
+GATE: gate_not  (not — binary NOT)
+-----------------------------------------------------------------------
+8. Printing statistics.
+
+=== gate_not ===
+
+   Number of wires:                  4
+   Number of wire bits:              4
+   Number of public wires:           2
+   Number of public wire bits:       2
+   Number of ports:                  2
+   Number of port bits:              2
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     sky130_fd_sc_hd__clkinv_1       1
+
+   Chip area for module '\gate_not': 3.753600
+     of which used for sequential elements: 0.000000 (0.00%)
+
+End of script. Logfile hash: 58bd72da03, CPU: user 0.15s system 0.03s, MEM: 38.63 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 59% 1x abc (0 sec), 31% 1x stat (0 sec), ...
+-----------------------------------------------------------------------
+ROW: gate_not	3.753600	1	sky130_fd_sc_hd__clkinv_1:1
+
+=======================================================================
+GATE: gate_nand2  (nand2 — binary NAND)
+-----------------------------------------------------------------------
+8. Printing statistics.
+
+=== gate_nand2 ===
+
+   Number of wires:                  7
+   Number of wire bits:              7
+   Number of public wires:           3
+   Number of public wire bits:       3
+   Number of ports:                  3
+   Number of port bits:              3
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     sky130_fd_sc_hd__nand2_1        1
+
+   Chip area for module '\gate_nand2': 3.753600
+     of which used for sequential elements: 0.000000 (0.00%)
+
+End of script. Logfile hash: c3d166d0ec, CPU: user 0.13s system 0.03s, MEM: 38.77 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 61% 1x abc (0 sec), 29% 1x stat (0 sec), ...
+-----------------------------------------------------------------------
+ROW: gate_nand2	3.753600	1	sky130_fd_sc_hd__nand2_1:1
+
+=======================================================================
+GATE: gate_nor2  (nor2 — binary NOR)
+-----------------------------------------------------------------------
+8. Printing statistics.
+
+=== gate_nor2 ===
+
+   Number of wires:                  7
+   Number of wire bits:              7
+   Number of public wires:           3
+   Number of public wire bits:       3
+   Number of ports:                  3
+   Number of port bits:              3
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     sky130_fd_sc_hd__nor2_1         1
+
+   Chip area for module '\gate_nor2': 3.753600
+     of which used for sequential elements: 0.000000 (0.00%)
+
+End of script. Logfile hash: 5297b76b65, CPU: user 0.14s system 0.03s, MEM: 38.79 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 61% 1x abc (0 sec), 30% 1x stat (0 sec), ...
+-----------------------------------------------------------------------
+ROW: gate_nor2	3.753600	1	sky130_fd_sc_hd__nor2_1:1
+
+=======================================================================
+GATE: gate_badd1  (badd1 — binary full adder (reference))
+-----------------------------------------------------------------------
+8. Printing statistics.
+
+=== gate_badd1 ===
+
+   Number of wires:                 15
+   Number of wire bits:             15
+   Number of public wires:           5
+   Number of public wire bits:       5
+   Number of ports:                  5
+   Number of port bits:              5
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  2
+     sky130_fd_sc_hd__maj3_1         1
+     sky130_fd_sc_hd__xor3_1         1
+
+   Chip area for module '\gate_badd1': 33.782400
+     of which used for sequential elements: 0.000000 (0.00%)
+
+End of script. Logfile hash: 63d190480a, CPU: user 0.13s system 0.03s, MEM: 38.96 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 65% 1x abc (0 sec), 26% 1x stat (0 sec), ...
+-----------------------------------------------------------------------
+ROW: gate_badd1	33.782400	2	sky130_fd_sc_hd__maj3_1:1,sky130_fd_sc_hd__xor3_1:1
+
+=========================================================================
+END OF LOG
+tneg           ternary NOT                      0.0000        0   
+tmin           ternary MIN                     12.5120        2   sky130_fd_sc_hd__and2_0:1 sky130_fd_sc_hd__lpflow_inputiso1p_1:1
+tmax           ternary MAX                     12.5120        2   sky130_fd_sc_hd__and2_0:1 sky130_fd_sc_hd__lpflow_inputiso1p_1:1
+tadd1          ternary sum                    146.3904       25   sky130_fd_sc_hd__a21oi_1:2 sky130_fd_sc_hd__a222oi_1:1 sky130_fd_sc_hd__a22oi_1:1 sky130_fd_sc_hd__a32oi_1:1 sky130_fd_sc_hd__and2_0:1 sky130_fd_sc_hd__lpflow_inputiso1p_1:1 sky130_fd_sc_hd__nand2_1:4 sky130_fd_sc_hd__nand2b_1:2 sky130_fd_sc_hd__nand3_1:3 sky130_fd_sc_hd__nor2_1:2 sky130_fd_sc_hd__nor3_1:1 sky130_fd_sc_hd__nor4_1:2 sky130_fd_sc_hd__o211ai_1:1 sky130_fd_sc_hd__o22ai_1:1 sky130_fd_sc_hd__o31ai_1:1 sky130_fd_sc_hd__xnor2_1:1
+not            binary NOT                       3.7536        1   sky130_fd_sc_hd__clkinv_1:1
+nand2          binary NAND                      3.7536        1   sky130_fd_sc_hd__nand2_1:1
+nor2           binary NOR                       3.7536        1   sky130_fd_sc_hd__nor2_1:1
+badd1          binary FADD                     33.7824        2   sky130_fd_sc_hd__maj3_1:1 sky130_fd_sc_hd__xor3_1:1

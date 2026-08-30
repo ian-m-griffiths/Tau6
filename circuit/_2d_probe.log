@@ -1,0 +1,159 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+vddsa                                        1
+pwpsup                                8.08e-12
+thrp                                       0.1
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+clk1                                         1
+outa1                              9.14501e-10
+xsaa1.cs                              0.400333
+outab1                             9.14501e-10
+outl1                                1.231e-09
+xsal1.cs                              0.400332
+outlb1                             5.98007e-10
+vda1                                         0
+vdl1                               6.32989e-10
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+clk2                                         1
+outa2                              9.14501e-10
+xsaa2.cs                              0.400333
+outab2                             9.14501e-10
+outl2                                1.231e-09
+xsal2.cs                              0.400332
+outlb2                             5.98007e-10
+vda2                              -7.39145e-20
+vdl2                               6.32989e-10
+drv3                                         0
+gp3                                          1
+gn3                                         -1
+cell3                                        0
+xc3.x                                        0
+ra3                                          0
+rb3                                          0
+clk3                                         1
+outa3                              9.14501e-10
+xsaa3.cs                              0.400333
+outab3                             9.14501e-10
+outl3                                1.231e-09
+xsal3.cs                              0.400332
+outlb3                             5.98007e-10
+vda3                               7.39145e-20
+vdl3                               6.32989e-10
+drv4                                         0
+gp4                                          1
+gn4                                         -1
+cell4                                        0
+xc4.x                                        0
+ra4                                          0
+rb4                                          0
+clk4                                         1
+outa4                              9.14501e-10
+xsaa4.cs                              0.400333
+outab4                             9.14501e-10
+outl4                                1.231e-09
+xsal4.cs                              0.400332
+outlb4                             5.98007e-10
+vda4                                         0
+vdl4                               6.32989e-10
+bdl4#branch                                  0
+bda4#branch                                  0
+bdl3#branch                                  0
+bda3#branch                                  0
+bdl2#branch                                  0
+bda2#branch                                  0
+bdl1#branch                                  0
+bda1#branch                                  0
+bpsup#branch                                 0
+vdd#branch                           -4.04e-12
+vss#branch                            4.04e-12
+vclk4#branch                                 0
+vs4#branch                                   0
+vgn4#branch                                  0
+vgp4#branch                                  0
+vclk3#branch                                 0
+vs3#branch                                   0
+vgn3#branch                                  0
+vgp3#branch                                  0
+vclk2#branch                                 0
+vs2#branch                                   0
+vgn2#branch                                  0
+vgp2#branch                                  0
+vclk1#branch                                 0
+vs1#branch                                   0
+vgn1#branch                                  0
+vgp1#branch                                  0
+vthrp#branch                                 0
+vddsa#branch                      -4.87734e-12
+
+ Reference value :  5.51656e-08 Reference value :  1.13450e-07 Reference value :  1.67490e-07
+No. of Data Rows : 11104
+
+  Measurements for Transient Analysis
+
+e1                  =   1.13074e-12 from=  9.90000e-08 to=  1.07000e-07
+l1                  =  6.155166e-01 at=  1.012300e-07
+r1p                 =  2.499945e-01 at=  1.012300e-07
+r1e                 =  1.422375e-01
+da1                 =  5.711835e-01
+dl1                 =  3.515739e-01
+e2                  =   4.12409e-13 from=  1.29000e-07 to=  1.37000e-07
+l2                  =  2.590556e-01 at=  1.312700e-07
+r2p                 =  4.465425e-02 at=  1.312020e-07
+r2e                 =  6.373666e-03
+da2                 =  2.535594e-02
+dl2                 =  -6.453108e-01
+e3                  =   1.60303e-12 from=  1.59000e-07 to=  1.67000e-07
+l3                  =  6.865568e-01 at=  1.618396e-07
+r3p                 =  3.148310e-01 at=  1.618396e-07
+r3e                 =  3.061524e-01
+da3                 =  6.767071e-01
+dl3                 =  6.785151e-01
+e4                  =   6.46117e-13 from=  1.89000e-07 to=  1.97000e-07
+l4                  =  3.906927e-01 at=  1.918596e-07
+r4p                 =  6.055827e-02 at=  1.918596e-07
+r4e                 =  4.844321e-02
+da4                 =  5.168701e-01
+dl4                 =  -6.446259e-01
+
+
+Total analysis time (seconds) = 0.960756
+
+Total elapsed time (seconds) = 0.969 
+
+Total DRAM available = 62177.336 MB.
+DRAM currently available = 10678.918 MB.
+Maximum ngspice program size =   25.664 MB.
+Current ngspice program size =   15.809 MB.
+
+Shared ngspice pages =   11.598 MB.
+Text (code) pages =    7.578 MB.
+Stack = 0 bytes.
+Library pages =    4.258 MB.
+

@@ -1,0 +1,100 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2025  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+
+-- Executing script file `design_smt2.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: design_prep.il
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `tadd1_verify'. Setting top module to tadd1_verify.
+
+2.1. Analyzing design hierarchy..
+Top module:  \tadd1_verify
+Used module:     \tadd1_wrapper
+
+2.2. Analyzing design hierarchy..
+Top module:  \tadd1_verify
+Used module:     \tadd1_wrapper
+Removed 0 unused modules.
+Module tadd1_verify directly or indirectly contains formal properties -> setting "keep" attribute.
+
+3. Executing FORMALFF pass.
+
+4. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+5. Printing statistics.
+
+=== tadd1_wrapper ===
+
+   Number of wires:                 82
+   Number of wire bits:             88
+   Number of public wires:           4
+   Number of public wire bits:      10
+   Number of ports:                  4
+   Number of port bits:             10
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 82
+     $and                           56
+     $not                            6
+     $or                            20
+
+=== tadd1_verify ===
+
+   Number of wires:                 49
+   Number of wire bits:             55
+   Number of public wires:           4
+   Number of public wire bits:      10
+   Number of ports:                  4
+   Number of port bits:             10
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 73
+     $cover                         27
+     $eq                             6
+     $logic_and                     36
+     $logic_not                      3
+     tadd1_wrapper                   1
+
+=== design hierarchy ===
+
+   tadd1_verify                      1
+     tadd1_wrapper                   1
+
+   Number of wires:                131
+   Number of wire bits:            143
+   Number of public wires:           8
+   Number of public wire bits:      20
+   Number of ports:                  8
+   Number of port bits:             20
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                154
+     $and                           56
+     $cover                         27
+     $eq                             6
+     $logic_and                     36
+     $logic_not                      3
+     $not                            6
+     $or                            20
+
+6. Executing SMT2 backend.
+
+6.1. Executing BMUXMAP pass.
+
+6.2. Executing DEMUXMAP pass.
+Creating SMT-LIBv2 representation of module tadd1_wrapper.
+Creating SMT-LIBv2 representation of module tadd1_verify.
+
+End of script. Logfile hash: eccc9e081d, CPU: user 0.01s system 0.01s, MEM: 15.75 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 46% 2x read_rtlil (0 sec), 44% 2x write_smt2 (0 sec), ...

@@ -1,0 +1,139 @@
+* =====================================================================
+* _2d_probe.cir -- exploratory probe of the (V,t) plane for the PWM-5-2D
+* cell. Maps FOUR (driver width, pulse width) points of the push side:
+*   (strong 11u, 1.0 ns)  (weak 11u/3, 1.0 ns)
+*   (strong 11u, 1.618 ns)(weak 11u/3, 1.618 ns)
+* and reports line/rail assertion + sense-amp resolution (dA vs 0,
+* dL vs a THR threshold) so pwm5_2d.cir can be sized honestly.
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param VDDR  = 1.0
+.param WP    = 11u
+.param WN    = {WP/2}
+.param WLB   = 300
+.param LEN   = 0.18u
+.param WEAK  = {WP/3}
+.param WNEAK = {WEAK/2}
+
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4 KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+.model NMOSDIODEB NMOS(LEVEL=1 VTO=0.30 KP=200u LAMBDA=0.05 GAMMA=0 PHI=0.7 TOX=2n IS=0)
+
+.subckt tcell4 in rA rB rwire=100 cline=1p rload=500 cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+M1  x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1B x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1C x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1D x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M2  rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2B rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2C rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2D rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+.subckt sensamp inP inM clk vddsa out outb
+M1 out  inP cs cs PMOS1 W=1u  L=0.18u
+M2 outb inM cs cs PMOS1 W=1u  L=0.18u
+M5 cs   clk vddsa vddsa PMOS1 W=0.3u L=0.18u
+M3 out  outb 0 0 NMOS1 W=0.5u L=0.18u
+M4 outb out  0 0 NMOS1 W=0.5u L=0.18u
+M6 out  clk  0 0 NMOS1 W=0.5u L=0.18u
+M7 outb clk  0 0 NMOS1 W=0.5u L=0.18u
+CLo  out  0 5f
+CLob outb 0 5f
+.ends
+
+VDD   vdd   0 DC {VDDR}
+VSS   vss   0 DC {-VDDR}
+VDDSA vddsa 0 DC 1.0
+BpSUP pwpSUP 0 V = -(V(vdd)*I(VDD) + V(vss)*I(VSS))
+VthrP thrP 0 DC 0.10
+
+* --- case S1: strong 11u, 1.0 ns at 100n ---
+MP1 drv1 gP1 vdd vdd PMOS1 W={WP} L=0.18u
+MN1 drv1 gN1 vss vss NMOS1 W={WN} L=0.18u
+VgP1 gP1 0 PULSE({VDDR} 0 100n 0.2n 0.2n 1.0n 200n)
+VgN1 gN1 0 DC {-VDDR}
+Vs1  drv1 cell1 DC 0
+Xc1  cell1 rA1 rB1 tcell4
+Vclk1 clk1 0 PULSE(1 0 101.7n 0.1n 0.1n 1.5n 200n)
+XsaA1 0 rA1 clk1 vddsa outA1 outAb1 sensamp
+XsaL1 thrP rA1 clk1 vddsa outL1 outLb1 sensamp
+BdA1 vdA1 0 V = V(outA1)-V(outAb1)
+BdL1 vdL1 0 V = V(outL1)-V(outLb1)
+
+* --- case W1: weak 3.67u, 1.0 ns at 130n ---
+MP2 drv2 gP2 vdd vdd PMOS1 W={WEAK} L=0.18u
+MN2 drv2 gN2 vss vss NMOS1 W={WNEAK} L=0.18u
+VgP2 gP2 0 PULSE({VDDR} 0 130n 0.2n 0.2n 1.0n 200n)
+VgN2 gN2 0 DC {-VDDR}
+Vs2  drv2 cell2 DC 0
+Xc2  cell2 rA2 rB2 tcell4
+Vclk2 clk2 0 PULSE(1 0 131.7n 0.1n 0.1n 1.5n 200n)
+XsaA2 0 rA2 clk2 vddsa outA2 outAb2 sensamp
+XsaL2 thrP rA2 clk2 vddsa outL2 outLb2 sensamp
+BdA2 vdA2 0 V = V(outA2)-V(outAb2)
+BdL2 vdL2 0 V = V(outL2)-V(outLb2)
+
+* --- case SL: strong 11u, 1.618 ns at 160n ---
+MP3 drv3 gP3 vdd vdd PMOS1 W={WP} L=0.18u
+MN3 drv3 gN3 vss vss NMOS1 W={WN} L=0.18u
+VgP3 gP3 0 PULSE({VDDR} 0 160n 0.2n 0.2n 1.618n 200n)
+VgN3 gN3 0 DC {-VDDR}
+Vs3  drv3 cell3 DC 0
+Xc3  cell3 rA3 rB3 tcell4
+Vclk3 clk3 0 PULSE(1 0 161.7n 0.1n 0.1n 1.5n 200n)
+XsaA3 0 rA3 clk3 vddsa outA3 outAb3 sensamp
+XsaL3 thrP rA3 clk3 vddsa outL3 outLb3 sensamp
+BdA3 vdA3 0 V = V(outA3)-V(outAb3)
+BdL3 vdL3 0 V = V(outL3)-V(outLb3)
+
+* --- case WL: weak 3.67u, 1.618 ns at 190n ---
+MP4 drv4 gP4 vdd vdd PMOS1 W={WEAK} L=0.18u
+MN4 drv4 gN4 vss vss NMOS1 W={WNEAK} L=0.18u
+VgP4 gP4 0 PULSE({VDDR} 0 190n 0.2n 0.2n 1.618n 200n)
+VgN4 gN4 0 DC {-VDDR}
+Vs4  drv4 cell4 DC 0
+Xc4  cell4 rA4 rB4 tcell4
+Vclk4 clk4 0 PULSE(1 0 191.7n 0.1n 0.1n 1.5n 200n)
+XsaA4 0 rA4 clk4 vddsa outA4 outAb4 sensamp
+XsaL4 thrP rA4 clk4 vddsa outL4 outLb4 sensamp
+BdA4 vdA4 0 V = V(outA4)-V(outAb4)
+BdL4 vdL4 0 V = V(outL4)-V(outLb4)
+
+.tran 20p 220n
+
+.meas tran e1 INTEG V(pwpSUP) FROM=99n TO=107n
+.meas tran l1 MAX V(Xc1.x) FROM=100n TO=103n
+.meas tran r1p MAX V(rA1) FROM=100n TO=103n
+.meas tran r1e FIND V(rA1) AT=101.7n
+.meas tran dA1 FIND V(vdA1) AT=102.7n
+.meas tran dL1 FIND V(vdL1) AT=102.7n
+.meas tran e2 INTEG V(pwpSUP) FROM=129n TO=137n
+.meas tran l2 MAX V(Xc2.x) FROM=130n TO=133n
+.meas tran r2p MAX V(rA2) FROM=130n TO=133n
+.meas tran r2e FIND V(rA2) AT=131.7n
+.meas tran dA2 FIND V(vdA2) AT=132.7n
+.meas tran dL2 FIND V(vdL2) AT=132.7n
+.meas tran e3 INTEG V(pwpSUP) FROM=159n TO=167n
+.meas tran l3 MAX V(Xc3.x) FROM=160n TO=163n
+.meas tran r3p MAX V(rA3) FROM=160n TO=163n
+.meas tran r3e FIND V(rA3) AT=161.7n
+.meas tran dA3 FIND V(vdA3) AT=162.7n
+.meas tran dL3 FIND V(vdL3) AT=162.7n
+.meas tran e4 INTEG V(pwpSUP) FROM=189n TO=197n
+.meas tran l4 MAX V(Xc4.x) FROM=190n TO=193n
+.meas tran r4p MAX V(rA4) FROM=190n TO=193n
+.meas tran r4e FIND V(rA4) AT=191.7n
+.meas tran dA4 FIND V(vdA4) AT=192.7n
+.meas tran dL4 FIND V(vdL4) AT=192.7n
+
+.end

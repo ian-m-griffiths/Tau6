@@ -1,0 +1,28 @@
+* Probe 2: bulk diode at PULL-case forward voltage (bulk=+1.2, drain=-0.72)
+* plus the diode-connected config (gate=drain) the project note warns about.
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4 KP=200u LAMBDA=0.05)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05)
+
+VDD vdd 0 DC 1.2
+VSS vss 0 DC -1.2
+
+* --- (a) plain PMOS, off, drain forced to -0.72 (bulk diode forward 1.92 V)
+VINa ina 0 DC 1.2
+VOUTa outa 0 DC -0.72
+Ma outa ina vdd vdd PMOS1 W=50u L=0.18u
+
+* --- (b) plain NMOS, off, drain forced to +0.72 (bulk diode forward 1.92 V)
+VINb inb 0 DC -1.2
+VOUTb outb 0 DC 0.72
+Mb outb inb vss vss NMOS1 W=25u L=0.18u
+
+* --- (c) diode-connected NMOS (gate=drain), as in the cell legs: reverse-block check
+VINc inc 0 DC 0.4
+VSRC xc 0 DC 0.6        ; forces xc=0.6, source/drain = xc via diode
+Mc xc xc 0 0 NMOS1 W=1u L=0.18u    ; gate=drain=xc, source=0 -> reverse "diode"
+
+.op
+.print op i(vouta) i(voutb) i(vsrc)
+.end

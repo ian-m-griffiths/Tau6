@@ -1,0 +1,424 @@
+* =====================================================================
+* lowswing_diode.cir  --  LOW-SWING applied to the DIODE-DIRECTION polar
+* ternary gate (dd_not), to answer ONE question:
+*
+*   "Can the 54.2 fJ/toggle diode-direction NOT be pushed DOWN toward the
+*    6.94 fJ/toggle fair single-ended binary NOT by reducing the swing?"
+*
+* THE LEVER UNDER TEST (task lever #1): low-swing / partial powering.
+*   Wire energy ~ swing^2.  If the diode gate's 54.2 fJ were wire-energy,
+*   dropping the rail VDD -> 0.65 V would cut it ~ 0.65^2 = 0.42x -> ~23 fJ,
+*   and VDD -> 0.4 V -> ~0.16x -> ~8.7 fJ, closing on binary's 6.94 fJ.
+*
+* WHAT THIS NETLIST MEASURES (all ngspice -b, real driver, verbatim
+*   diode_gates.cir devices, one toggle null<->+1 per gate):
+*
+*   SECTION 1 -- single-ended binary NOT controls (fair_binary.cir verbatim),
+*                0 -> VDD rails, at VDD = 1.00 / 0.65 / 0.40 V.
+*                VDD=0.65 is the lowswing_sweep sweet spot (binary's own
+*                low-swing lever, radix-agnostic -- it gets it for free).
+*   SECTION 2 -- dd_not with FIXED elevated |Vt| = 1.4 V (the diode_gates
+*                dead-zone device, UNCHANGED), supply rail swept VDD =
+*                1.00 / 0.90 / 0.85 / 0.82 / 0.80 / 0.70 V.  This is the
+*                honest "just lower the supply, keep the fab ask fixed".
+*   SECTION 3 -- dd_not with SCALED |Vt| = 1.4*VDD (the "tunable multi-Vt"
+*                native-device model: the dead zone TRACKS the swing), at
+*                VDD = 0.65 / 0.50 / 0.40 / 0.35 V.  This isolates "what if
+*                the multi-threshold device scales with the swing".
+*
+* WHY THE DEAD ZONE RESISTS LOW SWING (the whole point, predicted then
+*   measured): the elevated-|Vt| driver turns ON only when the input rail
+*   asserts Vrail such that  Vrail + VDD > |Vt|.  Vrail = VDD - Vf (Vf = the
+*   diode forward drop ~0.24 V, a FIXED voltage that does NOT scale).  So
+*   the ON condition is  2*VDD - Vf > |Vt| :
+*       fixed |Vt|=1.4  -> dies when VDD < (1.4 + Vf)/2 ~ 0.82 V
+*       scaled |Vt|=1.4*VDD -> dies when VDD - Vf < 0.4*VDD, i.e. VDD < Vf/0.6 ~ 0.4 V
+*   Low swing shrinks VDD AND Vrail together, so it attacks the dead-zone ON
+*   overdrive directly; the diode drop Vf is the floor.  Sections 2 and 3
+*   measure exactly where each flavour dies.
+*
+* MEASURED RESULT SUMMARY (ngspice 44.2, lowswing_diode.log; per-toggle =
+* full-cycle/2; dead = output does not resolve, energy ~ numerical noise):
+*   SECTION 1 (binary NOT, single-ended 0->VDD):
+*     VDD=1.00 : 6.94 fJ (reproduces fair_binary.cir)
+*     VDD=0.65 : 3.57 fJ (binary's own low-swing lever)
+*     VDD=0.40 : ~0    DEAD (VDD == |Vt|: binary dies below its Vt too)
+*   SECTION 2 (dd_not, FIXED |Vt|=1.4):
+*     VDD=1.00 : 54.09 fJ  out -0.987  rail 0.756  OK
+*     VDD=0.90 : 39.14 fJ  out -0.876  rail 0.660  OK (weaker)
+*     VDD=0.85 : 18.35 fJ  out -0.532  rail 0.612  MARGINAL (63% swing)
+*     VDD=0.82 :  0.06 fJ  out -0.002  rail 0.583  DEAD   <-- death ~0.82 V
+*     VDD=0.80 : ~0        out ~0                 DEAD
+*     VDD=0.70 : ~0        out ~0                 DEAD
+*   SECTION 3 (dd_not, SCALED |Vt|=1.4*VDD):
+*     VDD=0.65 : 20.02 fJ  out -0.634  rail 0.422  OK
+*     VDD=0.50 : 10.37 fJ  out -0.476  rail 0.284  OK
+*     VDD=0.40 :  2.49 fJ  out -0.200  rail 0.194  MARGINAL (50% swing)
+*     VDD=0.35 :  0.21 fJ  out -0.022  rail 0.151  DEAD   <-- death ~0.40 V
+*   VERDICT: low swing does NOT push 54.2 -> 6.94 fJ.  At the lowest WORKING
+*   swing the ratio to binary is ~5.6x/toggle (3.5x/bit), barely better than
+*   full swing's 7.8x (4.9x/bit).  See docs/compute/ground_up/lowswing_diode.md.
+*   DECOMPOSITION (gate 4, full swing): 108 fJ all on VSS (VDD ~0), a
+*   SUSTAINED 17.31 uA (Rterm 100k @0.987V = 9.87uA + next keeper 100k
+*   @0.744V = 7.44uA), not 1/2CV^2 -- the diode receiver's null-return
+*   termination is a resistive DC load on every asserted trit.
+*
+* FAIR-FIGHT HONESTY (identical rules to diode_gates.cir / fair_binary.cir):
+*   - Real output driver (elevated-Vt push-pull), supply V*I over a full
+*     output cycle (assert + release), per-toggle = cycle/2.
+*   - Real passive receiver: the next stage's diode rectifier (dd_recv) is
+*     the explicit load; it has no supply (its energy is inside E_gate).
+*   - Inputs are ideal voltage sources (previous stage abstracted).
+*   - LEVEL=1 models, no body diodes, no device mismatch (generous to
+*     ternary -- a real elevated-Vt device leaks, LEVEL=1 has no
+*     subthreshold).  Same caveat class as the whole corpus.
+*   - Toggle = cheapest ternary toggle null<->+1 (half swing); binary 0<->1
+*     (single-ended, 1 V swing).  Matched swing = VDD in both radices.
+*   - Device count (from the netlist): dd_not = 2 diodes + 2 transistors;
+*     binary NOT = 2 transistors.  Keeper/termination resistors (Rk*, Rterm)
+*     are passives, not counted as devices (but their DC current IS counted
+*     in E_gate -- see the doc).
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param Rwire = 100
+.param CL    = 10f          ; one output wire drives ~1 next-gate input
+.param Rterm = 100k         ; null-return termination on every polar wire
+.param Rk    = 100k         ; diode-receiver keeper (rail -> 0)
+
+* ---------------- models ---------------------------------------------
+* standard CMOS (binary driver + output stage), verbatim fair_binary.cir
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+* elevated-Vt dead-zone devices (verbatim diode_gates.cir): |Vt|=1.4 sits
+* BETWEEN VDD (off at null: Vgs=VDD<1.4) and VDD+Vrail (on when rail fires).
+.model N_HI  NMOS(LEVEL=1 VTO=1.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model P_HI  PMOS(LEVEL=1 VTO=-1.4 KP=100u LAMBDA=0.05 TOX=2n)
+* rectifier diode (Schottky-ish, verbatim diode_gates.cir: low forward drop,
+* small junction, no minority-carrier storage)
+.model DD D (IS=1e-9 RS=200 CJO=2f TT=1p N=1.05)
+* SCALED multi-Vt dead-zone devices (the "tunable multi-threshold" ask):
+* |Vt| = 1.4*VDD so the dead zone tracks the swing.  One flavour per low-
+* swing point (ngspice has no .step, so each VDD gets its own .model).
+.model N_HI_065 NMOS(LEVEL=1 VTO=0.91  KP=200u LAMBDA=0.05 TOX=2n)
+.model P_HI_065 PMOS(LEVEL=1 VTO=-0.91 KP=100u LAMBDA=0.05 TOX=2n)
+.model N_HI_05  NMOS(LEVEL=1 VTO=0.70  KP=200u LAMBDA=0.05 TOX=2n)
+.model P_HI_05  PMOS(LEVEL=1 VTO=-0.70 KP=100u LAMBDA=0.05 TOX=2n)
+.model N_HI_04  NMOS(LEVEL=1 VTO=0.56  KP=200u LAMBDA=0.05 TOX=2n)
+.model P_HI_04  PMOS(LEVEL=1 VTO=-0.56 KP=100u LAMBDA=0.05 TOX=2n)
+.model N_HI_035 NMOS(LEVEL=1 VTO=0.49  KP=200u LAMBDA=0.05 TOX=2n)
+.model P_HI_035 PMOS(LEVEL=1 VTO=-0.49 KP=100u LAMBDA=0.05 TOX=2n)
+
+* ---------------- diode-direction receiver (passive) ------------------
+* rA = push rail (0 -> +Vrail), rB = pull rail (0 -> -Vrail); null = neither.
+.subckt dd_recv win rA rB
+D1 win rA DD
+D2 rB win DD
+RkA rA 0 100k
+RkB rB 0 100k
+CkA rA 0 2f
+CkB rB 0 2f
+.ends
+
+* ---------------- diode-direction NOT, rails exposed ------------------
+* ra/rb are EXPOSED as extra ports so the input-side rail assert (and hence
+* the dead-zone ON overdrive Vrail+VDD-|Vt|) can be measured directly.
+.subckt dd_not win wout vdd vss ra rb
+Xr win ra rb dd_recv
+Mp wout rb vdd vdd P_HI W=4u L=0.18u
+Mn wout ra vss vss N_HI W=4u L=0.18u
+.ends
+
+* ---------------- binary inverter (single-ended 0 -> VDD) -------------
+.subckt inv in out vdd vss
+Mp out in vdd vdd PMOS1 W=4u  L=0.18u
+Mn out in vss vss NMOS1 W=2u  L=0.18u
+.ends
+
+* =====================================================================
+* SECTION 1: single-ended binary NOT controls
+*   0 -> VDD rail, toggle 0<->1.  VDD = 1.00 / 0.65 / 0.40 V.
+* =====================================================================
+
+* --- G1: binary NOT, VDD=1.00 V (natural binary, reproduce 6.94 fJ) ---
+VDDg1 vdd1 0 DC 1.00
+VSSg1 vss1 0 DC 0.0
+Vin1 in1 0 PULSE(0 1.00 100n 0.2n 0.2n 20n 200n)
+Xg1 in1 out1 vdd1 vss1 inv
+Rw1 out1 l1 {Rwire}
+Cl1 l1 0 {CL}
+Bpg1 pg1 0 V = -(V(vdd1)*I(VDDg1) + V(vss1)*I(VSSg1))
+
+* --- G2: binary NOT, VDD=0.65 V (binary's own low-swing lever) --------
+VDDg2 vdd2 0 DC 0.65
+VSSg2 vss2 0 DC 0.0
+Vin2 in2 0 PULSE(0 0.65 100n 0.2n 0.2n 20n 200n)
+Xg2 in2 out2 vdd2 vss2 inv
+Rw2 out2 l2 {Rwire}
+Cl2 l2 0 {CL}
+Bpg2 pg2 0 V = -(V(vdd2)*I(VDDg2) + V(vss2)*I(VSSg2))
+
+* --- G3: binary NOT, VDD=0.40 V (VDD == |Vt| : binary dies too) --------
+VDDg3 vdd3 0 DC 0.40
+VSSg3 vss3 0 DC 0.0
+Vin3 in3 0 PULSE(0 0.40 100n 0.2n 0.2n 20n 200n)
+Xg3 in3 out3 vdd3 vss3 inv
+Rw3 out3 l3 {Rwire}
+Cl3 l3 0 {CL}
+Bpg3 pg3 0 V = -(V(vdd3)*I(VDDg3) + V(vss3)*I(VSSg3))
+
+* =====================================================================
+* SECTION 2: dd_not with FIXED |Vt| = 1.4 V, supply rail swept
+*   The dead-zone device is UNCHANGED (the fab ask held fixed); only the
+*   supply VDD falls.  Predicted death when 2*VDD - Vf < 1.4  => VDD ~ 0.82.
+* =====================================================================
+
+* --- G4: dd_not fixed Vt, VDD=1.00 V (reproduce 54.2 fJ) ---------------
+VDDg4 vdd4 0 DC 1.00
+VSSg4 vss4 0 DC -1.00
+Vin4 in4 0 PULSE(0 1.00 100n 0.2n 0.2n 5n 200n)
+Xg4 in4 out4 vdd4 vss4 rai4 rbi4 dd_not
+Rw4 out4 l4 {Rwire}
+Cl4 l4 0 {CL}
+Rterm4 l4 0 {Rterm}
+Xrec4 l4 ra4 rb4 dd_recv
+Bpg4 pg4 0 V = -(V(vdd4)*I(VDDg4) + V(vss4)*I(VSSg4))
+
+* --- G5: dd_not fixed Vt, VDD=0.90 V -----------------------------------
+VDDg5 vdd5 0 DC 0.90
+VSSg5 vss5 0 DC -0.90
+Vin5 in5 0 PULSE(0 0.90 100n 0.2n 0.2n 5n 200n)
+Xg5 in5 out5 vdd5 vss5 rai5 rbi5 dd_not
+Rw5 out5 l5 {Rwire}
+Cl5 l5 0 {CL}
+Rterm5 l5 0 {Rterm}
+Xrec5 l5 ra5 rb5 dd_recv
+Bpg5 pg5 0 V = -(V(vdd5)*I(VDDg5) + V(vss5)*I(VSSg5))
+
+* --- G6: dd_not fixed Vt, VDD=0.85 V -----------------------------------
+VDDg6 vdd6 0 DC 0.85
+VSSg6 vss6 0 DC -0.85
+Vin6 in6 0 PULSE(0 0.85 100n 0.2n 0.2n 5n 200n)
+Xg6 in6 out6 vdd6 vss6 rai6 rbi6 dd_not
+Rw6 out6 l6 {Rwire}
+Cl6 l6 0 {CL}
+Rterm6 l6 0 {Rterm}
+Xrec6 l6 ra6 rb6 dd_recv
+Bpg6 pg6 0 V = -(V(vdd6)*I(VDDg6) + V(vss6)*I(VSSg6))
+
+* --- G7: dd_not fixed Vt, VDD=0.82 V (predicted death boundary) --------
+VDDg7 vdd7 0 DC 0.82
+VSSg7 vss7 0 DC -0.82
+Vin7 in7 0 PULSE(0 0.82 100n 0.2n 0.2n 5n 200n)
+Xg7 in7 out7 vdd7 vss7 rai7 rbi7 dd_not
+Rw7 out7 l7 {Rwire}
+Cl7 l7 0 {CL}
+Rterm7 l7 0 {Rterm}
+Xrec7 l7 ra7 rb7 dd_recv
+Bpg7 pg7 0 V = -(V(vdd7)*I(VDDg7) + V(vss7)*I(VSSg7))
+
+* --- G8: dd_not fixed Vt, VDD=0.80 V -----------------------------------
+VDDg8 vdd8 0 DC 0.80
+VSSg8 vss8 0 DC -0.80
+Vin8 in8 0 PULSE(0 0.80 100n 0.2n 0.2n 5n 200n)
+Xg8 in8 out8 vdd8 vss8 rai8 rbi8 dd_not
+Rw8 out8 l8 {Rwire}
+Cl8 l8 0 {CL}
+Rterm8 l8 0 {Rterm}
+Xrec8 l8 ra8 rb8 dd_recv
+Bpg8 pg8 0 V = -(V(vdd8)*I(VDDg8) + V(vss8)*I(VSSg8))
+
+* --- G9: dd_not fixed Vt, VDD=0.70 V -----------------------------------
+VDDg9 vdd9 0 DC 0.70
+VSSg9 vss9 0 DC -0.70
+Vin9 in9 0 PULSE(0 0.70 100n 0.2n 0.2n 5n 200n)
+Xg9 in9 out9 vdd9 vss9 rai9 rbi9 dd_not
+Rw9 out9 l9 {Rwire}
+Cl9 l9 0 {CL}
+Rterm9 l9 0 {Rterm}
+Xrec9 l9 ra9 rb9 dd_recv
+Bpg9 pg9 0 V = -(V(vdd9)*I(VDDg9) + V(vss9)*I(VSSg9))
+
+* =====================================================================
+* SECTION 3: dd_not with SCALED |Vt| = 1.4*VDD (tunable multi-threshold)
+*   The dead zone TRACKS the swing, so the null mechanism is preserved at
+*   any VDD; only the diode forward drop Vf remains as a fixed floor.
+*   Predicted death when VDD - Vf < 0.4*VDD  => VDD < Vf/0.6 ~ 0.4 V.
+*   (Inlined per gate -- each uses its own scaled .model flavour.)
+* =====================================================================
+
+* --- G10: dd_not scaled Vt, VDD=0.65 V (Vt=0.91) ----------------------
+VDDg10 vdd10 0 DC 0.65
+VSSg10 vss10 0 DC -0.65
+Vin10 in10 0 PULSE(0 0.65 100n 0.2n 0.2n 5n 200n)
+D1_10 in10 rai10 DD
+D2_10 rbi10 in10 DD
+RkA10 rai10 0 100k
+RkB10 rbi10 0 100k
+CkA10 rai10 0 2f
+CkB10 rbi10 0 2f
+Mp10 out10 rbi10 vdd10 vdd10 P_HI_065 W=4u L=0.18u
+Mn10 out10 rai10 vss10 vss10 N_HI_065 W=4u L=0.18u
+Rw10 out10 l10 {Rwire}
+Cl10 l10 0 {CL}
+Rterm10 l10 0 {Rterm}
+Xrec10 l10 ra10 rb10 dd_recv
+Bpg10 pg10 0 V = -(V(vdd10)*I(VDDg10) + V(vss10)*I(VSSg10))
+
+* --- G11: dd_not scaled Vt, VDD=0.50 V (Vt=0.70) ----------------------
+VDDg11 vdd11 0 DC 0.50
+VSSg11 vss11 0 DC -0.50
+Vin11 in11 0 PULSE(0 0.50 100n 0.2n 0.2n 5n 200n)
+D1_11 in11 rai11 DD
+D2_11 rbi11 in11 DD
+RkA11 rai11 0 100k
+RkB11 rbi11 0 100k
+CkA11 rai11 0 2f
+CkB11 rbi11 0 2f
+Mp11 out11 rbi11 vdd11 vdd11 P_HI_05 W=4u L=0.18u
+Mn11 out11 rai11 vss11 vss11 N_HI_05 W=4u L=0.18u
+Rw11 out11 l11 {Rwire}
+Cl11 l11 0 {CL}
+Rterm11 l11 0 {Rterm}
+Xrec11 l11 ra11 rb11 dd_recv
+Bpg11 pg11 0 V = -(V(vdd11)*I(VDDg11) + V(vss11)*I(VSSg11))
+
+* --- G12: dd_not scaled Vt, VDD=0.40 V (Vt=0.56, predicted edge) ------
+VDDg12 vdd12 0 DC 0.40
+VSSg12 vss12 0 DC -0.40
+Vin12 in12 0 PULSE(0 0.40 100n 0.2n 0.2n 5n 200n)
+D1_12 in12 rai12 DD
+D2_12 rbi12 in12 DD
+RkA12 rai12 0 100k
+RkB12 rbi12 0 100k
+CkA12 rai12 0 2f
+CkB12 rbi12 0 2f
+Mp12 out12 rbi12 vdd12 vdd12 P_HI_04 W=4u L=0.18u
+Mn12 out12 rai12 vss12 vss12 N_HI_04 W=4u L=0.18u
+Rw12 out12 l12 {Rwire}
+Cl12 l12 0 {CL}
+Rterm12 l12 0 {Rterm}
+Xrec12 l12 ra12 rb12 dd_recv
+Bpg12 pg12 0 V = -(V(vdd12)*I(VDDg12) + V(vss12)*I(VSSg12))
+
+* --- G13: dd_not scaled Vt, VDD=0.35 V (Vt=0.49, predicted dead) ------
+VDDg13 vdd13 0 DC 0.35
+VSSg13 vss13 0 DC -0.35
+Vin13 in13 0 PULSE(0 0.35 100n 0.2n 0.2n 5n 200n)
+D1_13 in13 rai13 DD
+D2_13 rbi13 in13 DD
+RkA13 rai13 0 100k
+RkB13 rbi13 0 100k
+CkA13 rai13 0 2f
+CkB13 rbi13 0 2f
+Mp13 out13 rbi13 vdd13 vdd13 P_HI_035 W=4u L=0.18u
+Mn13 out13 rai13 vss13 vss13 N_HI_035 W=4u L=0.18u
+Rw13 out13 l13 {Rwire}
+Cl13 l13 0 {CL}
+Rterm13 l13 0 {Rterm}
+Xrec13 l13 ra13 rb13 dd_recv
+Bpg13 pg13 0 V = -(V(vdd13)*I(VDDg13) + V(vss13)*I(VSSg13))
+
+* =====================================================================
+* SIMULATION + MEASUREMENTS (full cycle 95..135 ns)
+* =====================================================================
+.tran 20p 140n
+
+* --- E_gate: supply energy over one full output cycle (J) ---
+.meas tran egate_1 INTEG V(pg1) FROM=95n TO=135n
+.meas tran egate_2 INTEG V(pg2) FROM=95n TO=135n
+.meas tran egate_3 INTEG V(pg3) FROM=95n TO=135n
+.meas tran egate_4 INTEG V(pg4) FROM=95n TO=135n
+.meas tran egate_5 INTEG V(pg5) FROM=95n TO=135n
+.meas tran egate_6 INTEG V(pg6) FROM=95n TO=135n
+.meas tran egate_7 INTEG V(pg7) FROM=95n TO=135n
+.meas tran egate_8 INTEG V(pg8) FROM=95n TO=135n
+.meas tran egate_9 INTEG V(pg9) FROM=95n TO=135n
+.meas tran egate_10 INTEG V(pg10) FROM=95n TO=135n
+.meas tran egate_11 INTEG V(pg11) FROM=95n TO=135n
+.meas tran egate_12 INTEG V(pg12) FROM=95n TO=135n
+.meas tran egate_13 INTEG V(pg13) FROM=95n TO=135n
+
+* --- per-toggle = full cycle / 2 ---
+.meas tran ept_1  PARAM = 'egate_1/2'
+.meas tran ept_2  PARAM = 'egate_2/2'
+.meas tran ept_3  PARAM = 'egate_3/2'
+.meas tran ept_4  PARAM = 'egate_4/2'
+.meas tran ept_5  PARAM = 'egate_5/2'
+.meas tran ept_6  PARAM = 'egate_6/2'
+.meas tran ept_7  PARAM = 'egate_7/2'
+.meas tran ept_8  PARAM = 'egate_8/2'
+.meas tran ept_9  PARAM = 'egate_9/2'
+.meas tran ept_10 PARAM = 'egate_10/2'
+.meas tran ept_11 PARAM = 'egate_11/2'
+.meas tran ept_12 PARAM = 'egate_12/2'
+.meas tran ept_13 PARAM = 'egate_13/2'
+
+* --- output truth-table checkpoints ---
+* binary: assert @100n (mid 111n), release @120n (mid 131n)
+.meas tran vw_1_r FIND V(l1) AT=111n
+.meas tran vw_1_f FIND V(l1) AT=131n
+.meas tran vw_2_r FIND V(l2) AT=111n
+.meas tran vw_2_f FIND V(l2) AT=131n
+.meas tran vw_3_r FIND V(l3) AT=111n
+.meas tran vw_3_f FIND V(l3) AT=131n
+* ternary: pulse @100n (mid 103n), null after release @110n
+.meas tran vw_4_r FIND V(l4) AT=103n
+.meas tran vw_4_f FIND V(l4) AT=110n
+.meas tran vw_5_r FIND V(l5) AT=103n
+.meas tran vw_5_f FIND V(l5) AT=110n
+.meas tran vw_6_r FIND V(l6) AT=103n
+.meas tran vw_6_f FIND V(l6) AT=110n
+.meas tran vw_7_r FIND V(l7) AT=103n
+.meas tran vw_7_f FIND V(l7) AT=110n
+.meas tran vw_8_r FIND V(l8) AT=103n
+.meas tran vw_8_f FIND V(l8) AT=110n
+.meas tran vw_9_r FIND V(l9) AT=103n
+.meas tran vw_9_f FIND V(l9) AT=110n
+.meas tran vw_10_r FIND V(l10) AT=103n
+.meas tran vw_10_f FIND V(l10) AT=110n
+.meas tran vw_11_r FIND V(l11) AT=103n
+.meas tran vw_11_f FIND V(l11) AT=110n
+.meas tran vw_12_r FIND V(l12) AT=103n
+.meas tran vw_12_f FIND V(l12) AT=110n
+.meas tran vw_13_r FIND V(l13) AT=103n
+.meas tran vw_13_f FIND V(l13) AT=110n
+
+* --- input receiver rail assert (the dead-zone ON overdrive = Vrail+VDD-|Vt|) ---
+.meas tran vra_in_4  FIND V(rai4)  AT=103n
+.meas tran vra_in_5  FIND V(rai5)  AT=103n
+.meas tran vra_in_6  FIND V(rai6)  AT=103n
+.meas tran vra_in_7  FIND V(rai7)  AT=103n
+.meas tran vra_in_8  FIND V(rai8)  AT=103n
+.meas tran vra_in_9  FIND V(rai9)  AT=103n
+.meas tran vra_in_10 FIND V(rai10) AT=103n
+.meas tran vra_in_11 FIND V(rai11) AT=103n
+.meas tran vra_in_12 FIND V(rai12) AT=103n
+.meas tran vra_in_13 FIND V(rai13) AT=103n
+
+* --- next-stage receiver rails (direction resolved on the output) ---
+.meas tran vra_nxt_4  FIND V(ra4)  AT=103n
+.meas tran vrb_nxt_4  FIND V(rb4)  AT=103n
+.meas tran vra_nxt_10 FIND V(ra10) AT=103n
+.meas tran vrb_nxt_10 FIND V(rb10) AT=103n
+
+* --- null-idle (quiet-window) energy: the whole point -- expect ~0 ---
+.meas tran eq_4  INTEG V(pg4) FROM=10n TO=85n
+.meas tran eq_10 INTEG V(pg10) FROM=10n TO=85n
+
+* --- decomposition: where does the full-swing dd_not 54 fJ actually go? ---
+* VDD delivers ~0 (P_HI never conducts on the null<->+1 toggle); VSS carries
+* the whole cycle, and it is a SUSTAINED DC current, not a 1/2CV^2 transient.
+Bvdd4 pvdd4 0 V = -V(vdd4)*I(VDDg4)
+Bvss4 pvss4 0 V = -V(vss4)*I(VSSg4)
+Bvss10 pvss10 0 V = -V(vss10)*I(VSSg10)
+.meas tran e4_vdd  INTEG V(pvdd4)  FROM=95n TO=135n
+.meas tran e4_vss  INTEG V(pvss4)  FROM=95n TO=135n
+.meas tran e4_vss_a INTEG V(pvss4)  FROM=99n TO=110n
+.meas tran e4_vss_r INTEG V(pvss4)  FROM=110n TO=135n
+.meas tran i4_vss_ss  FIND I(VSSg4)  AT=103.5n
+.meas tran i4_vdd_ss  FIND I(VDDg4)  AT=103.5n
+.meas tran i10_vss_ss FIND I(VSSg10) AT=103.5n
+
+.end

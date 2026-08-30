@@ -1,0 +1,55 @@
+warning, can't find model '->' from line
+    d1 x ra dideal * forward leg: push (+1) -> rail a
+warning, can't find model '->' from line
+    d2 rb x dideal * reverse leg: pull (-1) -> rail b
+Netlist line no. 48:
+Undefined parameter [current]
+Netlist line no. 48:
+ Expression err: 1m * current-pulse amplitude (a) -- current-mode driver
+Netlist line no. 48:
+ Formula() error.
+      |.param ip=1m * current-pulse amplitude (a) -- current-mode driver| : |ip|=|1m * current-pulse amplitude (a) -- current-mode driver|
+Netlist line no. 49:
+Undefined parameter [pulse]
+Netlist line no. 49:
+ Expression err: 3n * pulse "on" width (s)
+Netlist line no. 49:
+ Formula() error.
+      |.param pw=3n * pulse "on" width (s)| : |pw|=|3n * pulse "on" width (s)|
+Netlist line no. 82:
+Undefined parameter [ip]
+Netlist line no. 82:
+Cannot compute substitute
+Netlist line no. 67:
+Closing "}" not found in line fragment
+    {s open q1:null handling).
+Netlist line no. 85:
+Undefined parameter [instantaneous]
+Netlist line no. 85:
+Cannot compute substitute
+Netlist line no. 92:
+Undefined parameter [ip]
+Netlist line no. 92:
+Cannot compute substitute
+Netlist line no. 67:
+Closing "}" not found in line fragment
+    {s open q1:null handling).
+Netlist line no. 122:
+Undefined parameter [ip]
+Netlist line no. 122:
+Cannot compute substitute
+Netlist line no. 123:
+Undefined parameter [ip]
+Netlist line no. 123:
+Cannot compute substitute
+Netlist line no. 67:
+Closing "}" not found in line fragment
+    {s open q1:null handling).
+
+ERROR: fatal error in ngspice, exit(1)
+
+Note: No compatibility mode selected!
+
+
+Circuit: * =====================================================================
+

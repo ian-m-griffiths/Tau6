@@ -1,0 +1,233 @@
+* =====================================================================
+* ternary_transistor.cir  -  AC-polarity ternary cell, TRANSISTOR-DIODE receiver
+* Replaces the ideal diode D of ternary_cell.cir with diode-connected MOSFETs
+* (gate tied to drain). Same current-pulse driver, wire, and loads, so the
+* numbers are apples-to-apples with the ideal-diode baseline:
+*   baseline: push 5.36 pJ, pull 5.36 pJ, null ~0 pJ, push->pull 2.68 pJ,
+*             line +/-1.67 V, rails +0.48 V / -0.48 V
+*
+* Config A (FINAL, best found): all-NMOS diode legs -- M1 (forward, in->rA)
+* and M2 (reverse, rB->in, mirrored so both legs are identical NMOS).
+* LEVEL=1, VTO=0.30, W/L=6400 (W = WL*LEN = 1.15 mm, L = 0.18 um).
+* Design notes:
+*  - W must be in METERS: W={WL*LEN} (W={WL} with WL=200 would be 200 m!).
+*  - IS=0 kills the LEVEL=1 parasitic bulk diode so each leg blocks reverse
+*    exactly like the ideal diode (the body diode would conduct at >~0.65 V
+*    in the opposite-polarity phase and wreck the demux).
+*  - The forward drop is VTO + Vov(I), Vov = sqrt(2I/(KP*W/L)) ~= 56 mV at
+*    1 mA here, so the drop ~= 0.36 V vs the ideal diode's ~0.7 V: the line
+*    swings only +-1.22 V and push/pull cost ~3.86 pJ (-28% vs 5.36 pJ).
+*  - Bigger WL lowers Vov (less line swing, less energy) at the cost of gate
+*    cap coupling that kicks the opposite rail (vrB_push ~82 mV at 14 ns) and
+*    of weaker rail assertion (vrA_push 0.386 V). WL=12800 still asserts but
+*    with 0.28 V / 0.18 V margins -- marginal; WL=6400 is the sweet spot.
+*  - PMOS reverse leg (NMOS+PMOS CMOS pair) also works: push 3.62 pJ at
+*    WLP=12800 but the 2x-size PMOS gate caps kick the reverse rail to
+*    0.17 V -- all-NMOS is cleaner and perfectly push/pull symmetric.
+* Measured (this file): push 3.86 pJ, pull 3.86 pJ, null 0, push->pull pair
+* 6.17 pJ (ecyc2 2.31 pJ), line +-1.22 V. Reverse leakage ~1 pA (IS=0).
+*
+* SECTION 2 (Ian): paralleled transistor-diodes in the charge-transfer regime.
+* Same regime as the sweep agent's Schottky winner (0.5905 pJ @ IP=1m PW=1n
+* RW=100 CL=1p, railA=0.294 V): N=1, 2, 4 identical diode-connected MOSFETs in
+* parallel per leg. Paralleling divides the current per device, so the
+* overdrive Vov ~ sqrt(2(I/N)/(KP*W/L)) shrinks by sqrt(N) and the drop
+* approaches VTO (R_on/N). Extra gate cap (N*Cgs) is the cost. Windows at
+* 120/140/160 ns; rail criterion = MAX V(rA) >= 0.25 V (sweep's ok(0.25)).
+* Measured (WLB=300, VTONB=0.30): push N1 0.658 / N2 0.616 / N4 0.562 pJ
+* (rails 0.304/0.296/0.267 V) -- N=4 beats the 0.5905 pJ Schottky winner by
+* 4.8%. N=4 with WLB=200 gives 0.595 pJ (parity); the rail-assertion boundary
+* is WLB~380 (0.541 pJ, rail 0.2505 V). Lowering VTO below spec (VTONB=0.15,
+* WLB=300) gives 0.544 pJ with rail 0.347 V.
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param IP = 1m
+.param PW = 3n
+.param WL = 6400
+.param LEN = 0.18u
+.param VTON = 0.30
+.param WLB = 300
+.param VTONB = 0.30
+
+* ---------- transistor-diode model: low-VTO LEVEL=1 NMOS ----------
+.model NMOSDIODE NMOS(LEVEL=1 VTO={VTON} KP=200u LAMBDA=0.05 GAMMA=0 PHI=0.7 TOX=2n IS=0)
+.model NMOSDIODEB NMOS(LEVEL=1 VTO={VTONB} KP=200u LAMBDA=0.05 GAMMA=0 PHI=0.7 TOX=2n IS=0)
+
+* ---------- reusable cell: wire + 2 transistor-diodes + load ----------
+.subckt tcell in rA rB rwire=500 cline=1p rload=500 cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+* M1: forward leg, conducts in->rA when v(in) > v(rA) + VTO + Vov
+M1 x x rA rA NMOSDIODE W={WL*LEN} L={LEN}
+* M2: reverse leg, conducts rB->in when v(rB) > v(in) + VTO + Vov
+M2 rB rB x x NMOSDIODE W={WL*LEN} L={LEN}
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+* ---------- paralleled transistor-diode cells (N per leg, SECTION 2) ----------
+* N=1: single diode-connected MOSFET per leg (charge-transfer regime)
+.subckt tcell1 in rA rB rwire=100 cline=1p rload=500 cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+M1 x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M2 rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+* N=2: two identical devices in parallel per leg (R_on/2)
+.subckt tcell2 in rA rB rwire=100 cline=1p rload=500 cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+M1  x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1B x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M2  rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2B rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+* N=4: four identical devices in parallel per leg (R_on/4)
+.subckt tcell4 in rA rB rwire=100 cline=1p rload=500 cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+M1  x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1B x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1C x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1D x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M2  rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2B rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2C rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2D rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+* =====================================================================
+* TEST CASE (a): PUSH (+1)  -  1 mA into the wire, 10..15 ns
+* =====================================================================
+IpA 0 dA PULSE(0 {IP} 10n 1n 1n {PW} 200n)
+VsA dA drvA DC 0
+Xpush drvA rAp rBp tcell
+BpA pwpA 0 V = V(drvA)*I(VsA)
+
+* =====================================================================
+* TEST CASE (b): PULL (-1)  -  -1 mA, 40..45 ns
+* =====================================================================
+IpB 0 dB PULSE(0 {-IP} 40n 1n 1n {PW} 200n)
+VsB dB drvB DC 0
+Xpull drvB rAq rBq tcell
+BpB pwpB 0 V = V(drvB)*I(VsB)
+
+* =====================================================================
+* TEST CASE (c): NULL (0) - idle driver; rails should stay ~0
+* =====================================================================
+In 0 dN DC 0
+RidleN dN 0 10meg
+VsN dN drvN DC 0
+RwN drvN xN 500
+CxN xN 0 1p
+RtermN xN 0 1meg
+M1N xN xN rAn rAn NMOSDIODE W={WL*LEN} L={LEN}
+M2N rBn rBn xN xN NMOSDIODE W={WL*LEN} L={LEN}
+RLAN rAn 0 500
+CLAN rAn 0 0.2p
+RLBN rBn 0 500
+CLBN rBn 0 0.2p
+BpN pwpN 0 V = V(drvN)*I(VsN)
+
+* =====================================================================
+* TEST CASE (d): PUSH then PULL back-to-back (charge recycling), 100..110 ns
+* =====================================================================
+Icy1 0 dC PULSE(0 {IP} 100n 1n 1n {PW} 200n)
+Icy2 0 dC PULSE(0 {-IP} 105n 1n 1n {PW} 200n)
+VsC dC drvC DC 0
+Xcyc drvC rAc rBc tcell
+BpC pwpC 0 V = V(drvC)*I(VsC)
+
+* =====================================================================
+* SECTION 2: charge-transfer regime (IP=1m, PW=1n, RW=100, CL=1p) --
+* push energy vs number N of paralleled transistor-diodes per leg.
+* Pulse shape matches the sweep agent's winning combo (rise=fall=pw/5).
+* =====================================================================
+* TEST CASE (e): N=1 paralleled device, push at 120..122.4 ns
+* =====================================================================
+IeN1 0 dE PULSE(0 {IP} 120n 0.2n 0.2n 1n 200n)
+VsE dE drvE DC 0
+XeN1 drvE rEa rEb tcell1
+BpE pwpE 0 V = V(drvE)*I(VsE)
+
+* =====================================================================
+* TEST CASE (f): N=2 paralleled devices, push at 140..142.4 ns
+* =====================================================================
+IeN2 0 dF PULSE(0 {IP} 140n 0.2n 0.2n 1n 200n)
+VsF dF drvF DC 0
+XeN2 drvF rFa rFb tcell2
+BpF pwpF 0 V = V(drvF)*I(VsF)
+
+* =====================================================================
+* TEST CASE (g): N=4 paralleled devices, push at 160..162.4 ns
+* =====================================================================
+IeN4 0 dG PULSE(0 {IP} 160n 0.2n 0.2n 1n 200n)
+VsG dG drvG DC 0
+XeN4 drvG rGa rGb tcell4
+BpG pwpG 0 V = V(drvG)*I(VsG)
+
+* =====================================================================
+* SIMULATION CONTROL + MEASUREMENTS
+* =====================================================================
+.tran 100p 220n
+
+* --- transfer-window energy [J] = integral of driver power ---
+.meas tran epush INTEG V(pwpA) FROM=10n TO=16n
+.meas tran epull INTEG V(pwpB) FROM=40n TO=46n
+.meas tran enull INTEG V(pwpN) FROM=70n TO=90n
+.meas tran ecyc1 INTEG V(pwpC) FROM=100n TO=106n
+.meas tran ecyc2 INTEG V(pwpC) FROM=105n TO=111n
+.meas tran ecycT INTEG V(pwpC) FROM=100n TO=111n
+
+* --- SECTION 2: push energy vs number of paralleled devices ---
+.meas tran epushN1 INTEG V(pwpE) FROM=120n TO=126n
+.meas tran epushN2 INTEG V(pwpF) FROM=140n TO=146n
+.meas tran epushN4 INTEG V(pwpG) FROM=160n TO=166n
+.meas tran railN1 MAX V(rEa) FROM=120n TO=126n
+.meas tran railN2 MAX V(rFa) FROM=140n TO=146n
+.meas tran railN4 MAX V(rGa) FROM=160n TO=166n
+.meas tran vlnN1 MAX V(drvE) FROM=120n TO=126n
+.meas tran vlnN2 MAX V(drvF) FROM=140n TO=146n
+.meas tran vlnN4 MAX V(drvG) FROM=160n TO=166n
+
+* --- receiver rail levels at mid-pulse checkpoints (demux check) ---
+.meas tran vrA_push FIND V(rAp) AT=14n
+.meas tran vrB_push FIND V(rBp) AT=14n
+.meas tran vrA_pull FIND V(rAq) AT=44n
+.meas tran vrB_pull FIND V(rBq) AT=44n
+.meas tran vrA_null FIND V(rAn) AT=80n
+.meas tran vrB_null FIND V(rBn) AT=80n
+
+* --- driver-side line voltage at mid-pulse ---
+.meas tran vline_push FIND V(drvA) AT=14n
+.meas tran vline_pull FIND V(drvB) AT=44n
+
+.print tran v(drvA) v(rAp) v(rBp)
+.print tran v(drvB) v(rAq) v(rBq)
+.print tran v(rAn) v(rBn)
+.print tran v(drvC) v(rAc) v(rBc)
+.print tran v(drvE) v(rEa) v(drvF) v(rFa) v(drvG) v(rGa)
+
+.end

@@ -1,0 +1,539 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * =====================================================================
+
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+pwpsup                                4.04e-12
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpl1                                        0
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+pwpl2                                        0
+bpl2#branch                                  0
+vs2#branch                                   0
+bpl1#branch                                  0
+vs1#branch                                   0
+bpsup#branch                                 0
+vdd#branch                           -2.02e-12
+vss#branch                            2.02e-12
+vgn2#branch                                  0
+vgp2#branch                                  0
+vgn1#branch                                  0
+vgp1#branch                                  0
+
+ Reference value :  1.01010e-07
+No. of Data Rows : 7532
+
+  Measurements for Transient Analysis
+
+epush_drv           =   4.33598e-13 from=  9.90000e-08 to=  1.06300e-07
+epush_line          =   1.12726e-13 from=  9.90000e-08 to=  1.06300e-07
+push_rail           =  1.024610e-01 at=  1.005140e-07
+push_line           =  2.918861e-01 at=  1.005700e-07
+epull_drv           =   4.33581e-13 from=  1.29000e-07 to=  1.36300e-07
+epull_line          =   1.12726e-13 from=  1.29000e-07 to=  1.36300e-07
+pull_rail           =  -1.024610e-01 at=  1.305140e-07
+pull_line           =  -2.918861e-01 at=  1.305700e-07
+
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+pwpsup                                4.04e-12
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpl1                                        0
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+pwpl2                                        0
+bpl2#branch                                  0
+vs2#branch                                   0
+bpl1#branch                                  0
+vs1#branch                                   0
+bpsup#branch                                 0
+vdd#branch                           -2.02e-12
+vss#branch                            2.02e-12
+vgn2#branch                                  0
+vgp2#branch                                  0
+vgn1#branch                                  0
+vgp1#branch                                  0
+
+ Reference value :  5.47656e-08
+No. of Data Rows : 7532
+
+  Measurements for Transient Analysis
+
+epush_drv           =   6.56439e-13 from=  9.90000e-08 to=  1.06500e-07
+epush_line          =   2.19501e-13 from=  9.90000e-08 to=  1.06500e-07
+push_rail           =  1.220863e-01 at=  1.007060e-07
+push_line           =  4.261588e-01 at=  1.007700e-07
+epull_drv           =   6.56402e-13 from=  1.29000e-07 to=  1.36500e-07
+epull_line          =   2.19494e-13 from=  1.29000e-07 to=  1.36500e-07
+pull_rail           =  -1.221210e-01 at=  1.307060e-07
+pull_line           =  -4.261064e-01 at=  1.307700e-07
+
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+pwpsup                                4.04e-12
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpl1                                        0
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+pwpl2                                        0
+bpl2#branch                                  0
+vs2#branch                                   0
+bpl1#branch                                  0
+vs1#branch                                   0
+bpsup#branch                                 0
+vdd#branch                           -2.02e-12
+vss#branch                            2.02e-12
+vgn2#branch                                  0
+vgp2#branch                                  0
+vgn1#branch                                  0
+vgp1#branch                                  0
+
+ Reference value :  9.44560e-09 Reference value :  1.19180e-07
+No. of Data Rows : 7559
+
+  Measurements for Transient Analysis
+
+epush_drv           =   9.08899e-13 from=  9.90000e-08 to=  1.06750e-07
+epush_line          =   3.70874e-13 from=  9.90000e-08 to=  1.06750e-07
+push_rail           =  1.889406e-01 at=  1.010000e-07
+push_line           =  5.463198e-01 at=  1.010000e-07
+epull_drv           =   9.08766e-13 from=  1.29000e-07 to=  1.36750e-07
+epull_line          =   3.70852e-13 from=  1.29000e-07 to=  1.36750e-07
+pull_rail           =  -1.887420e-01 at=  1.310000e-07
+pull_line           =  -5.460297e-01 at=  1.310000e-07
+
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+pwpsup                                4.04e-12
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpl1                                        0
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+pwpl2                                        0
+bpl2#branch                                  0
+vs2#branch                                   0
+bpl1#branch                                  0
+vs1#branch                                   0
+bpsup#branch                                 0
+vdd#branch                           -2.02e-12
+vss#branch                            2.02e-12
+vgn2#branch                                  0
+vgp2#branch                                  0
+vgn1#branch                                  0
+vgp1#branch                                  0
+
+ Reference value :  7.34456e-08
+No. of Data Rows : 7532
+
+  Measurements for Transient Analysis
+
+epush_drv           =   1.13048e-12 from=  9.90000e-08 to=  1.07000e-07
+epush_line          =   5.21190e-13 from=  9.90000e-08 to=  1.07000e-07
+push_rail           =  2.502734e-01 at=  1.012300e-07
+push_line           =  6.157926e-01 at=  1.012300e-07
+epull_drv           =   1.13009e-12 from=  1.29000e-07 to=  1.37000e-07
+epull_line          =   5.21082e-13 from=  1.29000e-07 to=  1.37000e-07
+pull_rail           =  -2.501097e-01 at=  1.312300e-07
+pull_line           =  -6.155114e-01 at=  1.312300e-07
+
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+pwpsup                                4.04e-12
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpl1                                        0
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+pwpl2                                        0
+bpl2#branch                                  0
+vs2#branch                                   0
+bpl1#branch                                  0
+vs1#branch                                   0
+bpsup#branch                                 0
+vdd#branch                           -2.02e-12
+vss#branch                            2.02e-12
+vgn2#branch                                  0
+vgp2#branch                                  0
+vgn1#branch                                  0
+vgp1#branch                                  0
+
+ Reference value :  3.13456e-08 Reference value :  1.38280e-07
+No. of Data Rows : 7559
+
+  Measurements for Transient Analysis
+
+epush_drv           =   1.33060e-12 from=  9.90000e-08 to=  1.07250e-07
+epush_line          =   6.65931e-13 from=  9.90000e-08 to=  1.07250e-07
+push_rail           =  2.866835e-01 at=  1.014800e-07
+push_line           =  6.559526e-01 at=  1.014800e-07
+epull_drv           =   1.33008e-12 from=  1.29000e-07 to=  1.37250e-07
+epull_line          =   6.65663e-13 from=  1.29000e-07 to=  1.37250e-07
+pull_rail           =  -2.864332e-01 at=  1.314800e-07
+pull_line           =  -6.555689e-01 at=  1.314800e-07
+
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+pwpsup                                4.04e-12
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpl1                                        0
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+pwpl2                                        0
+bpl2#branch                                  0
+vs2#branch                                   0
+bpl1#branch                                  0
+vs1#branch                                   0
+bpsup#branch                                 0
+vdd#branch                           -2.02e-12
+vss#branch                            2.02e-12
+vgn2#branch                                  0
+vgp2#branch                                  0
+vgn1#branch                                  0
+vgp1#branch                                  0
+
+ Reference value :  9.72656e-08
+No. of Data Rows : 7532
+
+  Measurements for Transient Analysis
+
+epush_drv           =   1.51741e-12 from=  9.90000e-08 to=  1.07500e-07
+epush_line          =   8.05352e-13 from=  9.90000e-08 to=  1.07500e-07
+push_rail           =  3.075444e-01 at=  1.017300e-07
+push_line           =  6.788560e-01 at=  1.017300e-07
+epull_drv           =   1.51670e-12 from=  1.29000e-07 to=  1.37500e-07
+epull_line          =   8.04956e-13 from=  1.29000e-07 to=  1.37500e-07
+pull_rail           =  -3.072848e-01 at=  1.317140e-07
+pull_line           =  -6.787348e-01 at=  1.317140e-07
+
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+pwpsup                                4.04e-12
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpl1                                        0
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+pwpl2                                        0
+bpl2#branch                                  0
+vs2#branch                                   0
+bpl1#branch                                  0
+vs1#branch                                   0
+bpsup#branch                                 0
+vdd#branch                           -2.02e-12
+vss#branch                            2.02e-12
+vgn2#branch                                  0
+vgp2#branch                                  0
+vgn1#branch                                  0
+vgp1#branch                                  0
+
+ Reference value :  5.36656e-08
+No. of Data Rows : 7559
+
+  Measurements for Transient Analysis
+
+epush_drv           =   1.69635e-12 from=  9.90000e-08 to=  1.07750e-07
+epush_line          =   9.41268e-13 from=  9.90000e-08 to=  1.07750e-07
+push_rail           =  3.196065e-01 at=  1.019640e-07
+push_line           =  6.922757e-01 at=  1.019640e-07
+epull_drv           =   1.69559e-12 from=  1.29000e-07 to=  1.37750e-07
+epull_line          =   9.40874e-13 from=  1.29000e-07 to=  1.37750e-07
+pull_rail           =  -3.195121e-01 at=  1.319640e-07
+pull_line           =  -6.921100e-01 at=  1.319640e-07
+
+Reset re-loads circuit * =====================================================================
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+pwpsup                                4.04e-12
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpl1                                        0
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+pwpl2                                        0
+bpl2#branch                                  0
+vs2#branch                                   0
+bpl1#branch                                  0
+vs1#branch                                   0
+bpsup#branch                                 0
+vdd#branch                           -2.02e-12
+vss#branch                            2.02e-12
+vgn2#branch                                  0
+vgp2#branch                                  0
+vgn1#branch                                  0
+vgp1#branch                                  0
+
+ Reference value :  8.94560e-09 Reference value :  1.18310e-07
+No. of Data Rows : 7532
+
+  Measurements for Transient Analysis
+
+epush_drv           =   1.87070e-12 from=  9.90000e-08 to=  1.08000e-07
+epush_line          =   1.07502e-12 from=  9.90000e-08 to=  1.08000e-07
+push_rail           =  3.266330e-01 at=  1.022140e-07
+push_line           =  6.999531e-01 at=  1.022140e-07
+epull_drv           =   1.86982e-12 from=  1.29000e-07 to=  1.38000e-07
+epull_line          =   1.07455e-12 from=  1.29000e-07 to=  1.38000e-07
+pull_rail           =  -3.264952e-01 at=  1.322140e-07
+pull_line           =  -6.997397e-01 at=  1.322140e-07
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd                                          1
+vss                                         -1
+pwpsup                                4.04e-12
+drv1                                         0
+gp1                                          1
+gn1                                         -1
+cell1                                        0
+xc1.x                                        0
+ra1                                          0
+rb1                                          0
+pwpl1                                        0
+drv2                                         0
+gp2                                          1
+gn2                                         -1
+cell2                                        0
+xc2.x                                        0
+ra2                                          0
+rb2                                          0
+pwpl2                                        0
+bpl2#branch                                  0
+vs2#branch                                   0
+bpl1#branch                                  0
+vs1#branch                                   0
+bpsup#branch                                 0
+vdd#branch                           -2.02e-12
+vss#branch                            2.02e-12
+vgn2#branch                                  0
+vgp2#branch                                  0
+vgn1#branch                                  0
+vgp1#branch                                  0
+
+ Reference value :  7.79056e-08
+No. of Data Rows : 7532
+
+  Measurements for Transient Analysis
+
+epush_drv           =   1.87070e-12 from=  9.90000e-08 to=  1.08000e-07
+epush_line          =   1.07502e-12 from=  9.90000e-08 to=  1.08000e-07
+push_rail           =  3.266330e-01 at=  1.022140e-07
+push_line           =  6.999531e-01 at=  1.022140e-07
+epull_drv           =   1.86982e-12 from=  1.29000e-07 to=  1.38000e-07
+epull_line          =   1.07455e-12 from=  1.29000e-07 to=  1.38000e-07
+pull_rail           =  -3.264952e-01 at=  1.322140e-07
+pull_line           =  -6.997397e-01 at=  1.322140e-07
+
+
+Total analysis time (seconds) = 0.689787
+
+Total elapsed time (seconds) = 3.167 
+
+Total DRAM available = 62177.336 MB.
+DRAM currently available = 10527.094 MB.
+Maximum ngspice program size =   38.477 MB.
+Current ngspice program size =   28.738 MB.
+
+Shared ngspice pages =   11.711 MB.
+Text (code) pages =    7.578 MB.
+Stack = 0 bytes.
+Library pages =   17.070 MB.
+

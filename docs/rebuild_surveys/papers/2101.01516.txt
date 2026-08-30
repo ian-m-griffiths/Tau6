@@ -1,0 +1,265 @@
+                                                                   Best CNTFET Ternary Adders?
+                                                                                                   Daniel Etiemble
+                                                                                        Computer Science Laboratory (LRI)
+                                                                                             Paris Saclay University
+                                                                                              Saint Aubin, France
+                                                                                                    de@lri.fr
+
+
+
+
+                                           Abstract—The MUX implementation of ternary half adders                                           TABLE I
+                                        and full adders using predecessor and successor functions lead                              H ALF ADDER TRUTH TABLE
+                                        to the most efficient efficient implementation using the smallest
+arXiv:2101.01516v1 [cs.AR] 5 Jan 2021
+
+
+
+
+                                        transistor count. These designs are compared with the binary                                      SUM               CARRY
+                                                                                                                              X/Y     0    1  2         0     1 2
+                                        implementation of the corresponding half adders and full adders
+                                                                                                                               0      0    1  2         0     0 0
+                                        using the MUX technique or the typical complementary CMOS                              1      1    2  0         0     0 1
+                                        circuit style. The transistor count ratio between ternary and                          2      2    0  1         0     1 1
+                                        binary implementations is always greater than the information
+                                        ratio (log2 (3)/log2 (2) = 1.585) between ternary and binary wires.
+                                                                                                                                          TABLE II
+                                                               I. I NTRODUCTION                                                  NI AND PI BINARY FUNCTIONS
+
+                                           Many ternary half adders and full adders have been pre-                                            NI   PI
+                                        sented in the last decade. The most significant papers are [1],                                   0   2    2
+                                                                                                                                          1   0    2
+                                        [2], [3], [4]. [5], [6], [7]. In [8], we have compared different                                  2   0    0
+                                        implementations of quaternary adders. The best quaternary
+                                        one has been presented in [9]. It is based on the use of
+                                        multiplexers. In this paper, we show that this approach also             Computation of the Half Adder SUM is processed by the
+                                        leads to the best implementation of ternary half and full             following rules:
+                                        adders. The design is based on CNTFET technology. This                   • When X = 0, SUM = Y
+                                        technology is far from being a mature technology. As of                  • When X = 1, SUM = (Y+1) mod (3). The corresponding
+                                        2020, FinFET technology integrates millions of times more                  circuit is called successor circuit.
+                                        transistors than CNTFET technology. However, CNTFET has                  • When X = 2, SUM = (Y-1) mod (3). The corresponding
+                                        a big advantage for designing multivalued circuits. While it               circuit is called predecessor circuit.
+                                        basically uses the typical CMOS circuit styles, the threshold            • According to X, a ternary MUX provides the correct
+                                        levels of the different multivalued gates can be got by adjusting          SUM output.
+                                        the diameter of each used transistor. This technology is used            Threshold detectors circuits are implemented by the in-
+                                        in this paper. We first present the MUX based design of the           verters NI and PI, according to Table 2. These inverters are
+                                        ternary half adder. Then we present the full adder design.            generally called NTI and PTI, but this is confusing as they
+                                        These implementation are compared with the similar MUX                are binary inverters: the outputs are binary ones and they only
+                                        based implementation and the conventional implementation of           have one threshold level. The only difference with typical
+                                        the binary versions.                                                  binary inverters is the specific threshold levels. AssumingVdd ,
+                                                         II. T ERNARY H ALF A DDERS                           Vdd /2 and 0 ternary levels, the threshold levels are Vdd /4 and
+                                                                                                              3Vdd /4 when the threshold level of a binary inverter is Vdd /2.
+                                           Table I presents the truth table of the ternary half-adder.        The NI and PI threshold levels are obtained by choosing the
+                                           Ternary half adders and full adders have ternary inputs and        appropriate diameter for the different CNTFET transistors.
+                                        outputs and binary carry inputs and outputs.                          They are shown in left part of Figure 1. The implementation
+                                           • Ternary values (0,1,2) corresponding to 0, Vdd /2 and Vdd        of the ternary MUX is shown in right part of Figure 1.
+                                             voltage levels                                                      Figure 2 presents the Successor and Predecessor circuits
+                                           • According to the circuit style that is used, the binary          with two power supplies (Vdd and Vdd /2). A, B, C, D outputs
+                                             values may have levels 0 and Vdd /2 or 0 and Vdd .               of NI and PI inverters control the different transistors: for each
+                                           The technique used in [9] is based on multiplexers. In this        ternary input X, only one path is active between Vdd or Vdd /2
+                                        approach, the carry signals are used as control inputs of MUX:        or ground and the corresponding output. The drawback of this
+                                        they are never used as input values of these MUX. The binary          approach is the supplementary power supply. Figure 3 presents
+                                        levels are thus 0 and Vdd . The corresponding binary values are       the successor and predecessor circuits with only one power
+                                        0 and 2.                                                              supply (Vdd ). The intermediate level is got through a voltage
+                                                                                                    Fig. 4. Ternary Half Adder
+Fig. 1. Threshold detectors and ternary MUX (Ternary inputs and ternary
+control)
+                                                                                                         TABLE III
+                                                                                      T RANSISTOR COUNT FOR THE T ERNARY H ALF A DDER
+divider by using resistor-like transistors. The drawback of this                                                  2 PS   1 PS
+approach is a static power dissipation when the output is 1.                                         Succ-Pred      8     14
+                                                                                                       MUX         16     16
+                                                                                                       PI-NI       16     16
+                                                                                                       NOT          2      2
+                                                                                                      TOTAL        42     48
+
+
+
+                                                                                Still using the MUX approach, the SUM output of the full
+                                                                              adder is given by
+                                                                                • If Cin = 0, then SU MF A = SU MHA else SU MF A =
+                                                                                   (SU MHA + 1)mod(3)
+      Fig. 2. Successor and Predecessor Circuits (2 power supplies)
+                                                                              Another approach directly computes SU MF A as a function
+                                                                              of Cin and X.
+                                                                                • When X = 0: if Cin = 0 then SUM = Y else SUM =
+                                                                                   (Y+1) mod (3).
+                                                                                • When X = 1, if Cin = 0 then SUM = (Y+1) mod (3) else
+                                                                                   SUM = (Y-1) mod (3).
+                                                                                • When X = 2, if Cin = 0 then SUM= (Y-1) mod (3) else
+                                                                                   SUM =Y.
+                                                                              Cout1 is the carry output when Cin = 1:
+                                                                                • When X = 0, Cout1 = 1 if Y = 2 (P I(Y ) = 2 according
+                                                                                   to Table 2)
+       Fig. 3. Successor and Predecessor Circuits (1 power supply)              • When X = 1, Cout1 = 1 if Y ≥ 1 (N I(Y ) = 2 according
+                                                                                   to Table 2)
+  Figure 4 presents the ternary half-adder circuit. The carry
+                                                                                • When X = 2, Cout1 = 1
+output is:
+  • When X = 0, Cout = 0
+  • When X = 1, Cout = 1 if Y = 2 (P I(Y ) = 2) according                                                 TABLE IV
+     to Table 2)                                                                             T RANSISTOR COUNT OF DIFFERENT HA S
+  • When X = 2, Cout = 1 if Y ≥ 1 (N I(Y ) = 2) according                      Ternary Half Adder    [1]    [2]    [3]   [4]     New 2 PS   New 1PS
+     to Table 2)                                                                 Transistor count    136    112    112   85         42        48
+  Table III presents the transistor count for the half adders.
+  Table IV presents the transistor count for different ternary                                           TABLE V
+half adders proposed in the last ten years.                                                F ULL ADDER TRUTH TABLE WHEN Cin = 1
+
+                  III. T ERNARY F ULL A DDERS                                                              SUM               CARRY
+                                                                                               X/Y     0    1 2          0     1 2
+  When Cin = 0, the full adder truth table was presented in                                     0      1    2 0          0     0 1
+Table 1 (half-adder).When Cin = 1, the truth table is given in                                  1      2    0 1          0     1 1
+Table V.                                                                                        2      0    1 2          1     1 1
+
+
+
+
+                                                                          2
+If Cin = 0 then CoutF A = CoutHA else CoutF A = Cout1                                              TABLE VI
+                                                                           T RANSISTOR COUNTS FOR THEE TERNARY FULL ADDER (2 POWER
+                                                                                                   SUPPLIES )
+
+                                                                                          Carry    SUM V1     SUM V2      FA-V1   FA-V2
+                                                                          SUCC- PRED       0         12          8
+                                                                            MUX3           16         8         16
+                                                                            MUX2           4          4          4
+                                                                             PI-NI         0         24         16
+                                                                             NOT           6          2          2
+                                                                            TOTAL          26        50         46         76         72
+
+
+                                                                                                  TABLE VII
+                                                                        T RANSISTOR COUNTS FOR THE TERNARY FULL ADDER (1 POWER SUPPLY )
+
+                                                                                          Carry    SUM V1     SUM V2      FA-V1   FA-V2
+                                                                          SUCC- PRED       0         21         14
+                                                                            MUX3           16         8         16
+                                                                            MUX2           4          4          4
+                                                                             PI-NI         0         24         16
+                                                                             NOT           6          2          2
+                                                                            TOTAL          26        59         52         83         78
+                Fig. 5. Ternary Full Adder(version 1)
+
+                                                                                  IV. C OMPARING WITH BINARY ADDERS
+                                                                        A. Binary Half Adder
+                                                                          Using the same MUX technique, the binary half-adder is
+                                                                        shown in Figure 8. It uses 12 T. Permuting the MUX inputs
+                                                                        and adding an output inverter would lead to 14 T with restored
+                                                                        output levels. The transistor count is then the same as a typical
+                                                                        conventional approach used in standard cell libraries [10], as
+                                                                        shown in Figure 9 .
+
+
+
+
+               Fig. 6. Ternary Full Adder (version 2)
+
+   Figure 5 and Figure 6 use two new different types of
+MUXes:
+   • MUXes with ternary inputs and binary control;
+                                                                                     Fig. 8. Binary Half Adder (MUX technique)
+   • MUXes with binary inputs and binary control.
+
+Both types use the same typical MUX2 binary circuit (Figure
+7)                                                                      B. Binary Full Adder
+                                                                           With the MUX approach, the binary full adder is presented
+                                                                        in Figure 10. It corresponds to the following rules:
+                                                                           • If Cin = 0 then SU MF A = X XOR Y else X NXOR
+                                                                             Y. XOR and NXOR functions are implemented using
+                                                                             MUXes.
+                                                                           • If Cin = 0 then Cout = X.Y else Cout = X+Y.
+
+                                                                        The MUX based full adder has 30 T. A version with restored
+                                                                        output levels would have 34 T. It could be outlined that
+             Fig. 7. Typical MUX2 with binary control)
+
+   Table VI presents the transistor counts for the two versions                                   TABLE VIII
+of the ternary full adder with two power supplies. Table VII                      T RANSISTOR COUNT OF DIFFERENT TERNARY FA S
+provides the same information for one power supply.                              Ternary Full Adder     [5]   [6]   [7]    Proposed
+   Table VIII presents the transistor count for different ternary               TC (2 power supplies)         106   132       72
+full adders proposed in the last decade.                                        TC (1 power supply)     142                   78
+
+
+
+
+                                                                    3
+                                                                                          V. C ONCLUSION
+                                                                  The proposed ternary half adders and full adders have less
+                                                               transistors than all the previously proposed ones. It seems that
+                                                               the MUX approach with successor and predecessor circuits
+                                                               is the best one to implement ternary arithmetic circuits. It
+                                                               looks like the transistor counts are close to the minimal
+                                                               possible value. The only valid comparison between ternary and
+                                                               binary circuit is based on the information ratio. According to
+                                                               Shannon theory of information, when N events have the same
+                                                               probability to occur, the corresponding amount of information
+                                                               is I = log2 (N ) bits (or Shannon). When N = 2, I = 1 bit.
+                                                               When N = 3, I = 1.585 bits. A ternary wire carries 1.585
+                                                               times the amount of information of a binary one. This 1.585
+                                                               information ratio must be used to compare binary and ternary
+                                                               circuits. For instance, an 8-bit binary adder can be compared
+                 Fig. 9. 14 T binary Half Adder)               to a 5-trit ternary adder as they process approximately the
+                                                               same amount of information. 8/5 is close to 1.585. The
+                                                               difference results from rounding issues. Considering the most
+the MUX approach has more transistors than the typical         conservative implementation of binary circuits, the transistor
+conventional full adder with complementary CMOS shown in       count ratio between ternary and binary half adder is 42/14
+Figure 11. Many proposals using less than 28 T have been       = 3 and 72/28 = 2.57 for the full adder when using two
+proposed in the literature.                                    power supplies for the ternary case. With only one power
+                                                               supply, the ratios are respectively 48/14 = 3.4 and 78/28 =
+                                                               2.8. Both ratios are greater than 1.585. It means that the best
+                                                               ternary implementation leads to more transistors, more chip
+                                                               area, more interconnects and more power dissipation than the
+                                                               corresponding conservative binary ones. These results are not
+                                                               surprising. 3 is not the best base for computation [11] and
+                                                               multivalued circuits are restricted to a small niche [12].
+
+                                                                                            R EFERENCES
+                                                               [1] S. Lin, Y-B. Yin and F. Lombardi, “CNTFET-Based Design of Ternary
+                                                                   Logic Gates and Arithmetic Circuit", IEEE Transactions on Nanotech-
+                                                                   nology, Vol 10, No 2, March 2011.
+                                                               [2] H. Samadi, A. Shahhoseini and F. Aghaei-liavali, “A new method
+                                                                   on designing and simulating CNTFET-based ternary gates and arith-
+                                                                   metic circuits", Microelectron. J, vol 63, pp 41-48, May 2017, doi:
+                                                                   10.1016/j.mejo.2017.02.018
+                                                               [3] S. K. Sahoo, G. Akhilesh, R. Sahoo and M. Muglikar, “High-
+                                                                   Performance Ternary Adder Using CNTFET," in IEEE Transactions
+                                                                   on Nanotechnology, vol. 16, no. 3, pp. 368-374, May 2017, doi:
+           Fig. 10. Binary Full Adder (MUX technique)              10.1109/TNANO.2017.2649548.
+                                                               [4] R.A. Jaber, A.Kassem, A.M. El-Hajj, L.A. El-Nimri and A.Massoud
+                                                                   Haidar, “High-Performance and Energy-Efficient CNTFET-Base Designs
+                                                                   for Ternary Logic Circuits", IEEE Access, Vol 7, pp. 93871-93886, 2019.
+                                                               [5] R. F. Mirzaee, K. Navi and N. Bagherzadeh, “High-Efficient
+                                                                   Circuits for Ternary Addition", Hindawi Publishing Corporation,
+                                                                   VLSI Design, Volume 2014, Article ID 534587, 15 pages
+                                                                   http://dx.doi.org/10.1155/2014/534587
+                                                               [6] S. A. Ebrahimi, P. Keshavarzian, S. Sorouri, and M. Shahsavari, “Low
+                                                                   power CNTFET-based ternary full adder cell for nanoelectronics", Inter-
+                                                                   national Journal of Soft Computing and Engineering, vol. 2, pp. 291-295,
+                                                                   2012.
+                                                               [7] P. Keshavarzian and R. Sarikhani, “A novel CNTFET-based ternary full
+                                                                   adder", Circuits, Systems, and Signal Processing, vol. 33, no.3, pp. 665-
+                                                                   679, 2014.
+                                                               [8] D. Etiemble, “Comparing quaternary and binary multipliers",
+                                                                   arXiv:1908.07299 [cs.AR]
+                                                               [9] E. Roosta and S. A. Hosseiny, "A Novel Multiplexer-Based Quaternary
+                                                                   Full Adder in Nanoelectronics", Circuits, Systems and Signal Processing,
+                Fig. 11. 28 T binary Full Adder)                   https://doi.org/10.1007/s00034-019-01039-8
+                                                               [10] VLSI Technology Standard Cell Library, January 2008
+                                                                   http://www.vlsitechnology.org/html/cells/wsclib013/ha2.html
+
+
+
+
+                                                           4
+[11] D. Etiemble, “Ternary circuits: why R = 3 is not the Optimal Radix for
+    Computation", August 2019, arXiv:1908.06841 [cs.AR],
+[12] D. Etiemble, “Why M-Valued Circuits are restricted to a Small Niche”,
+    in Journal of Multiple Valued Logic and Soft Computing, Vol. 9 , No 1,
+    2003.
+
+
+
+
+                                                                              5
+

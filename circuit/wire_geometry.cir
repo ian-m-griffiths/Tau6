@@ -1,0 +1,402 @@
+* =====================================================================
+* wire_geometry.cir  --  does WIRE/DEVICE GEOMETRY reduce ternary energy?
+*
+* The principal's hypothesis: "optimise the current vs resistance
+* modifiers, because parallel and wider wires negate the losses of
+* smaller things... may even need to be different across our complex
+* transistors because we want them doing different things."
+*   i.e. energy ~ C*V^2 (capacitance), delay ~ R*C (resistance);
+*   a wider wire lowers R but raises C -> an R-vs-C tradeoff per wire,
+*   possibly DIFFERENT for the push rail (PMOS drive) vs the pull rail
+*   (NMOS drive) because P-side and N-side have different mobility/|Vt|.
+*
+* WHAT IS BUILT (two-rail one-hot ternary driver, the task's encoding):
+*   +1 (push) : PMOS driver pulls the PUSH wire 0 -> +VDD
+*   -1 (pull) : NMOS driver pulls the PULL wire 0 -> -VDD
+*   0  (null) : both drivers off, both wires stay 0 (free)
+*   Each rail is a width-parametrized interconnect + a 0.2 pF receiver
+*   input (the "next gate").  Wire model (Elmore-style, matches the
+*   repo's `Rw in x` + `Cx x 0` convention):
+*       R(W) = Rref * Wref / W          (narrow -> more squares -> more R)
+*       C(W) = Caref * (W/Wref) + Cf    (area term + width-independent fringe)
+*   Wref=1 is the reference width (R=500 ohm, C=1 pF area -- the repo's
+*   ternary_cell.cir defaults).  Parallel rails (N in parallel) divide R
+*   by N but add N*fringe + N*via overhead, vs one wire W=N*Wref which
+*   adds only area C.  This is exactly the "parallel adds via-vs-area
+*   overhead; wide adds C directly" comparison.
+*
+* DRIVER (real CMOS, from lowswing_sweep.cir): VDD=+1 / VSS=-1, VTO=+/-0.4,
+* KP 200u/100u.  PDRV (PMOS) and NDRV (NMOS) are given EQUAL W=11u so the
+* PMOS is genuinely ~2x weaker than the NMOS -- the real mobility asymmetry
+* that the heterogeneity test (step 4) is meant to exploit.  Gate charge is
+* ~34 fJ/toggle (C_g ~ 34 fF) -- negligible vs the ~pJ wire/load energy and
+* width-independent, so it cannot change the geometry ranking; noted, not
+* swept.
+*
+* ENERGY ACCOUNTING (repo convention, INTEG V*I over the toggle window):
+*   E_push = INTEG -V(vdd)*I(VDD)  over the push window   [supply energy]
+*   E_pull = INTEG -V(vss)*I(VSS)  over the pull window   [supply energy]
+*   Both are the FULL C_total*V^2 delivered from the rail (1/2 stored in
+*   the caps, 1/2 dissipated in driver channel + wire R -- the channel/
+*   wire dissipation IS inside this integral, exactly what the geometry
+*   modifies).  A 1 Meg term resistor gives the wires a DC return and
+*   draws ~1 uA (negligible over a 20 ns window).
+*
+* HONESTY NOTES: LEVEL=1 models, no body diodes, no subthreshold leakage,
+* no device mismatch; a pure capacitive receiver (the diode demux / sense
+* amp add a WIDTH-INDEPENDENT constant overhead that does not change the
+* wire ranking, so they are omitted to isolate the wire).  Each pulse is
+* 20 ns so every rail FULLY settles: the measured energy is the textbook
+* C_total*V^2 (independent of R), and R appears only through DELAY -- the
+* "R-vs-C optimum" is therefore a DELAY/energy-delay tradeoff, not a pure
+* energy one.  This is the honest physics: geometry cannot beat C*V^2;
+* it can only move the C*V^2 up (wider) or the delay up (narrower).
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+* ------------------------------------------------------------------
+* geometry parameters
+* ------------------------------------------------------------------
+.param VDD   = 1.0
+.param VTD   = 0.4
+.param WP    = 11u         ; PMOS driver width (push)
+.param WN    = 11u         ; NMOS driver width (pull) -- EQUAL => PMOS 2x weaker
+.param LEN   = 0.18u
+
+.param Wref  = 1           ; reference wire width (Rref=500, Caref=1p)
+.param Rref  = 500
+.param Caref = 1p
+.param Cf    = 0.1p        ; width-independent fringe cap per rail edge
+.param Cvia  = 20f         ; via + landing-pad overhead per rail
+.param CL    = 0.2p        ; receiver input cap (the "device" floor)
+
+* ------------------------------------------------------------------
+* models (verbatim lowswing_sweep.cir driver devices)
+* ------------------------------------------------------------------
+.model NDRV NMOS(LEVEL=1 VTO={VTD}   KP=200u LAMBDA=0.05 TOX=2n)
+.model PDRV PMOS(LEVEL=1 VTO={-VTD}  KP=100u LAMBDA=0.05 TOX=2n)
+
+* ------------------------------------------------------------------
+* driver stages (output device only; gate charge is ~34 fJ, negligible)
+* ------------------------------------------------------------------
+.subckt drvP g out vddp
+Mp out g vddp vddp PDRV W={WP} L={LEN}
+.ends
+
+.subckt drvN g out vssn
+Mn out g vssn vssn NDRV W={WN} L={LEN}
+.ends
+
+* ------------------------------------------------------------------
+* wire sections: N parallel rails, each R/C + one via cap
+* ------------------------------------------------------------------
+.subckt wire1 in out rsec=500 csec=1p cvia=20f
+R1 in out {rsec}
+C1 out 0 {csec}
+Cv1 out 0 {cvia}
+.ends
+
+.subckt wire2 in out rsec=500 csec=1p cvia=20f
+R1 in out {rsec}
+C1 out 0 {csec}
+Cv1 out 0 {cvia}
+R2 in out {rsec}
+C2 out 0 {csec}
+Cv2 out 0 {cvia}
+.ends
+
+.subckt wire3 in out rsec=500 csec=1p cvia=20f
+R1 in out {rsec}
+C1 out 0 {csec}
+Cv1 out 0 {cvia}
+R2 in out {rsec}
+C2 out 0 {csec}
+Cv2 out 0 {cvia}
+R3 in out {rsec}
+C3 out 0 {csec}
+Cv3 out 0 {cvia}
+.ends
+
+.subckt wire4 in out rsec=500 csec=1p cvia=20f
+R1 in out {rsec}
+C1 out 0 {csec}
+Cv1 out 0 {cvia}
+R2 in out {rsec}
+C2 out 0 {csec}
+Cv2 out 0 {cvia}
+R3 in out {rsec}
+C3 out 0 {csec}
+Cv3 out 0 {cvia}
+R4 in out {rsec}
+C4 out 0 {csec}
+Cv4 out 0 {cvia}
+.ends
+
+* ------------------------------------------------------------------
+* shared supplies + per-rail power probes
+* ------------------------------------------------------------------
+VDD   vdd 0 DC {VDD}
+VSS   vss 0 DC {-VDD}
+BpPUSH ppush 0 V = -V(vdd)*I(VDD)     ; push energy rate (positive while PMOS on)
+BpPULL ppull 0 V = -V(vss)*I(VSS)     ; pull energy rate (positive while NMOS on)
+
+* =====================================================================
+* CASE 1: symmetric W=0.25  (R=2000, C=0.35p)  push@50n  pull@75n
+* =====================================================================
+VgP1 gp1 0 PULSE({VDD} 0 50n 0.2n 0.2n 20n 2u)
+VgN1 gn1 0 PULSE({-VDD} 0 75n 0.2n 0.2n 20n 2u)
+XdP1 gp1 dl1 vdd drvP
+XwP1 dl1 x1  wire1 rsec=2000 csec=0.35p
+ClP1 x1 0 {CL}
+RtP1 x1 0 1meg
+XdN1 gn1 dl1b vss drvN
+XwN1 dl1b x1b wire1 rsec=2000 csec=0.35p
+ClN1 x1b 0 {CL}
+RtN1 x1b 0 1meg
+
+* =====================================================================
+* CASE 2: symmetric W=0.5  (R=1000, C=0.6p)  push@120n  pull@145n
+* =====================================================================
+VgP2 gp2 0 PULSE({VDD} 0 120n 0.2n 0.2n 20n 2u)
+VgN2 gn2 0 PULSE({-VDD} 0 145n 0.2n 0.2n 20n 2u)
+XdP2 gp2 dl2 vdd drvP
+XwP2 dl2 x2  wire1 rsec=1000 csec=0.6p
+ClP2 x2 0 {CL}
+RtP2 x2 0 1meg
+XdN2 gn2 dl2b vss drvN
+XwN2 dl2b x2b wire1 rsec=1000 csec=0.6p
+ClN2 x2b 0 {CL}
+RtN2 x2b 0 1meg
+
+* =====================================================================
+* CASE 3: symmetric W=1.0 REFERENCE (R=500, C=1.1p)  push@190n pull@215n
+* =====================================================================
+VgP3 gp3 0 PULSE({VDD} 0 190n 0.2n 0.2n 20n 2u)
+VgN3 gn3 0 PULSE({-VDD} 0 215n 0.2n 0.2n 20n 2u)
+XdP3 gp3 dl3 vdd drvP
+XwP3 dl3 x3  wire1 rsec=500 csec=1.1p
+ClP3 x3 0 {CL}
+RtP3 x3 0 1meg
+XdN3 gn3 dl3b vss drvN
+XwN3 dl3b x3b wire1 rsec=500 csec=1.1p
+ClN3 x3b 0 {CL}
+RtN3 x3b 0 1meg
+
+* =====================================================================
+* CASE 4: symmetric W=2  (R=250, C=2.1p)  push@260n  pull@285n
+* =====================================================================
+VgP4 gp4 0 PULSE({VDD} 0 260n 0.2n 0.2n 20n 2u)
+VgN4 gn4 0 PULSE({-VDD} 0 285n 0.2n 0.2n 20n 2u)
+XdP4 gp4 dl4 vdd drvP
+XwP4 dl4 x4  wire1 rsec=250 csec=2.1p
+ClP4 x4 0 {CL}
+RtP4 x4 0 1meg
+XdN4 gn4 dl4b vss drvN
+XwN4 dl4b x4b wire1 rsec=250 csec=2.1p
+ClN4 x4b 0 {CL}
+RtN4 x4b 0 1meg
+
+* =====================================================================
+* CASE 5: symmetric W=4  (R=125, C=4.1p)  push@330n  pull@355n
+* =====================================================================
+VgP5 gp5 0 PULSE({VDD} 0 330n 0.2n 0.2n 20n 2u)
+VgN5 gn5 0 PULSE({-VDD} 0 355n 0.2n 0.2n 20n 2u)
+XdP5 gp5 dl5 vdd drvP
+XwP5 dl5 x5  wire1 rsec=125 csec=4.1p
+ClP5 x5 0 {CL}
+RtP5 x5 0 1meg
+XdN5 gn5 dl5b vss drvN
+XwN5 dl5b x5b wire1 rsec=125 csec=4.1p
+ClN5 x5b 0 {CL}
+RtN5 x5b 0 1meg
+
+* =====================================================================
+* CASE 6: symmetric W=8  (R=62.5, C=8.1p)  push@400n  pull@425n
+* =====================================================================
+VgP6 gp6 0 PULSE({VDD} 0 400n 0.2n 0.2n 20n 2u)
+VgN6 gn6 0 PULSE({-VDD} 0 425n 0.2n 0.2n 20n 2u)
+XdP6 gp6 dl6 vdd drvP
+XwP6 dl6 x6  wire1 rsec=62.5 csec=8.1p
+ClP6 x6 0 {CL}
+RtP6 x6 0 1meg
+XdN6 gn6 dl6b vss drvN
+XwN6 dl6b x6b wire1 rsec=62.5 csec=8.1p
+ClN6 x6b 0 {CL}
+RtN6 x6b 0 1meg
+
+* =====================================================================
+* CASE 7: PARALLEL N=2 rails (each W=1)  push@470n  pull@495n
+*         R_eff=250 (same as wide W=2), C_eff=2*1.1p+2*20f=2.24p
+* =====================================================================
+VgP7 gp7 0 PULSE({VDD} 0 470n 0.2n 0.2n 20n 2u)
+VgN7 gn7 0 PULSE({-VDD} 0 495n 0.2n 0.2n 20n 2u)
+XdP7 gp7 dl7 vdd drvP
+XwP7 dl7 x7  wire2 rsec=500 csec=1.1p
+ClP7 x7 0 {CL}
+RtP7 x7 0 1meg
+XdN7 gn7 dl7b vss drvN
+XwN7 dl7b x7b wire2 rsec=500 csec=1.1p
+ClN7 x7b 0 {CL}
+RtN7 x7b 0 1meg
+
+* =====================================================================
+* CASE 8: PARALLEL N=3 rails (each W=1)  push@540n  pull@565n
+*         R_eff=166.7, C_eff=3*1.1p+3*20f=3.36p
+* =====================================================================
+VgP8 gp8 0 PULSE({VDD} 0 540n 0.2n 0.2n 20n 2u)
+VgN8 gn8 0 PULSE({-VDD} 0 565n 0.2n 0.2n 20n 2u)
+XdP8 gp8 dl8 vdd drvP
+XwP8 dl8 x8  wire3 rsec=500 csec=1.1p
+ClP8 x8 0 {CL}
+RtP8 x8 0 1meg
+XdN8 gn8 dl8b vss drvN
+XwN8 dl8b x8b wire3 rsec=500 csec=1.1p
+ClN8 x8b 0 {CL}
+RtN8 x8b 0 1meg
+
+* =====================================================================
+* CASE 9: PARALLEL N=4 rails (each W=1)  push@610n  pull@635n
+*         R_eff=125 (same as wide W=4), C_eff=4*1.1p+4*20f=4.48p
+* =====================================================================
+VgP9 gp9 0 PULSE({VDD} 0 610n 0.2n 0.2n 20n 2u)
+VgN9 gn9 0 PULSE({-VDD} 0 635n 0.2n 0.2n 20n 2u)
+XdP9 gp9 dl9 vdd drvP
+XwP9 dl9 x9  wire4 rsec=500 csec=1.1p
+ClP9 x9 0 {CL}
+RtP9 x9 0 1meg
+XdN9 gn9 dl9b vss drvN
+XwN9 dl9b x9b wire4 rsec=500 csec=1.1p
+ClN9 x9b 0 {CL}
+RtN9 x9b 0 1meg
+
+* =====================================================================
+* CASE 10: HETEROGENEOUS  push W=2 (R=250,C=2.1p) / pull W=1 (R=500,C=1.1p)
+*           push@680n  pull@705n
+* =====================================================================
+VgP10 gp10 0 PULSE({VDD} 0 680n 0.2n 0.2n 20n 2u)
+VgN10 gn10 0 PULSE({-VDD} 0 705n 0.2n 0.2n 20n 2u)
+XdP10 gp10 dl10 vdd drvP
+XwP10 dl10 x10  wire1 rsec=250 csec=2.1p
+ClP10 x10 0 {CL}
+RtP10 x10 0 1meg
+XdN10 gn10 dl10b vss drvN
+XwN10 dl10b x10b wire1 rsec=500 csec=1.1p
+ClN10 x10b 0 {CL}
+RtN10 x10b 0 1meg
+
+* =====================================================================
+* CASE 11: HETEROGENEOUS  push W=4 (R=125,C=4.1p) / pull W=1 (R=500,C=1.1p)
+*           push@750n  pull@775n
+* =====================================================================
+VgP11 gp11 0 PULSE({VDD} 0 750n 0.2n 0.2n 20n 2u)
+VgN11 gn11 0 PULSE({-VDD} 0 775n 0.2n 0.2n 20n 2u)
+XdP11 gp11 dl11 vdd drvP
+XwP11 dl11 x11  wire1 rsec=125 csec=4.1p
+ClP11 x11 0 {CL}
+RtP11 x11 0 1meg
+XdN11 gn11 dl11b vss drvN
+XwN11 dl11b x11b wire1 rsec=500 csec=1.1p
+ClN11 x11b 0 {CL}
+RtN11 x11b 0 1meg
+
+* =====================================================================
+* CASE 12: HETEROGENEOUS  push W=1 (R=500,C=1.1p) / pull W=2 (R=250,C=2.1p)
+*           push@820n  pull@845n
+* =====================================================================
+VgP12 gp12 0 PULSE({VDD} 0 820n 0.2n 0.2n 20n 2u)
+VgN12 gn12 0 PULSE({-VDD} 0 845n 0.2n 0.2n 20n 2u)
+XdP12 gp12 dl12 vdd drvP
+XwP12 dl12 x12  wire1 rsec=500 csec=1.1p
+ClP12 x12 0 {CL}
+RtP12 x12 0 1meg
+XdN12 gn12 dl12b vss drvN
+XwN12 dl12b x12b wire1 rsec=250 csec=2.1p
+ClN12 x12b 0 {CL}
+RtN12 x12b 0 1meg
+
+* =====================================================================
+* CASE 13: HETEROGENEOUS  push W=1 (R=500,C=1.1p) / pull W=4 (R=125,C=4.1p)
+*           push@890n  pull@915n
+* =====================================================================
+VgP13 gp13 0 PULSE({VDD} 0 890n 0.2n 0.2n 20n 2u)
+VgN13 gn13 0 PULSE({-VDD} 0 915n 0.2n 0.2n 20n 2u)
+XdP13 gp13 dl13 vdd drvP
+XwP13 dl13 x13  wire1 rsec=500 csec=1.1p
+ClP13 x13 0 {CL}
+RtP13 x13 0 1meg
+XdN13 gn13 dl13b vss drvN
+XwN13 dl13b x13b wire1 rsec=125 csec=4.1p
+ClN13 x13b 0 {CL}
+RtN13 x13b 0 1meg
+
+* =====================================================================
+* SIMULATION + MEASUREMENTS
+* =====================================================================
+.tran 20p 950n
+
+* --- energy per toggle [J] = INTEG of the rail supply power ----------
+.meas tran epush1 INTEG V(ppush) FROM=49n TO=71n
+.meas tran epull1 INTEG V(ppull) FROM=74n TO=96n
+.meas tran epush2 INTEG V(ppush) FROM=119n TO=141n
+.meas tran epull2 INTEG V(ppull) FROM=144n TO=166n
+.meas tran epush3 INTEG V(ppush) FROM=189n TO=211n
+.meas tran epull3 INTEG V(ppull) FROM=214n TO=236n
+.meas tran epush4 INTEG V(ppush) FROM=259n TO=281n
+.meas tran epull4 INTEG V(ppull) FROM=284n TO=306n
+.meas tran epush5 INTEG V(ppush) FROM=329n TO=351n
+.meas tran epull5 INTEG V(ppull) FROM=354n TO=376n
+.meas tran epush6 INTEG V(ppush) FROM=399n TO=421n
+.meas tran epull6 INTEG V(ppull) FROM=424n TO=446n
+.meas tran epush7 INTEG V(ppush) FROM=469n TO=491n
+.meas tran epull7 INTEG V(ppull) FROM=494n TO=516n
+.meas tran epush8 INTEG V(ppush) FROM=539n TO=561n
+.meas tran epull8 INTEG V(ppull) FROM=564n TO=586n
+.meas tran epush9 INTEG V(ppush) FROM=609n TO=631n
+.meas tran epull9 INTEG V(ppull) FROM=634n TO=656n
+.meas tran epush10 INTEG V(ppush) FROM=679n TO=701n
+.meas tran epull10 INTEG V(ppull) FROM=704n TO=726n
+.meas tran epush11 INTEG V(ppush) FROM=749n TO=771n
+.meas tran epull11 INTEG V(ppull) FROM=774n TO=796n
+.meas tran epush12 INTEG V(ppush) FROM=819n TO=841n
+.meas tran epull12 INTEG V(ppull) FROM=844n TO=866n
+.meas tran epush13 INTEG V(ppush) FROM=889n TO=911n
+.meas tran epull13 INTEG V(ppull) FROM=914n TO=936n
+
+* --- 10-90% delay [s] (each line toggles exactly once) ----------------
+.meas tran tdP1 TRIG V(x1)  VAL=0.1 RISE=1 TARG V(x1)  VAL=0.9 RISE=1
+.meas tran tdN1 TRIG V(x1b) VAL=-0.1 FALL=1 TARG V(x1b) VAL=-0.9 FALL=1
+.meas tran tdP2 TRIG V(x2)  VAL=0.1 RISE=1 TARG V(x2)  VAL=0.9 RISE=1
+.meas tran tdN2 TRIG V(x2b) VAL=-0.1 FALL=1 TARG V(x2b) VAL=-0.9 FALL=1
+.meas tran tdP3 TRIG V(x3)  VAL=0.1 RISE=1 TARG V(x3)  VAL=0.9 RISE=1
+.meas tran tdN3 TRIG V(x3b) VAL=-0.1 FALL=1 TARG V(x3b) VAL=-0.9 FALL=1
+.meas tran tdP4 TRIG V(x4)  VAL=0.1 RISE=1 TARG V(x4)  VAL=0.9 RISE=1
+.meas tran tdN4 TRIG V(x4b) VAL=-0.1 FALL=1 TARG V(x4b) VAL=-0.9 FALL=1
+.meas tran tdP5 TRIG V(x5)  VAL=0.1 RISE=1 TARG V(x5)  VAL=0.9 RISE=1
+.meas tran tdN5 TRIG V(x5b) VAL=-0.1 FALL=1 TARG V(x5b) VAL=-0.9 FALL=1
+.meas tran tdP6 TRIG V(x6)  VAL=0.1 RISE=1 TARG V(x6)  VAL=0.9 RISE=1
+.meas tran tdN6 TRIG V(x6b) VAL=-0.1 FALL=1 TARG V(x6b) VAL=-0.9 FALL=1
+.meas tran tdP7 TRIG V(x7)  VAL=0.1 RISE=1 TARG V(x7)  VAL=0.9 RISE=1
+.meas tran tdN7 TRIG V(x7b) VAL=-0.1 FALL=1 TARG V(x7b) VAL=-0.9 FALL=1
+.meas tran tdP8 TRIG V(x8)  VAL=0.1 RISE=1 TARG V(x8)  VAL=0.9 RISE=1
+.meas tran tdN8 TRIG V(x8b) VAL=-0.1 FALL=1 TARG V(x8b) VAL=-0.9 FALL=1
+.meas tran tdP9 TRIG V(x9)  VAL=0.1 RISE=1 TARG V(x9)  VAL=0.9 RISE=1
+.meas tran tdN9 TRIG V(x9b) VAL=-0.1 FALL=1 TARG V(x9b) VAL=-0.9 FALL=1
+.meas tran tdP10 TRIG V(x10)  VAL=0.1 RISE=1 TARG V(x10)  VAL=0.9 RISE=1
+.meas tran tdN10 TRIG V(x10b) VAL=-0.1 FALL=1 TARG V(x10b) VAL=-0.9 FALL=1
+.meas tran tdP11 TRIG V(x11)  VAL=0.1 RISE=1 TARG V(x11)  VAL=0.9 RISE=1
+.meas tran tdN11 TRIG V(x11b) VAL=-0.1 FALL=1 TARG V(x11b) VAL=-0.9 FALL=1
+.meas tran tdP12 TRIG V(x12)  VAL=0.1 RISE=1 TARG V(x12)  VAL=0.9 RISE=1
+.meas tran tdN12 TRIG V(x12b) VAL=-0.1 FALL=1 TARG V(x12b) VAL=-0.9 FALL=1
+.meas tran tdP13 TRIG V(x13)  VAL=0.1 RISE=1 TARG V(x13)  VAL=0.9 RISE=1
+.meas tran tdN13 TRIG V(x13b) VAL=-0.1 FALL=1 TARG V(x13b) VAL=-0.9 FALL=1
+
+* --- settled swing (confirm full settle, expect ~+/-1.0 V) ------------
+.meas tran vP1 MAX V(x1)   FROM=60n TO=70n
+.meas tran vN1 MIN V(x1b)  FROM=85n TO=95n
+.meas tran vP3 MAX V(x3)   FROM=200n TO=210n
+.meas tran vN3 MIN V(x3b)  FROM=225n TO=235n
+.meas tran vP6 MAX V(x6)   FROM=410n TO=420n
+.meas tran vN6 MIN V(x6b)  FROM=435n TO=445n
+
+.end

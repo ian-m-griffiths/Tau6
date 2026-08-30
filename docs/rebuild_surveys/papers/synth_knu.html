@@ -1,0 +1,752 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="nexus-font-support">
+
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="google" content="nositelinkssearchbox"/>
+    <meta name="tdm-reservation" content="0">
+    <title>
+        An optimal gate design for the synthesis of ternary logic circuits
+      -  Kyungpook National University(KNU)</title>
+    
+    
+    
+
+
+
+<meta property="og:site_name" content="Kyungpook National University(KNU)">
+
+
+    <meta property="og:title" content="An optimal gate design for the synthesis of ternary logic circuits"/>
+
+
+<meta property="og:url" content="https://research.knu.ac.kr/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/">
+<meta property="og:locale" content="en_US">
+
+
+
+
+    
+        <meta property="og:image" content="https://research.knu.ac.kr/skin/headerImage/">
+    
+
+
+
+
+    
+        <meta property="og:type" content="article">
+    
+
+    
+
+    
+
+
+    <link rel="stylesheet" href="/assets/application-d8c4196ba42289b701050fcf209ab3eb.css" />
+    
+    
+        <link rel="shortcut icon" href="/skin/favIcon/"/>
+    
+    <link href="/skin/css/" rel="stylesheet"/>
+    
+    <script src="/skin/script/" type="text/javascript"></script>
+    <script type="text/javascript" src="/assets/application-d9c3c96b32ee7877543159e1191a25d2.js" ></script>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="/assets/html5shiv.min-ca5300beead9a4a9d2c9c584a9016410.js" ></script>
+    <script type="text/javascript" src="/assets/respond.min-678d372b349e434d9923e1b591f14a1e.js" ></script>
+    <![endif]-->
+    
+        
+        
+        <meta name="citation_title" content="An optimal gate design for the synthesis of ternary logic circuits"></meta><meta name="citation_inbook_title" content="ASP-DAC 2018 - 23rd Asia and South Pacific Design Automation Conference, Proceedings"></meta><meta name="citation_author" content="Sunmean Kim"></meta><meta name="citation_author_institution" content="School of  Electronics Engineering"></meta><meta name="citation_author_email" content="sunmean@knu.ac.kr"></meta><meta name="citation_author" content="Taeho Lim"></meta><meta name="citation_author_institution" content="Ulsan National Institute of Science and Technology"></meta><meta name="citation_author" content="Seokhyeong Kang"></meta><meta name="citation_author_institution" content="Ulsan National Institute of Science and Technology"></meta><meta name="citation_publication_date" content="2018/02/20"></meta><meta name="citation_doi" content="10.1109/ASPDAC.2018.8297369"></meta><meta name="citation_language" content="English"></meta><meta name="citation_publisher" content="Institute of Electrical and Electronics Engineers Inc."></meta><meta name="citation_firstpage" content="476"></meta><meta name="citation_lastpage" content="481"></meta><meta name="citation_conference_title" content="23rd Asia and South Pacific Design Automation Conference, ASP-DAC 2018"></meta>
+        <script src="/assets/Chart.min-27bff060c3e539ceb22e763c8f2e9e10.js"></script>
+        <script src="/assets/jquery.content-chart-9c09bb79ba3fc3829b6478d0e114f737.js"></script>
+        
+    
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script src="https://www.googletagmanager.com/gtag/js?id=G-YM3YMQJLPQ" async=""></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YM3YMQJLPQ', {'cookie_domain' : document.location.hostname, 'anonymize_ip': true });
+</script>
+    <script src="//assets.adobedtm.com/4a848ae9611a/ea83f870454d/launch-af020409b299.min.js" async=""></script>
+    
+    <!-- Pendo: Disabled -->
+</head>
+
+<body class="" data-page="publications">
+
+<div id="aria-polite" aria-live="polite"></div>
+<div id="aria-assertive" aria-live="assertive"></div>
+
+<a href="#main-navigation" class="sr-only sr-only-focusable">Skip to main navigation</a>
+
+    <a href="#main-search" class="sr-only sr-only-focusable">Skip to search</a>
+
+<a href="#main-content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+
+
+
+
+
+
+    <header class="header" id="page-header">
+        <div class="primary  ">
+            <div class="container">
+                
+                <a href="/en/" class="logo">
+                    
+                        <span class="sr-only">Kyungpook National University(KNU) Home</span>
+                        <img src="/skin/headerImage/" alt="Kyungpook National University(KNU) Logo"/>
+                    
+                </a>
+                
+                
+                
+            </div>
+        </div>
+
+        
+            <div class="header-search">
+                
+<form action="/en/searchAll/index/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/" method="get"
+      class="search-form" id="search-everything">
+
+    <div class="global-search-wrapper">
+        <div class="global-search mini">
+            <div class="field-button-wrapper">
+                <div class="search-cell search-field">
+                    <label for="main-search" class="sr-only">Search content at Kyungpook National University(KNU)</label>
+                    <input id="main-search" class="search-field" value="" name="search"
+                           placeholder="Search"/>
+                </div>
+
+                <div class="search-submit">
+                    <button type="submit" aria-label="Search">
+                        <i class="icon icon-magnifying-glass" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(function () {
+        var searchForm = $("#search-everything");
+        var searchField = $(".search-field", searchForm);
+        searchForm.on("submit", function () {
+            var field = searchField.find("input");
+            var searchString = field.val();
+
+            // No enter key submit nothing :-)
+            if (!searchString) return false;
+
+            if (searchString.length >= 200) {
+                searchForm.attr("method", "post");
+                searchForm.attr("action", "/en/concepts/copypaste/");
+                field.attr("name", "text");
+            }
+        });
+    });
+</script>
+            </div>
+        
+
+
+        
+        
+            <div class="subMenu">
+                <div class="secondary">
+                    <div class="container">
+                        <nav id="main-navigation" aria-label="Main navigation" class="content-navigation three-third">
+                            <ul data-value="More" role="menubar" aria-label="Main navigation">
+                                <li class="" role="none">
+                                    <a href="/en/" role="menuitem" tabindex="-1">Home</a>
+                                </li>
+
+                                
+                                    <li class="" role="none">
+                                        <a class="portal_link" tabindex="-1" role="menuitem" href="/en/persons/"><span>Profiles</span></a>
+                                    </li>
+                                
+                                    <li class="" role="none">
+                                        <a class="portal_link" tabindex="-1" role="menuitem" href="/en/organisations/"><span>Research units</span></a>
+                                    </li>
+                                
+                                    <li class="selected" role="none">
+                                        <a class="portal_link" tabindex="0" role="menuitem" href="/en/publications/"><span>Research output</span></a>
+                                    </li>
+                                
+                                    <li class="" role="none">
+                                        <a class="portal_link" tabindex="-1" role="menuitem" href="/en/clippings/"><span>Press/Media</span></a>
+                                    </li>
+                                
+                            </ul>
+                        </nav>
+
+                    </div>
+                </div>
+            </div>
+        
+    </header>
+
+    <main id="page-content">
+        
+    <div class="page-section page-section-publications page-section-publications-view ">
+
+        
+        
+        
+        
+        <section
+                class="page-section-header page-section-header-publications page-section-header-publications-view
+                 no-backdrop-image"
+                data-stickyheader=""
+                style="">
+            
+            
+        
+
+
+<div class="container">
+    <div class="row">
+        <div class="introduction no-metrics">
+            <div class="rendering"><h1><span>An optimal gate design for the synthesis of ternary logic circuits</span></h1></div>
+            <div class="rendering rendering_researchoutput  rendering_researchoutput_associatespersonsclassifiedportal rendering_contributiontobookanthology rendering_associatespersonsclassifiedportal rendering_contributiontobookanthology_associatespersonsclassifiedportal"><ul class="relations persons"><li><a rel="Person" href="https://research.knu.ac.kr/en/persons/sunmean-kim/" class="link person"><span>Sunmean Kim</span></a></li><li>, Taeho Lim</li><li>, Seokhyeong Kang</li></div>
+            <div class="rendering rendering_researchoutput  rendering_researchoutput_associatesorganisationsportal rendering_contributiontobookanthology rendering_associatesorganisationsportal rendering_contributiontobookanthology_associatesorganisationsportal"><ul class="relations organisations"><li class="department"><a rel="Organisation" href="https://research.knu.ac.kr/en/organisations/school-of-electronics-engineering/" class="link"><span>School of  Electronics Engineering</span></a></li></ul></div>
+            <div class="rendering rendering_researchoutput  rendering_researchoutput_associatesexternalorganisationsportal rendering_contributiontobookanthology rendering_associatesexternalorganisationsportal rendering_contributiontobookanthology_associatesexternalorganisationsportal"><ul class="relations organisations"><li><span>Ulsan National Institute of Science and Technology</span></li></ul></div>
+            <div class="rendering rendering_researchoutput  rendering_researchoutput_publicationcontenttyperendererportalng rendering_contributiontobookanthology rendering_publicationcontenttyperendererportalng rendering_contributiontobookanthology_publicationcontenttyperendererportalng"><p class="type"><span class="type_family">Research output<span class="type_family_sep">: </span></span><span class="type_classification_parent">Chapter in Book/Report/Conference proceeding<span class="type_parent_sep"> › </span></span><span class="type_classification">Conference contribution</span><span class="type_classification"><span class="type_parent_sep"> › </span>peer-review</span></p></div>
+        </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="publication-metrics" role="region" aria-label="Publication metrics section">
+        
+            <div class="metrics-container">
+                
+                    <div class="metrics-wrap metrics-top one">
+                        
+                            <div class="metric scopus-citations">
+                                
+                                <span class="count">50</span>
+                                
+                                <span class="label">Scopus 
+ citations</span>
+                            </div>
+                        
+                        
+                    </div>
+                
+                
+                    <div class="metrics-wrap metrics-bottom ">
+                        
+
+                        
+                            <div class="metric metric-altmetric">
+                                
+                            </div>
+                        
+                    </div>
+                
+            </div>
+        
+    </div>
+
+
+    </div>
+
+</div>
+<div class="subMenu">
+    <div class="content-profile-navigation">
+    <div class="container">
+        <nav role="navigation">
+            <ul role="menubar">
+                <li class="selected" role="none">
+                    <a class="portal_link" role="menuitem" href="/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/"><span>
+                        <i class="icon icon-publication" aria-hidden="true"></i>
+                        <span class="label">Overview</span>
+                    </span></a>
+                </li>
+                
+                    <li class="" role="none">
+                        <a class="portal_link" role="menuitem" href="/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/fingerprints/"><span>
+                            <i class="icon icon-fingerprint" aria-hidden="true"></i>
+                            <span class="label">Fingerprint</span>
+                        </span></a>
+                    </li>
+                
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+
+            </ul>
+        </nav>
+    </div>
+    </div>
+</div>
+
+    
+        </section>
+
+        <div id="main-content"
+             class="page-section-content page-section-content-publications page-section-content-publications-view   ">
+            
+        <section class="page-section content-relation-section">
+            <div class="container">
+                <div class="clearfix">
+                    <div class="content-content publication-content">
+                        
+                        
+                            <h2 class="subheader">Abstract</h2>
+                        <div class="rendering rendering_researchoutput  rendering_researchoutput_abstractportal rendering_contributiontobookanthology rendering_abstractportal rendering_contributiontobookanthology_abstractportal"><div class="textblock"><p>Over the last few decades, CMOS-based digital circuits have been steadily developed. However, because of the power density limits, device scaling may soon come to an end, and new approaches for circuit designs are required. Multi-valued logic (MVL) is one of the new approaches, which increases the radix for computation to lower the complexity of the circuit. For the MVL implementation, ternary logic circuit designs have been proposed previously, though they could not show advantages over binary logic, because of unoptimized synthesis techniques. In this paper, we propose a methodology to design ternary gates by modeling pull-up and pull-down operations of the gates. Our proposed methodology makes it possible to synthesize ternary gates with a minimum number of transistors. From HSPICE simulation results, our ternary designs show significant power-delay product reductions; 49 % in the ternary full adder and 62 % in the ternary multiplier compared to the existing methodology. We have also compared the number of transistors in CMOS-based binary logic circuits and ternary device-based logic circuits.</p></div></div>
+                        <div class="rendering rendering_researchoutput  rendering_researchoutput_detailsportal rendering_contributiontobookanthology rendering_detailsportal rendering_contributiontobookanthology_detailsportal"><div class="conference"><table class="properties"><tbody><tr class="language"><th scope="row">Original language</th><td>English</td></tr><tr><th scope="row">Title of host publication</th><td>ASP-DAC 2018 - 23rd Asia and South Pacific Design Automation Conference, Proceedings</td></tr><tr><th scope="row">Publisher</th><td><a rel="Publisher" href="#" class="link"><span>Institute of Electrical and Electronics Engineers Inc.</span></a></td></tr><tr><th scope="row">Pages</th><td>476-481</td></tr><tr class="numberofpages"><th scope="row">Number of pages</th><td>6</td></tr><tr class="isbn-electronic"><th scope="row">ISBN (Electronic)</th><td>9781509006021</td></tr><tr class="digital_object_identifiers"><th scope="row">DOIs</th><td><ul class="relations digital_object_identifiers"><li><a onclick="window.open(this.href, '_blank','noopener,noreferrer'); return false;" href="https://doi.org/10.1109/ASPDAC.2018.8297369" class="link"><span>https://doi.org/10.1109/ASPDAC.2018.8297369</span></a> </li></ul></td></tr><tr class="status"><th scope="row">State</th><td><span class="prefix">Published - </span><span class="date">20 Feb 2018</span></td></tr><tr class="event"><th scope="row">Event</th><td><a rel="Event" href="#" class="link"><span><span class="prefix">23rd Asia and South Pacific Design Automation Conference, ASP-DAC 2018</span></a> - Jeju, Korea, Republic of<br />Duration: <span class="date">22 Jan 2018</span> → <span class="date">25 Jan 2018</span></span></td></tr></tbody></table></div><div class="publication-series"><h3 class="subheader">Publication series</h3><table class="properties"><tbody><tr><th scope="row">Name</th><td>Proceedings of the Asia and South Pacific Design Automation Conference, ASP-DAC</td></tr><tr><th scope="row">Volume</th><td>2018-January</td></tr></tbody></table></div><h3 class="subheader">Conference</h3><table class="properties"><tbody><tr><th scope="row">Conference</th><td>23rd Asia and South Pacific Design Automation Conference, ASP-DAC 2018</td></tr><tr><th scope="row">Country/Territory</th><td>Korea, Republic of</td></tr><tr><th scope="row">City</th><td>Jeju</td></tr><tr class="period"><th scope="row">Period</th><td><span class="date">22/01/18</span> → <span class="date">25/01/18</span></td></tr></tbody></table></div>
+                        
+
+                        
+
+                        
+
+                        
+
+                    </div>
+
+                    <div class="content-sidebar publication-sidebar">
+                        
+                            <h2 class="subheader">Access to Document</h2>
+                        <div class="rendering rendering_researchoutput  rendering_researchoutput_publicationaccessrenderer rendering_contributiontobookanthology rendering_publicationaccessrenderer rendering_contributiontobookanthology_publicationaccessrenderer"><ul class="dois"><li><div class="doi"><a onclick="window.open(this.href, '_blank','noopener,noreferrer'); return false;" href="https://doi.org/10.1109/ASPDAC.2018.8297369" class="link"><span>10.1109/ASPDAC.2018.8297369</span></a></div></li></ul></div>
+
+                        
+
+                        
+
+                        
+                            <h2 class="subheader">Other files and links</h2>
+                        <div class="rendering rendering_researchoutput  rendering_researchoutput_publicationotherfilesandlinksrenderer rendering_contributiontobookanthology rendering_publicationotherfilesandlinksrenderer rendering_contributiontobookanthology_publicationotherfilesandlinksrenderer"><ul class="links"><li><div class="link"><a onclick="window.open(this.href, '_blank','noopener,noreferrer'); return false;" href="https://www.scopus.com/pages/publications/85045308684" class="link"><span>Link to publication in Scopus</span></a></div></li></ul></div>
+
+                        
+
+                        
+
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+            <section class="page-section content-relation-section publication-fingerprint">
+                <div class="container">
+                    <div class="header">
+                        <h2 class="section-title">
+                            <i class="icon icon-fingerprint" aria-hidden="true"></i>
+                            <span class="title">Fingerprint</span>
+                        </h2>
+                        <span class="sub-title">
+                            Dive into the research topics of 'An optimal gate design for the synthesis of ternary logic circuits'. Together they form a unique fingerprint.
+                        </span>
+                    </div>
+
+                    <ul class="publication-top-concepts" role="menubar"  aria-label="Related fingerprints">
+                        
+                            <li class="concept-badge-large-container dropdown-overflow" role="none">
+
+    <button tabindex="0"
+            class="concept-badge-large dropdown-toggle"
+            type="button"
+            role="menuitem"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="a1c800aa-6a35-462e-8899-8e1c57ea278f"
+            data-concept-uuid="a1c800aa-6a35-462e-8899-8e1c57ea278f"
+            data-rank-size="32"
+            data-rank-thickness="8"
+            data-rank-value="1.0"
+            data-summary="true"
+            data-summary-url="/en/concepts/summary/">
+        <span class="concept-wrapper" title="100%">
+            <span class="rank"></span>
+            <span class="concept">Synthesis Technique</span>
+            <span class="thesauri">Computer Science</span>
+            <span class="value sr-only">100%</span>
+        </span>
+    </button>
+
+    <div class="dropdown-container"></div>
+
+</li>
+                        
+                            <li class="concept-badge-large-container dropdown-overflow" role="none">
+
+    <button tabindex="0"
+            class="concept-badge-large dropdown-toggle"
+            type="button"
+            role="menuitem"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="037e49ee-cb54-4007-8f13-7067428f3d34"
+            data-concept-uuid="037e49ee-cb54-4007-8f13-7067428f3d34"
+            data-rank-size="32"
+            data-rank-thickness="8"
+            data-rank-value="1.0"
+            data-summary="true"
+            data-summary-url="/en/concepts/summary/">
+        <span class="concept-wrapper" title="100%">
+            <span class="rank"></span>
+            <span class="concept">Digital Circuit</span>
+            <span class="thesauri">Computer Science</span>
+            <span class="value sr-only">100%</span>
+        </span>
+    </button>
+
+    <div class="dropdown-container"></div>
+
+</li>
+                        
+                            <li class="concept-badge-large-container dropdown-overflow" role="none">
+
+    <button tabindex="0"
+            class="concept-badge-large dropdown-toggle"
+            type="button"
+            role="menuitem"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="18e4ce9f-ee74-4cc4-945c-bfe38d951d98"
+            data-concept-uuid="18e4ce9f-ee74-4cc4-945c-bfe38d951d98"
+            data-rank-size="32"
+            data-rank-thickness="8"
+            data-rank-value="1.0"
+            data-summary="true"
+            data-summary-url="/en/concepts/summary/">
+        <span class="concept-wrapper" title="100%">
+            <span class="rank"></span>
+            <span class="concept">Multivalued Logic</span>
+            <span class="thesauri">Mathematics</span>
+            <span class="value sr-only">100%</span>
+        </span>
+    </button>
+
+    <div class="dropdown-container"></div>
+
+</li>
+                        
+                            <li class="concept-badge-large-container dropdown-overflow" role="none">
+
+    <button tabindex="0"
+            class="concept-badge-large dropdown-toggle"
+            type="button"
+            role="menuitem"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="0f2bdd91-e3b2-49f0-8319-b80547a15699"
+            data-concept-uuid="0f2bdd91-e3b2-49f0-8319-b80547a15699"
+            data-rank-size="32"
+            data-rank-thickness="8"
+            data-rank-value="0.5"
+            data-summary="true"
+            data-summary-url="/en/concepts/summary/">
+        <span class="concept-wrapper" title="50%">
+            <span class="rank"></span>
+            <span class="concept">Digital Circuits</span>
+            <span class="thesauri">Mathematics</span>
+            <span class="value sr-only">50%</span>
+        </span>
+    </button>
+
+    <div class="dropdown-container"></div>
+
+</li>
+                        
+                    </ul>
+                    <div class="footer">
+                        <div class="view-all align-center">
+                            <a class="portal_link btn-primary btn-large btn-content-link" href="/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/fingerprints/"><span>
+                                View full fingerprint
+                                <i class="icon icon-right-open-mini" aria-hidden="true"></i>
+                            </span></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        <section class="page-section cite">
+            <div class="container">
+                <section class="publication-cite" aria-labelledby="publications-cite-title">
+    <h2 class="subheader" id="publications-cite-title">Cite this</h2>
+    <ul class="tabs" role="tablist" aria-label="Cite this">
+        
+            <li class="selected" role="tab" id="tab-0" aria-controls="cite-apa" tabindex="-1"  aria-selected="false" >
+                APA
+            </li>
+        
+            <li class="" role="tab" id="tab-1" aria-controls="cite-author" tabindex="-1"  aria-selected="false" >
+                Author
+            </li>
+        
+            <li class="" role="tab" id="tab-2" aria-controls="cite-BIBTEX" tabindex="-1"  aria-selected="false" >
+                BIBTEX
+            </li>
+        
+            <li class="" role="tab" id="tab-3" aria-controls="cite-harvard" tabindex="-1"  aria-selected="false" >
+                Harvard
+            </li>
+        
+            <li class="" role="tab" id="tab-4" aria-controls="cite-standard" tabindex="-1"  aria-selected="false" >
+                Standard
+            </li>
+        
+            <li class="" role="tab" id="tab-5" aria-controls="cite-RIS" tabindex="-1"  aria-selected="false" >
+                RIS
+            </li>
+        
+            <li class="" role="tab" id="tab-6" aria-controls="cite-vancouver" tabindex="-1"  aria-selected="false" >
+                Vancouver
+            </li>
+        
+    </ul>
+    <div class="tab-container">
+        
+            <div id="cite-apa" class="tab selected" role="tabpanel" aria-labelledby="tab-0" tabindex="-1" aria-hidden="true">
+                <div class="rendering rendering_researchoutput  rendering_researchoutput_apa rendering_contributiontobookanthology rendering_apa rendering_contributiontobookanthology_apa"><a rel="Person" href="https://research.knu.ac.kr/en/persons/sunmean-kim/" class="link"><span>Kim, S.</span></a>, Lim, T., &amp; Kang, S. (2018). <a rel="ContributionToBookAnthology" href="https://research.knu.ac.kr/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/" class="link"><span>An optimal gate design for the synthesis of ternary logic circuits</span></a>. In <em>ASP-DAC 2018 - 23rd Asia and South Pacific Design Automation Conference, Proceedings </em>(pp. 476-481). (Proceedings of the Asia and South Pacific Design Automation Conference, ASP-DAC; Vol. 2018-January). Institute of Electrical and Electronics Engineers Inc.. <a onclick="window.open(this.href, '_blank','noopener,noreferrer'); return false;" href="https://doi.org/10.1109/ASPDAC.2018.8297369" class="link"><span>https://doi.org/10.1109/ASPDAC.2018.8297369</span></a></div>
+            </div>
+        
+            <div id="cite-author" class="tab " role="tabpanel" aria-labelledby="tab-1" tabindex="-1" aria-hidden="true">
+                <div class="rendering rendering_researchoutput  rendering_researchoutput_author rendering_contributiontobookanthology rendering_author rendering_contributiontobookanthology_author"><a rel="Person" href="https://research.knu.ac.kr/en/persons/sunmean-kim/" class="link"><span>Kim, Sunmean</span></a> ; Lim, Taeho ; Kang, Seokhyeong. / <a rel="ContributionToBookAnthology" href="https://research.knu.ac.kr/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/" class="link"><span><strong>An optimal gate design for the synthesis of ternary logic circuits</strong></span></a>. ASP-DAC 2018 - 23rd Asia and South Pacific Design Automation Conference, Proceedings. Institute of Electrical and Electronics Engineers Inc., 2018. pp. 476-481 (Proceedings of the Asia and South Pacific Design Automation Conference, ASP-DAC).</div>
+            </div>
+        
+            <div id="cite-BIBTEX" class="tab " role="tabpanel" aria-labelledby="tab-2" tabindex="-1" aria-hidden="true">
+                <div class="rendering rendering_researchoutput  rendering_researchoutput_bibtex rendering_contributiontobookanthology rendering_bibtex rendering_contributiontobookanthology_bibtex"><div>@inproceedings{87e6b48600e448e08bd4ed6543034589,</div><div>  title     = "An optimal gate design for the synthesis of ternary logic circuits",</div><div>  abstract  = "Over the last few decades, CMOS-based digital circuits have been steadily developed. However, because of the power density limits, device scaling may soon come to an end, and new approaches for circuit designs are required. Multi-valued logic (MVL) is one of the new approaches, which increases the radix for computation to lower the complexity of the circuit. For the MVL implementation, ternary logic circuit designs have been proposed previously, though they could not show advantages over binary logic, because of unoptimized synthesis techniques. In this paper, we propose a methodology to design ternary gates by modeling pull-up and pull-down operations of the gates. Our proposed methodology makes it possible to synthesize ternary gates with a minimum number of transistors. From HSPICE simulation results, our ternary designs show significant power-delay product reductions; 49 \% in the ternary full adder and 62 \% in the ternary multiplier compared to the existing methodology. We have also compared the number of transistors in CMOS-based binary logic circuits and ternary device-based logic circuits.",</div><div>  author    = "Sunmean Kim and Taeho Lim and Seokhyeong Kang",</div><div>  note      = "Publisher Copyright: {\textcopyright} 2018 IEEE.; 23rd Asia and South Pacific Design Automation Conference, ASP-DAC 2018 ; Conference date: 22-01-2018 Through 25-01-2018",</div><div>  year      = "2018",</div><div>  month     = feb,</div><div>  day       = "20",</div><div>  doi       = "10.1109/ASPDAC.2018.8297369",</div><div>  language  = "English",</div><div>  series    = "Proceedings of the Asia and South Pacific Design Automation Conference, ASP-DAC",</div><div>  publisher = "Institute of Electrical and Electronics Engineers Inc.",</div><div>  pages     = "476--481",</div><div>  booktitle = "ASP-DAC 2018 - 23rd Asia and South Pacific Design Automation Conference, Proceedings",</div><div>  address   = "United States",</div><p>}</p></div>
+            </div>
+        
+            <div id="cite-harvard" class="tab " role="tabpanel" aria-labelledby="tab-3" tabindex="-1" aria-hidden="true">
+                <div class="rendering rendering_researchoutput  rendering_researchoutput_harvard rendering_contributiontobookanthology rendering_harvard rendering_contributiontobookanthology_harvard"><a rel="Person" href="https://research.knu.ac.kr/en/persons/sunmean-kim/" class="link"><span>Kim, S</span></a>, Lim, T &amp; Kang, S 2018, <a rel="ContributionToBookAnthology" href="https://research.knu.ac.kr/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/" class="link harvard_title"><span>An optimal gate design for the synthesis of ternary logic circuits</span></a>. in <em>ASP-DAC 2018 - 23rd Asia and South Pacific Design Automation Conference, Proceedings.</em> Proceedings of the Asia and South Pacific Design Automation Conference, ASP-DAC, vol. 2018-January, Institute of Electrical and Electronics Engineers Inc., pp. 476-481, 23rd Asia and South Pacific Design Automation Conference, ASP-DAC 2018, Jeju, Korea, Republic of, <span class="date">22/01/18</span>. <a onclick="window.open(this.href, '_blank','noopener,noreferrer'); return false;" href="https://doi.org/10.1109/ASPDAC.2018.8297369" class="link"><span>https://doi.org/10.1109/ASPDAC.2018.8297369</span></a></div>
+            </div>
+        
+            <div id="cite-standard" class="tab " role="tabpanel" aria-labelledby="tab-4" tabindex="-1" aria-hidden="true">
+                <div class="rendering rendering_researchoutput  rendering_researchoutput_standard rendering_contributiontobookanthology rendering_standard rendering_contributiontobookanthology_standard"><a rel="ContributionToBookAnthology" href="https://research.knu.ac.kr/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/" class="link"><span><strong>An optimal gate design for the synthesis of ternary logic circuits.</strong></span></a> / <a rel="Person" href="https://research.knu.ac.kr/en/persons/sunmean-kim/" class="link"><span>Kim, Sunmean</span></a>; Lim, Taeho; Kang, Seokhyeong. <br />ASP-DAC 2018 - 23rd Asia and South Pacific Design Automation Conference, Proceedings. Institute of Electrical and Electronics Engineers Inc., 2018. p. 476-481 (Proceedings of the Asia and South Pacific Design Automation Conference, ASP-DAC; Vol. 2018-January).<p class="type"><span class="type_family">Research output<span class="type_family_sep">: </span></span><span class="type_classification_parent">Chapter in Book/Report/Conference proceeding<span class="type_parent_sep"> › </span></span><span class="type_classification">Conference contribution</span><span class="type_classification"><span class="type_parent_sep"> › </span>peer-review</span></p></div>
+            </div>
+        
+            <div id="cite-RIS" class="tab " role="tabpanel" aria-labelledby="tab-5" tabindex="-1" aria-hidden="true">
+                <div class="rendering rendering_researchoutput  rendering_researchoutput_ris rendering_contributiontobookanthology rendering_ris rendering_contributiontobookanthology_ris"><p>TY  - GEN</p><p>T1  - An optimal gate design for the synthesis of ternary logic circuits</p><p>AU  - Kim, Sunmean</p><p>AU  - Lim, Taeho</p><p>AU  - Kang, Seokhyeong</p><p>N1  - Publisher Copyright:
+© 2018 IEEE.</p><p>PY  - 2018/2/20</p><p>Y1  - 2018/2/20</p><p>N2  - Over the last few decades, CMOS-based digital circuits have been steadily developed. However, because of the power density limits, device scaling may soon come to an end, and new approaches for circuit designs are required. Multi-valued logic (MVL) is one of the new approaches, which increases the radix for computation to lower the complexity of the circuit. For the MVL implementation, ternary logic circuit designs have been proposed previously, though they could not show advantages over binary logic, because of unoptimized synthesis techniques. In this paper, we propose a methodology to design ternary gates by modeling pull-up and pull-down operations of the gates. Our proposed methodology makes it possible to synthesize ternary gates with a minimum number of transistors. From HSPICE simulation results, our ternary designs show significant power-delay product reductions; 49 % in the ternary full adder and 62 % in the ternary multiplier compared to the existing methodology. We have also compared the number of transistors in CMOS-based binary logic circuits and ternary device-based logic circuits.</p><p>AB  - Over the last few decades, CMOS-based digital circuits have been steadily developed. However, because of the power density limits, device scaling may soon come to an end, and new approaches for circuit designs are required. Multi-valued logic (MVL) is one of the new approaches, which increases the radix for computation to lower the complexity of the circuit. For the MVL implementation, ternary logic circuit designs have been proposed previously, though they could not show advantages over binary logic, because of unoptimized synthesis techniques. In this paper, we propose a methodology to design ternary gates by modeling pull-up and pull-down operations of the gates. Our proposed methodology makes it possible to synthesize ternary gates with a minimum number of transistors. From HSPICE simulation results, our ternary designs show significant power-delay product reductions; 49 % in the ternary full adder and 62 % in the ternary multiplier compared to the existing methodology. We have also compared the number of transistors in CMOS-based binary logic circuits and ternary device-based logic circuits.</p><p>UR  - https://www.scopus.com/pages/publications/85045308684</p><p>U2  - 10.1109/ASPDAC.2018.8297369</p><p>DO  - 10.1109/ASPDAC.2018.8297369</p><p>M3  - Conference contribution</p><p>AN  - SCOPUS:85045308684</p><p>T3  - Proceedings of the Asia and South Pacific Design Automation Conference, ASP-DAC</p><p>SP  - 476</p><p>EP  - 481</p><p>BT  - ASP-DAC 2018 - 23rd Asia and South Pacific Design Automation Conference, Proceedings</p><p>PB  - Institute of Electrical and Electronics Engineers Inc.</p><p>T2  - 23rd Asia and South Pacific Design Automation Conference, ASP-DAC 2018</p><p>Y2  - 22 January 2018 through 25 January 2018</p><p>ER  - </p></div>
+            </div>
+        
+            <div id="cite-vancouver" class="tab " role="tabpanel" aria-labelledby="tab-6" tabindex="-1" aria-hidden="true">
+                <div class="rendering rendering_researchoutput  rendering_researchoutput_vancouver rendering_contributiontobookanthology rendering_vancouver rendering_contributiontobookanthology_vancouver"><a rel="Person" href="https://research.knu.ac.kr/en/persons/sunmean-kim/" class="link"><span>Kim S</span></a>, Lim T, Kang S. <span class="title"><a rel="ContributionToBookAnthology" href="https://research.knu.ac.kr/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/" class="link"><span>An optimal gate design for the synthesis of ternary logic circuits</span></a></span>. In ASP-DAC 2018 - 23rd Asia and South Pacific Design Automation Conference, Proceedings. Institute of Electrical and Electronics Engineers Inc. 2018. p. 476-481. (Proceedings of the Asia and South Pacific Design Automation Conference, ASP-DAC). doi: 10.1109/ASPDAC.2018.8297369</div>
+            </div>
+        
+
+        <script>
+            $(function() {
+                $(".tab-container .rendering a:not([href^='http://dx.doi.org'])").contents().unwrap();
+            });
+        </script>
+    </div>
+</section>
+
+            </div>
+        </section>
+        <script>
+    $(function () {
+        if($('.publication-sidebar').length > 0){
+            if($('a.document-link').length === 0){
+                $(".metrics-top").addClass("one");
+                $('div.metrics-downloads').remove();
+            }
+        }
+    });
+
+    function plumXError(e) {
+        $(e).closest('.metric-plum-x').closest('.metrics-bottom').addClass('one');
+        $(e).closest('.metric-plum-x').remove();
+    }
+    $('div.altmetric-embed').on('altmetric:hide', function () {
+        $(this).closest('.metric-altmetric').closest('.metrics-bottom').addClass('one');
+        $(this).closest('.metric-altmetric').remove();
+    });
+</script>
+        
+
+
+
+    
+    
+    
+    
+    
+    
+
+    
+        
+        
+        
+    
+
+    <div class="share-box">
+        <ul>
+            <li class="icon-share"></li>
+            <li><a aria-label="Share on Facebook"
+                   href="https://www.facebook.com/sharer.php?u=https://research.knu.ac.kr/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/%3Futm_source%3Dfacebook%26utm_medium%3Dsocial%26utm_campaign%3Dsharelink%26doi%3D10.1109%2FASPDAC.2018.8297369&p[summary]=Check+out+this+research+output+at+Kyungpook+National+University%28KNU%29%3A+An+optimal+gate+design+for+the+synthesis+of+ternary+logic+circuits"
+                   class="icon-facebook"
+                   onclick="window.location.origin('https://www.facebook.com/sharer.php?u=https://research.knu.ac.kr/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/%3Futm_source%3Dfacebook%26utm_medium%3Dsocial%26utm_campaign%3Dsharelink%26doi%3D10.1109%2FASPDAC.2018.8297369&p[summary]=Check+out+this+research+output+at+Kyungpook+National+University%28KNU%29%3A+An+optimal+gate+design+for+the+synthesis+of+ternary+logic+circuits', 'Facebook', 'width=600,height=600,scrollbars=no,resizable=no');
+                   return false;" target="popup"></a></li>
+            <li><a aria-label="Share on Twitter"
+                   href="https://twitter.com/intent/tweet?url=https://research.knu.ac.kr/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/%3Futm_source%3Dtwitter%26utm_medium%3Dsocial%26utm_campaign%3Dsharelink%26doi%3D10.1109%2FASPDAC.2018.8297369&text=Check+out+this+research+output+at+Kyungpook+National+University%28KNU%29%3A+An+optimal+gate+design+for+the+synthesis+of+ternary+logic+circuits"
+                   onclick="window.location.origin('https://twitter.com/intent/tweet?url=https://research.knu.ac.kr/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/%3Futm_source%3Dtwitter%26utm_medium%3Dsocial%26utm_campaign%3Dsharelink%26doi%3D10.1109%2FASPDAC.2018.8297369&text=Check+out+this+research+output+at+Kyungpook+National+University%28KNU%29%3A+An+optimal+gate+design+for+the+synthesis+of+ternary+logic+circuits doi%3A10.1109%2FASPDAC.2018.8297369', 'Twitter', 'width=600,height=600,scrollbars=no,resizable=no');
+                   return false;" class="twitter" target="popup"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 300 271">
+                    
+                    <path d="m236 0h46l-101 115 118 156h-92.6l-72.5-94.8-83 94.8h-46l107-123-113-148h94.9l65.5 86.6zm-16.1 244h25.5l-165-218h-27.4z"></path>
+                </svg></a></li>
+            <li><a aria-label="Share on LinkedIn"
+                   href="https://www.linkedin.com/shareArticle?mini=true&url=https://research.knu.ac.kr/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/%3Futm_source%3Dlinkedin%26utm_medium%3Dsocial%26utm_campaign%3Dsharelink%26doi%3D10.1109%2FASPDAC.2018.8297369&summary=Check+out+this+research+output+at+Kyungpook+National+University%28KNU%29%3A+An+optimal+gate+design+for+the+synthesis+of+ternary+logic+circuits"
+                   onclick="window.location.origin('https://www.linkedin.com/shareArticle?mini=true&url=https://research.knu.ac.kr/en/publications/an-optimal-gate-design-for-the-synthesis-of-ternary-logic-circuit/%3Futm_source%3Dlinkedin%26utm_medium%3Dsocial%26utm_campaign%3Dsharelink%26doi%3D10.1109%2FASPDAC.2018.8297369&summary=Check+out+this+research+output+at+Kyungpook+National+University%28KNU%29%3A+An+optimal+gate+design+for+the+synthesis+of+ternary+logic+circuits doi%3A10.1109%2FASPDAC.2018.8297369', 'LinkedIn', 'width=600,height=600,scrollbars=no,resizable=no');
+                   return false;" class="icon-linkedin" target="popup"></a></li>
+            <li><a aria-label="Share by email" href="/cdn-cgi/l/email-protection#340b4741565e51574009755a1106045b44405d595558110604535540511106045051475d535a110604525b46110604405c51110604474d5a405c51475d471106045b521106044051465a55464d110604585b535d57110604575d4657415d404712565b504d09775c51575f1106045b4140110604405c5d47110604465147515546575c1106045b414044414011060455401106047f4d415a53445b5b5f1106047a55405d5b5a5558110604615a5d425146475d404d1c7f7a611d110775110604755a1106045b44405d595558110604535540511106045051475d535a110604525b46110604405c51110604474d5a405c51475d471106045b521106044051465a55464d110604585b535d57110604575d4657415d40471448145c404044470e1b1b465147515546575c1a5f5a411a55571a5f461b515a1b444156585d5755405d5b5a471b555a195b44405d5955581953554051195051475d535a19525b4619405c5119474d5a405c51475d47195b52194051465a55464d19585b535d5719575d4657415d401b0b4140596b475b41465751095159555d58125559440f4140596b5951505d4159095159555d58125559440f4140596b57555944555d535a09475c554651585d5a5f" class="icon-email"></a></li>
+        </ul>
+    </div>
+
+
+
+
+    
+        </div>
+    </div>
+
+    <div id="new-modal-overlay"></div>
+    
+    </main>
+
+    <footer id="page-footer" class="main-footer">
+        <div class="container">
+            <div class="footer-wrapper">
+                <div class="content-navigation three-third">
+                    <div dir="ltr" class="footer-columns">
+                        
+                        <div class="footer-column">
+                            <p>
+                                Powered by <a href="http://www.elsevier.com/online-tools/research-intelligence/products-and-services/pure" target="_blank">Pure <span class="sr-only">Link opens in a new tab</span></a>, <a href="http://www.scopus.com/" target="_blank">Scopus <span class="sr-only">Link opens in a new tab</span></a> & <a href="https://www.elsevier.com/products/elsevier-fingerprint-engine" target="_blank">Elsevier Fingerprint Engine&trade; <span class="sr-only">Link opens in a new tab</span></a>
+                            </p>
+
+                            <p>
+                                All content on this site: Copyright &copy; 2026 Kyungpook National University(KNU), its licensors, and contributors. All rights are reserved, including those for text and data mining, AI training, and similar technologies. For all open access content, the relevant licensing terms apply
+                            </p>
+
+                            <p>We use cookies to help provide and enhance our service and tailor content. By continuing you agree to the <a href="/en/about/cookies/">use of cookies</a></p>
+                            
+                            
+                            <p></p>
+                        </div>
+
+                        <div class="footer-column">
+                            
+                            
+                            
+                                <p><a href="/en/web-accessibility/" rel="nofollow" target="_blank">About web accessibility <span class="sr-only">&nbsp; Link opens in a new tab</span></a></p>
+                            
+
+                            <p>
+                                
+                            </p>
+
+                            <p>
+                                
+                            </p>
+
+                            <p>
+                                <a href="https://elsevier.responsibledisclosure.com/hc/en-us/requests/new" target="_blank" rel="nofollow">Report vulnerability <span class="sr-only">&nbsp; Link opens in a new tab</span></a>
+                            </p>
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="back-to-top">
+            <a href="#" class="back-to-top" aria-label="Go to top"><i class="icon icon-up-open"></i></a>
+        </div>
+    </footer>
+
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="//d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+
+
+
+    
+
+    
+
+
+<script>window.appData = window.appData || [];</script><script type="text/javascript">
+try {(function() {
+appData.push({...{"page":{"businessUnit":"ELS:RP:ST","cmsName":"Pure Portal","environment":"prod","language":"en","loadTime":"292","loadTimestamp":"1787988685505","name":"pure portal:publications:view","noTracking":"false","productName":"PR","type":"CP-CA"},"visitor":{"accountId":"","accountName":"pr:Kyungpook National University","ipAddress":"","accessType":"pr:ANON_GUEST","loginStatus":"anonymous"},"content":[{"id":"87e6b486-00e4-48e0-8bd4-ed6543034589","title":"An optimal gate design for the synthesis of ternary logic circuits","recordType":"researchoutput"}]}, event: "pageLoad"});})();} catch(e) {if(console) { console.log(e) } }</script>
+<script>try {(function() {
+window.appData = window.appData || [];
+})();} catch(e) {if(console) { console.log(e) } }</script>
+
+</body>
+</html>
+

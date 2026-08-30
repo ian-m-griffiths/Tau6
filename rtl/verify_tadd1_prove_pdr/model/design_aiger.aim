@@ -1,0 +1,6 @@
+input 0 0 a
+input 1 1 a
+input 2 0 b
+input 3 1 b
+input 4 0 cin
+input 5 1 cin

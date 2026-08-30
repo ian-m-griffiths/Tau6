@@ -1,0 +1,236 @@
+* =====================================================================
+* ternary_adiabatic.cir
+* Charge-recycling (adiabatic) drive of the AC-polarity ternary cell.
+*
+* Question: can adiabatic driving get the ternary cell BELOW binary's
+* energy?  Binary to beat: 0.75 pJ/bit-transition
+*   (= binary_baseline.cir ecycle/2 = 1.496 pJ per 0->1->0 cycle / 2).
+*
+* Baseline (sharp 1 mA pulse, ternary_cell.cir):
+*   epush 5.36 pJ, epull 5.36 pJ, enull ~0,
+*   push->pull back-to-back ecycT 8.04 pJ (50 % recycling already).
+*
+* Adiabatic idea: replace the sharp current pulse with a SLOW raised-
+* cosine voltage ramp through a series inductor, or with an LC-resonant
+* half-sine ring, so the line capacitance charges AND DISCHARGES through
+* the inductor instead of being dumped.  Energy is measured at the drive
+* source as INTEG V(drv)*I(sense) over each window; a NEGATIVE integral
+* means charge was returned to the source (recovery).
+*
+* Tests (one .tran; cell subckt identical to baseline except rload):
+*   A: ramp Tr=3n  , rload=500  (near-pulse speed, same receiver)
+*   B: ramp Tr=10n , rload=500  (slow ramp,  same receiver)
+*   C: ramp Tr=30n , rload=500  (slower ramp, same receiver)
+*   D: ramp Tr=10n , rload=1meg (adiabatic-compatible capacitive receiver)
+*   E: ramp Tr=30n , rload=1meg (slower -> less energy in the win regime)
+*   R: LC resonant ring (L=9.4uH, half-sine), rload=1meg (works only with
+*      the high-Z receiver -- the 500R rail load damps the ring)
+*      push 450-460n, ring-pull 460-470n (free), reset 470-480n
+*   S: LC resonant ring, rload=500 (negative control: the 500R receiver's
+*      static assert current eats the ring) 500-530n
+*   T: LC resonant ring, high-Z, L=40uH (bigger L -> less R/Z0 loss,
+*      2x slower: the adiabatic energy<->speed tradeoff) 550-616n
+*
+* Cycle timing (B: Tr=10n): push triangle 40-60n, pull 62-82n ->
+* one push+pull pair takes 2*(2*Tr)+2*TG = 44 ns.  Compare baseline
+* ~6-8 ns per pair: adiabatic is ~5-7x SLOWER (the classic tradeoff).
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+* ---------- diode model: identical to ternary_cell.cir ----------
+.model DIDEAL D (IS=1e-14 RS=50 CJO=0.2p TT=2n N=1.0)
+
+* ---------- reusable cell: wire + 2-diode receiver + load ----------
+.subckt ternary_cell in rA rB rwire=500 cline=1p rload=500 cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+D1 x rA DIDEAL
+D2 rB x DIDEAL
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+* ---------------------------------------------------------------------
+* Adiabatic ramp generator: raised-cosine triangle
+*   V(t) = VPK * [ tri((t-T0)/Tr) - tri((t-T1)/Tr) ]
+*   tri(x) = 0.5(1-cos(pi*clip(x,0,1))) + 0.5(1+cos(pi*clip(x-1,0,1))) - 1
+* zero slope at start / peak / end -> no current discontinuity.
+* (clip(x,0,1) written as min(max(x,0),1))
+* ---------------------------------------------------------------------
+.param VPK = 1.7
+.param VPKD = 1.25
+.param TG = 2n
+
+* ---------- TEST A: ramp Tr=3n, same receiver (rload=500) ----------
+.param T0A = 10n
+.param TrA = 3n
+.param T1A = 'T0A+2*TrA+TG'
+BrampA adrvA 0 V = VPK*(0.5*(1-cos(pi*min(max((time-T0A)/TrA,0),1)))+0.5*(1+cos(pi*min(max((time-T0A)/TrA-1,0),1)))-1-0.5*(1-cos(pi*min(max((time-T1A)/TrA,0),1)))-0.5*(1+cos(pi*min(max((time-T1A)/TrA-1,0),1)))+1)
+LrampA adrvA dA 100n
+VsA dA inA DC 0
+XcellA inA rAa rBa ternary_cell rload=500
+BpA pwA 0 V = V(adrvA)*I(VsA)
+
+* ---------- TEST B: ramp Tr=10n, same receiver (rload=500) ----------
+.param T0B = 40n
+.param TrB = 10n
+.param T1B = 'T0B+2*TrB+TG'
+BrampB adrvB 0 V = VPK*(0.5*(1-cos(pi*min(max((time-T0B)/TrB,0),1)))+0.5*(1+cos(pi*min(max((time-T0B)/TrB-1,0),1)))-1-0.5*(1-cos(pi*min(max((time-T1B)/TrB,0),1)))-0.5*(1+cos(pi*min(max((time-T1B)/TrB-1,0),1)))+1)
+LrampB adrvB dB 100n
+VsB dB inB DC 0
+XcellB inB rAb rBb ternary_cell rload=500
+BpB pwB 0 V = V(adrvB)*I(VsB)
+
+* ---------- TEST C: ramp Tr=30n, same receiver (rload=500) ----------
+.param T0C = 100n
+.param TrC = 30n
+.param T1C = 'T0C+2*TrC+TG'
+BrampC adrvC 0 V = VPK*(0.5*(1-cos(pi*min(max((time-T0C)/TrC,0),1)))+0.5*(1+cos(pi*min(max((time-T0C)/TrC-1,0),1)))-1-0.5*(1-cos(pi*min(max((time-T1C)/TrC,0),1)))-0.5*(1+cos(pi*min(max((time-T1C)/TrC-1,0),1)))+1)
+LrampC adrvC dC 100n
+VsC dC inC DC 0
+XcellC inC rAc rBc ternary_cell rload=500
+BpC pwC 0 V = V(adrvC)*I(VsC)
+
+* ---------- TEST D: ramp Tr=10n, high-Z receiver (rload=1meg) ----------
+.param T0D = 240n
+.param TrD = 10n
+.param T1D = 'T0D+2*TrD+TG'
+BrampD adrvD 0 V = VPKD*(0.5*(1-cos(pi*min(max((time-T0D)/TrD,0),1)))+0.5*(1+cos(pi*min(max((time-T0D)/TrD-1,0),1)))-1-0.5*(1-cos(pi*min(max((time-T1D)/TrD,0),1)))-0.5*(1+cos(pi*min(max((time-T1D)/TrD-1,0),1)))+1)
+LrampD adrvD dD 100n
+VsD dD inD DC 0
+XcellD inD rAd rBd ternary_cell rload=1meg
+BpD pwD 0 V = V(adrvD)*I(VsD)
+
+* ---------- TEST E: ramp Tr=30n, high-Z receiver (rload=1meg) ----------
+.param T0E = 300n
+.param TrE = 30n
+.param T1E = 'T0E+2*TrE+TG'
+BrampE adrvE 0 V = VPKD*(0.5*(1-cos(pi*min(max((time-T0E)/TrE,0),1)))+0.5*(1+cos(pi*min(max((time-T0E)/TrE-1,0),1)))-1-0.5*(1-cos(pi*min(max((time-T1E)/TrE,0),1)))-0.5*(1+cos(pi*min(max((time-T1E)/TrE-1,0),1)))+1)
+LrampE adrvE dE 100n
+VsE dE inE DC 0
+XcellE inE rAe rBe ternary_cell rload=1meg
+BpE pwE 0 V = V(adrvE)*I(VsE)
+
+* ---------------------------------------------------------------------
+* TEST R: LC-resonant charge-recycling, HIGH-Z receiver (rload=1meg)
+* Step the drive rail through a large L; the line rings (half-sine).
+*   L=9.4uH, C~1.3pF  ->  T/2 = pi*sqrt(L*C) ~ 10 ns
+*   450n: +0.6V step  -> line rings 0 -> +1.2V in 10ns (PUSH, D1 -> rail A)
+*   460n: rail -> 0V  -> line rings +1.2 -> 0 -> -1.2V in 10ns (PULL for
+*                          free: the L returns the charge; D2 -> rail B)
+*   470n: -0.6V step  -> line -1.2 -> 0V in 10ns (reset; charge absorbed)
+*   480n: rail -> 0V
+* Energy = INTEG V(vring)*I(VsR) per window; negative = returned charge.
+* ---------------------------------------------------------------------
+Vring vring 0 PWL(0 0 450n 0 450.001n 0.6 460n 0.6 460.001n 0 470n 0 470.001n -0.6 480n -0.6 480.001n 0)
+Lring vring dR 9.4u
+VsR dR inR DC 0
+XcellR inR rAr rBr ternary_cell rload=1meg
+BpR pwR 0 V = V(vring)*I(VsR)
+
+* ---------------------------------------------------------------------
+* TEST S: LC-resonant, SAME 500R receiver (negative control)
+* Same L and timing, but rload=500: the rail assert current (Vr/500 ~ 1mA)
+* through D1/D2 damps the ring and burns Vf*I*t while the line is above
+* the diode clamp.  Expect: much worse than R, ~ baseline or above.
+* ---------------------------------------------------------------------
+VringS vringS 0 PWL(0 0 500n 0 500.001n 1.3 510n 1.3 510.001n 0 520n 0 520.001n -1.3 530n -1.3 530.001n 0)
+LringS vringS dS 9.4u
+VsS dS inS DC 0
+XcellS inS rAs rBs ternary_cell rload=500
+BpS pwS 0 V = V(vringS)*I(VsS)
+
+* ---------------------------------------------------------------------
+* TEST T: LC-resonant, high-Z, BIGGER L (L=40uH -> Z0=5.6kOhm, half the
+* R/Z0 loss, 2x slower ring).  Demonstrates the adiabatic tradeoff:
+* energy floor ~ (pi/2)*(R/Z0)*C*V^2, cycle time ~ pi*sqrt(L*C).
+*   550n: +0.6V step, 572n: ->0, 594n: ->-0.6V, 616n: ->0  (T/2 ~ 22ns)
+* ---------------------------------------------------------------------
+VringT vringT 0 PWL(0 0 550n 0 550.001n 0.6 572n 0.6 572.001n 0 594n 0 594.001n -0.6 616n -0.6 616.001n 0)
+LringT vringT dT 40u
+VsT dT inT DC 0
+XcellT inT rAt rBt ternary_cell rload=1meg
+BpT pwT 0 V = V(vringT)*I(VsT)
+
+* =====================================================================
+* SIMULATION CONTROL + MEASUREMENTS
+* =====================================================================
+.tran 50p 640n
+
+* --- TEST A (Tr=3n): push 10-16n, pull 18-24n ---
+.meas tran epushA INTEG V(pwA) FROM=10n TO=16n
+.meas tran epullA INTEG V(pwA) FROM=18n TO=24n
+.meas tran ecycA INTEG V(pwA) FROM=10n TO=24n
+.meas tran vrAa_peak FIND V(rAa) AT=13n
+.meas tran vxAa_peak FIND V(XcellA.x) AT=13n
+
+* --- TEST B (Tr=10n): push 40-60n, pull 62-82n ---
+.meas tran epushB INTEG V(pwB) FROM=40n TO=60n
+.meas tran eupB   INTEG V(pwB) FROM=40n TO=50n
+.meas tran ednB   INTEG V(pwB) FROM=50n TO=60n
+.meas tran epullB INTEG V(pwB) FROM=62n TO=82n
+.meas tran ecycB  INTEG V(pwB) FROM=40n TO=82n
+.meas tran vrAb_peak FIND V(rAb) AT=50n
+.meas tran vrBb_peak FIND V(rBb) AT=72n
+.meas tran vxAb_peak FIND V(XcellB.x) AT=50n
+
+* --- TEST C (Tr=30n): push 100-160n, pull 162-222n ---
+.meas tran epushC INTEG V(pwC) FROM=100n TO=160n
+.meas tran epullC INTEG V(pwC) FROM=162n TO=222n
+.meas tran ecycC  INTEG V(pwC) FROM=100n TO=222n
+.meas tran vrAc_peak FIND V(rAc) AT=130n
+
+* --- TEST D (Tr=10n, rload=1meg): push 240-260n, pull 262-282n ---
+.meas tran epushD INTEG V(pwD) FROM=240n TO=260n
+.meas tran eupD   INTEG V(pwD) FROM=240n TO=250n
+.meas tran ednD   INTEG V(pwD) FROM=250n TO=260n
+.meas tran epullD INTEG V(pwD) FROM=262n TO=282n
+.meas tran ecycD  INTEG V(pwD) FROM=240n TO=282n
+.meas tran vrAd_peak FIND V(rAd) AT=250n
+.meas tran vxAd_peak FIND V(XcellD.x) AT=250n
+
+* --- TEST E (Tr=30n, rload=1meg): push 300-360n, pull 362-422n ---
+.meas tran epushE INTEG V(pwE) FROM=300n TO=360n
+.meas tran epullE INTEG V(pwE) FROM=362n TO=422n
+.meas tran ecycE  INTEG V(pwE) FROM=300n TO=422n
+
+* --- TEST R (LC resonant, high-Z): push 450-460n, ring-pull 460-470n, reset 470-480n ---
+.meas tran eR_push INTEG V(pwR) FROM=450n TO=460n
+.meas tran eR_pull INTEG V(pwR) FROM=460n TO=470n
+.meas tran eR_reset INTEG V(pwR) FROM=470n TO=480n
+.meas tran eR_cyc   INTEG V(pwR) FROM=450n TO=480n
+.meas tran vrAr_peak FIND V(rAr) AT=460n
+.meas tran vrBr_peak FIND V(rBr) AT=470n
+.meas tran vxR_peak  FIND V(XcellR.x) AT=460n
+.meas tran vxR_min   FIND V(XcellR.x) AT=470n
+
+* --- TEST S (LC resonant, 500R control): push 500-510n, ring-pull 510-520n, reset 520-530n ---
+.meas tran eS_push INTEG V(pwS) FROM=500n TO=510n
+.meas tran eS_pull INTEG V(pwS) FROM=510n TO=520n
+.meas tran eS_reset INTEG V(pwS) FROM=520n TO=530n
+.meas tran eS_cyc   INTEG V(pwS) FROM=500n TO=530n
+.meas tran vrAs_peak FIND V(rAs) AT=510n
+.meas tran vrBs_peak FIND V(rBs) AT=520n
+.meas tran vxS_peak  FIND V(XcellS.x) AT=510n
+.meas tran vxS_min   FIND V(XcellS.x) AT=520n
+
+* --- TEST T (LC resonant, high-Z, L=40u): push 550-572n, ring-pull 572-594n, reset 594-616n ---
+.meas tran eT_push INTEG V(pwT) FROM=550n TO=572n
+.meas tran eT_pull INTEG V(pwT) FROM=572n TO=594n
+.meas tran eT_reset INTEG V(pwT) FROM=594n TO=616n
+.meas tran eT_cyc   INTEG V(pwT) FROM=550n TO=616n
+.meas tran vrAt_peak FIND V(rAt) AT=570n
+.meas tran vrBt_peak FIND V(rBt) AT=593n
+.meas tran vxT_peak  FIND V(XcellT.x) AT=570n
+.meas tran vxT_min   FIND V(XcellT.x) AT=593n
+
+* --- print key waveforms for inspection ---
+.print tran v(adrvB) v(XcellB.x) v(rAb) v(rBb)
+.print tran v(vring) v(XcellR.x) v(rAr) v(rBr)
+.print tran v(vringT) v(XcellT.x) v(rAt) v(rBt)
+
+.end

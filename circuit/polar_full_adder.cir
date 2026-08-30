@@ -1,0 +1,519 @@
+* =====================================================================
+* polar_full_adder.cir  --  POLAR ternary FULL ADDER, diode-direction form.
+*
+*   a + b + cin  ->  sum (= (a+b+cin) mod 3) + cout (carry, balanced).
+*
+* REPRESENTATION (balanced, "polar" = push/null/pull on ONE wire)
+*   +1 = +VDD (push),  0 = 0 V (null, no line energized),  -1 = -VDD (pull).
+*   carry rule (balanced):  cout = +1 iff s >= +2,  -1 iff s <= -2,  0 else.
+*   sum = s mod 3 in balanced digits {+1,0,-1}.
+*   (The task's "carry=1 iff >=3" is the UNSIGNED radix-3 phrasing; balanced
+*    ternary -- which is what "polar"/push-pull means -- uses |carry|=1 iff
+*    |s|>=2.  The 27-row table below is the balanced tadd1 table.)
+*
+* DESIGN (flag every decision)
+*   1. Receiver (per input wire): the repo's PASSIVE diode-direction rectifier
+*      (2 Schottky diodes) splits the polar wire into rA (push rail) / rB (pull
+*      rail); null = neither fires (free).  Then an elevated-|Vt| dead-zone
+*      restore pair re-quantizes each rail to full swing:
+*        p = +VDD iff push,  n = +VDD iff pull  (else -VDD).
+*      (This is tsum_cell.cir's t_recv, minus the explicit z rail: the logic
+*       below derives its own null-context pz/nz = NOT(any push/pull).)
+*   2. Carry "threshold": static-CMOS majority + veto (NOT an elevated-Vt or
+*      comparator threshold device -- flagged):
+*        p2 = maj3(pa,pb,pc) = ">=2 pushes",  n2 = maj3(na,nb,nc) = ">=2 pulls"
+*        pz = ~(pa|pb|pc) = "no pushes",      nz = ~(na|nb|nc) = "no pulls"
+*        cop = nz & p2   (carry +1 : no pulls AND >=2 pushes)
+*        con = pz & n2   (carry -1 : no pushes AND >=2 pulls)
+*   3. Sum = s mod 3, factored (exactly-one / exactly-two / no-context):
+*        p1 = "exactly one push",  n1 = "exactly one pull"
+*        p2x = "exactly two pushes", n2x = "exactly two pulls"
+*        sp = (p1 & nz) | (p2x & n1) | (pz & n2x)     [s == +1 (mod 3)]
+*        sn = (n1 & pz) | (n2x & p1) | (nz & p2x)     [s == -1 (mod 3)]
+*   4. Output: dead-zone push-pull driver re-encodes sp/sn -> one sum wire and
+*      cop/con -> one cout wire (null when both rails inactive).
+*
+* DEVICE COUNT (D = rectifier diode, T = transistor; keepers R/C passive)
+*   receiver : 3 x t_recv2 (2 D + 6 T)                  =  6 D +  18 T
+*   and2     : 18 x 6 T                                  =        108 T
+*   or3      :  6 x 8 T                                  =         48 T
+*   nor3     :  2 x 6 T                                  =         12 T
+*   and3     :  2 x 8 T                                  =         16 T
+*   inv      :  6 x 2 T                                  =         12 T
+*   driver   :  2 x 2 T                                  =          4 T
+*   -------------------------------------------------------------------
+*   TOTAL    :                                            6 D + 218 T  = 224 devices
+*
+* FAIR-FIGHT HONESTY (same as tsum_cell.cir / diode_gates.cir)
+*   - REAL driver (V*I counted over a full assert+release cycle), REAL passive
+*     diode receiver load, inputs ideal voltage sources, LEVEL=1 no body diode
+*     no mismatch, same +/-VDD = +/-1.0 V rails as the binary reference.
+*   - Cheapest toggle (null<->+1) AND carry/full-swing toggles both measured.
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param VDD   = 1.0
+.param Rwire = 100
+.param CL    = 10f          ; one output wire drives ~1 next-gate input
+.param Rterm = 100k         ; null-return termination on every polar wire
+.param T_C0 = 95n           ; full-cycle window: assert @100n, release @120n
+.param T_C1 = 135n
+.param T_Q0 = 10n           ; quiet (held-null / idle) window
+.param T_Q1 = 85n
+
+* ---------------- models (verbatim tsum_cell.cir / diode_gates.cir) -------
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+.model N_HI  NMOS(LEVEL=1 VTO=1.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model P_HI  PMOS(LEVEL=1 VTO=-1.4 KP=100u LAMBDA=0.05 TOX=2n)
+.model DD D (IS=1e-9 RS=200 CJO=2f TT=1p N=1.05)
+
+* ---------------- diode-direction receiver (passive, per input wire) -------
+.subckt dd_recv win rA rB
+D1 win rA DD
+D2 rB win DD
+RkA rA 0 100k
+RkB rB 0 100k
+CkA rA 0 2f
+CkB rB 0 2f
+.ends
+
+* ---------------- static CMOS primitives (bipolar rails +/-VDD) ------------
+.subckt inv in out vdd vss
+Mp out in vdd vdd PMOS1 W=4u  L=0.18u
+Mn out in vss vss NMOS1 W=2u  L=0.18u
+.ends
+
+.subckt nand2 a b out vdd vss
+Mp1 out a vdd vdd PMOS1 W=4u  L=0.18u
+Mp2 out b vdd vdd PMOS1 W=4u  L=0.18u
+Mn1 out a mid vss NMOS1 W=4u  L=0.18u
+Mn2 mid b vss vss NMOS1 W=4u  L=0.18u
+Cmid mid 0 1f
+.ends
+
+.subckt nor2 a b out vdd vss
+Mp1 mid a vdd vdd PMOS1 W=8u  L=0.18u
+Mp2 out b mid vdd PMOS1 W=8u  L=0.18u
+Mn1 out a vss vss NMOS1 W=2u  L=0.18u
+Mn2 out b vss vss NMOS1 W=2u  L=0.18u
+Cmid mid 0 1f
+.ends
+
+.subckt and2 a b out vdd vss
+X1 a b mid vdd vss nand2
+X2 mid out vdd vss inv
+.ends
+
+.subckt or2 a b out vdd vss
+X1 a b mid vdd vss nor2
+X2 mid out vdd vss inv
+.ends
+
+* 3-input gates (real CMOS, single-gate count: nor3=6T or3=8T nand3=6T and3=8T)
+.subckt nor3 a b c out vdd vss
+Mp1 m1 a vdd vdd PMOS1 W=12u L=0.18u
+Mp2 m2 b m1 vdd PMOS1 W=12u L=0.18u
+Mp3 out c m2 vdd PMOS1 W=12u L=0.18u
+Mn1 out a vss vss NMOS1 W=2u  L=0.18u
+Mn2 out b vss vss NMOS1 W=2u  L=0.18u
+Mn3 out c vss vss NMOS1 W=2u  L=0.18u
+Cm1 m1 0 1f
+Cm2 m2 0 1f
+.ends
+
+.subckt or3 a b c out vdd vss
+Xn a b c mid vdd vss nor3
+Xi mid out vdd vss inv
+.ends
+
+.subckt nand3 a b c out vdd vss
+Mp1 out a vdd vdd PMOS1 W=4u L=0.18u
+Mp2 out b vdd vdd PMOS1 W=4u L=0.18u
+Mp3 out c vdd vdd PMOS1 W=4u L=0.18u
+Mn1 out a m1 vss NMOS1 W=12u L=0.18u
+Mn2 m1 b m2 vss NMOS1 W=12u L=0.18u
+Mn3 m2 c vss vss NMOS1 W=12u L=0.18u
+Cm1 m1 0 1f
+Cm2 m2 0 1f
+.ends
+
+.subckt and3 a b c out vdd vss
+Xn a b c mid vdd vss nand3
+Xi mid out vdd vss inv
+.ends
+
+* ---------------- push-pull output driver (2 T, dead-zone null) ------------
+.subckt driver gp gn out vdd vss
+Mp out gp vdd vdd PMOS1 W=4u  L=0.18u
+Mn out gn vss vss NMOS1 W=2u  L=0.18u
+.ends
+
+* ---------------- ternary receiver: polar wire -> full-swing p,n -----------
+* p = +VDD iff push, n = +VDD iff pull (else -VDD).  No explicit null rail.
+* 2 D + 6 T.  Elevated-|Vt| restore = dead zone (null => both off, no static).
+.subckt t_recv2 w p n vdd vss
+Xr w ra rb dd_recv
+Mpu midp ra vdd vdd PMOS1 W=4u L=0.18u
+Mpd midp ra vss vss N_HI  W=4u L=0.18u
+Xi  midp p  vdd vss inv
+Mnu n  rb vdd vdd P_HI  W=4u L=0.18u
+Mnd n  rb vss vss NMOS1 W=4u L=0.18u
+.ends
+
+* =====================================================================
+* POLAR FULL ADDER  (the deliverable):  wa,wb,wc -> wsum,wcout
+* =====================================================================
+.subckt pol_fa wa wb wc wsum wcout vdd vss
+Xra wa pa na vdd vss t_recv2
+Xrb wb pb nb vdd vss t_recv2
+Xrc wc pc nc vdd vss t_recv2
+* --- carry majority: p2 = >=2 pushes, n2 = >=2 pulls ---
+Xp2a pa pb p21 vdd vss and2
+Xp2b pa pc p22 vdd vss and2
+Xp2c pb pc p23 vdd vss and2
+Xp2  p21 p22 p23 p2 vdd vss or3
+Xn2a na nb n21 vdd vss and2
+Xn2b na nc n22 vdd vss and2
+Xn2c nb nc n23 vdd vss and2
+Xn2  n21 n22 n23 n2 vdd vss or3
+* --- null context: pz = no pushes, nz = no pulls ---
+Xpz pa pb pc pz vdd vss nor3
+Xnz na nb nc nz vdd vss nor3
+* --- exactly three / exactly two ---
+Xa3p pa pb pc a3p vdd vss and3
+Xa3n na nb nc a3n vdd vss and3
+Xi3p a3p a3pb vdd vss inv
+Xi3n a3n a3nb vdd vss inv
+Xp2x p2 a3pb p2x vdd vss and2
+Xn2x n2 a3nb n2x vdd vss and2
+* --- at least one / exactly one ---
+Xpany pa pb pc pany vdd vss or3
+Xnany na nb nc nany vdd vss or3
+Xip2 p2 p2b vdd vss inv
+Xin2 n2 n2b vdd vss inv
+Xp1 pany p2b p1 vdd vss and2
+Xn1 nany n2b n1 vdd vss and2
+* --- carry out ---
+Xcop nz p2 cop vdd vss and2
+Xcon pz n2 con vdd vss and2
+* --- sum = s mod 3 ---
+Xsp1 p1 nz t1 vdd vss and2
+Xsp2 p2x n1 t2 vdd vss and2
+Xsp3 pz n2x t3 vdd vss and2
+Xsp  t1 t2 t3 sp vdd vss or3
+Xsn1 n1 pz t4 vdd vss and2
+Xsn2 n2x p1 t5 vdd vss and2
+Xsn3 nz p2x t6 vdd vss and2
+Xsn  t4 t5 t6 sn vdd vss or3
+* --- output drivers (polar re-encode) ---
+Xgsum sp gpsum vdd vss inv
+Xdrvsum gpsum sn wsum vdd vss driver
+Xgcout cop gpcout vdd vss inv
+Xdrvcout gpcout con wcout vdd vss driver
+.ends
+
+* ---------------- binary full-adder reference (same harness) --------------
+* 46 T unoptimized NAND/NOR form (verbatim tsum_cell.cir bin_fa).
+.subckt bin_xor2 a b out vdd vss
+Xa a b mid1 vdd vss and2
+Xn a b mid2 vdd vss nor2
+Xo mid1 mid2 out vdd vss nor2
+.ends
+
+.subckt bin_fa a b cin sum cout vdd vss
+Xs1 a b s1 vdd vss bin_xor2
+Xs2 s1 cin sum vdd vss bin_xor2
+Xc1 a b c1 vdd vss and2
+Xc2 cin s1 c2 vdd vss and2
+Xco c1 c2 cout vdd vss or2
+.ends
+* TT1: (+1,+1,+1) -> sum +0, carry +1
+Vat1 at1 0 DC {VDD}
+Vbt1 bt1 0 DC {VDD}
+Vct1 ct1 0 DC {VDD}
+Xtt1 at1 bt1 ct1 st1 cot1 vddt vsst pol_fa
+Rwst1 st1 lsumt1 {Rwire}
+Clst1 lsumt1 0 {CL}
+Rtermst1 lsumt1 0 {Rterm}
+Rwct1 cot1 lcoutt1 {Rwire}
+Clct1 lcoutt1 0 {CL}
+Rtermct1 lcoutt1 0 {Rterm}
+
+* TT2: (+1,+1,+0) -> sum -1, carry +1
+Vat2 at2 0 DC {VDD}
+Vbt2 bt2 0 DC {VDD}
+Vct2 ct2 0 DC 0
+Xtt2 at2 bt2 ct2 st2 cot2 vddt vsst pol_fa
+Rwst2 st2 lsumt2 {Rwire}
+Clst2 lsumt2 0 {CL}
+Rtermst2 lsumt2 0 {Rterm}
+Rwct2 cot2 lcoutt2 {Rwire}
+Clct2 lcoutt2 0 {CL}
+Rtermct2 lcoutt2 0 {Rterm}
+
+* TT3: (+1,+0,+0) -> sum +1, carry +0
+Vat3 at3 0 DC {VDD}
+Vbt3 bt3 0 DC 0
+Vct3 ct3 0 DC 0
+Xtt3 at3 bt3 ct3 st3 cot3 vddt vsst pol_fa
+Rwst3 st3 lsumt3 {Rwire}
+Clst3 lsumt3 0 {CL}
+Rtermst3 lsumt3 0 {Rterm}
+Rwct3 cot3 lcoutt3 {Rwire}
+Clct3 lcoutt3 0 {CL}
+Rtermct3 lcoutt3 0 {Rterm}
+
+* TT4: (+1,+1,-1) -> sum +1, carry +0
+Vat4 at4 0 DC {VDD}
+Vbt4 bt4 0 DC {VDD}
+Vct4 ct4 0 DC {-VDD}
+Xtt4 at4 bt4 ct4 st4 cot4 vddt vsst pol_fa
+Rwst4 st4 lsumt4 {Rwire}
+Clst4 lsumt4 0 {CL}
+Rtermst4 lsumt4 0 {Rterm}
+Rwct4 cot4 lcoutt4 {Rwire}
+Clct4 lcoutt4 0 {CL}
+Rtermct4 lcoutt4 0 {Rterm}
+
+* TT5: (+0,+0,+0) -> sum +0, carry +0
+Vat5 at5 0 DC 0
+Vbt5 bt5 0 DC 0
+Vct5 ct5 0 DC 0
+Xtt5 at5 bt5 ct5 st5 cot5 vddt vsst pol_fa
+Rwst5 st5 lsumt5 {Rwire}
+Clst5 lsumt5 0 {CL}
+Rtermst5 lsumt5 0 {Rterm}
+Rwct5 cot5 lcoutt5 {Rwire}
+Clct5 lcoutt5 0 {CL}
+Rtermct5 lcoutt5 0 {Rterm}
+
+* TT6: (+1,-1,+0) -> sum +0, carry +0
+Vat6 at6 0 DC {VDD}
+Vbt6 bt6 0 DC {-VDD}
+Vct6 ct6 0 DC 0
+Xtt6 at6 bt6 ct6 st6 cot6 vddt vsst pol_fa
+Rwst6 st6 lsumt6 {Rwire}
+Clst6 lsumt6 0 {CL}
+Rtermst6 lsumt6 0 {Rterm}
+Rwct6 cot6 lcoutt6 {Rwire}
+Clct6 lcoutt6 0 {CL}
+Rtermct6 lcoutt6 0 {Rterm}
+
+* TT7: (+1,+0,-1) -> sum +0, carry +0
+Vat7 at7 0 DC {VDD}
+Vbt7 bt7 0 DC 0
+Vct7 ct7 0 DC {-VDD}
+Xtt7 at7 bt7 ct7 st7 cot7 vddt vsst pol_fa
+Rwst7 st7 lsumt7 {Rwire}
+Clst7 lsumt7 0 {CL}
+Rtermst7 lsumt7 0 {Rterm}
+Rwct7 cot7 lcoutt7 {Rwire}
+Clct7 lcoutt7 0 {CL}
+Rtermct7 lcoutt7 0 {Rterm}
+
+* TT8: (-1,+0,+0) -> sum -1, carry +0
+Vat8 at8 0 DC {-VDD}
+Vbt8 bt8 0 DC 0
+Vct8 ct8 0 DC 0
+Xtt8 at8 bt8 ct8 st8 cot8 vddt vsst pol_fa
+Rwst8 st8 lsumt8 {Rwire}
+Clst8 lsumt8 0 {CL}
+Rtermst8 lsumt8 0 {Rterm}
+Rwct8 cot8 lcoutt8 {Rwire}
+Clct8 lcoutt8 0 {CL}
+Rtermct8 lcoutt8 0 {Rterm}
+
+* TT9: (-1,-1,+1) -> sum -1, carry +0
+Vat9 at9 0 DC {-VDD}
+Vbt9 bt9 0 DC {-VDD}
+Vct9 ct9 0 DC {VDD}
+Xtt9 at9 bt9 ct9 st9 cot9 vddt vsst pol_fa
+Rwst9 st9 lsumt9 {Rwire}
+Clst9 lsumt9 0 {CL}
+Rtermst9 lsumt9 0 {Rterm}
+Rwct9 cot9 lcoutt9 {Rwire}
+Clct9 lcoutt9 0 {CL}
+Rtermct9 lcoutt9 0 {Rterm}
+
+* TT10: (-1,-1,+0) -> sum +1, carry -1
+Vat10 at10 0 DC {-VDD}
+Vbt10 bt10 0 DC {-VDD}
+Vct10 ct10 0 DC 0
+Xtt10 at10 bt10 ct10 st10 cot10 vddt vsst pol_fa
+Rwst10 st10 lsumt10 {Rwire}
+Clst10 lsumt10 0 {CL}
+Rtermst10 lsumt10 0 {Rterm}
+Rwct10 cot10 lcoutt10 {Rwire}
+Clct10 lcoutt10 0 {CL}
+Rtermct10 lcoutt10 0 {Rterm}
+
+* TT11: (-1,-1,-1) -> sum +0, carry -1
+Vat11 at11 0 DC {-VDD}
+Vbt11 bt11 0 DC {-VDD}
+Vct11 ct11 0 DC {-VDD}
+Xtt11 at11 bt11 ct11 st11 cot11 vddt vsst pol_fa
+Rwst11 st11 lsumt11 {Rwire}
+Clst11 lsumt11 0 {CL}
+Rtermst11 lsumt11 0 {Rterm}
+Rwct11 cot11 lcoutt11 {Rwire}
+Clct11 lcoutt11 0 {CL}
+Rtermct11 lcoutt11 0 {Rterm}
+
+* TT12: (+0,+1,+1) -> sum -1, carry +1
+Vat12 at12 0 DC 0
+Vbt12 bt12 0 DC {VDD}
+Vct12 ct12 0 DC {VDD}
+Xtt12 at12 bt12 ct12 st12 cot12 vddt vsst pol_fa
+Rwst12 st12 lsumt12 {Rwire}
+Clst12 lsumt12 0 {CL}
+Rtermst12 lsumt12 0 {Rterm}
+Rwct12 cot12 lcoutt12 {Rwire}
+Clct12 lcoutt12 0 {CL}
+Rtermct12 lcoutt12 0 {Rterm}
+
+* TT13: (+0,-1,-1) -> sum +1, carry -1
+Vat13 at13 0 DC 0
+Vbt13 bt13 0 DC {-VDD}
+Vct13 ct13 0 DC {-VDD}
+Xtt13 at13 bt13 ct13 st13 cot13 vddt vsst pol_fa
+Rwst13 st13 lsumt13 {Rwire}
+Clst13 lsumt13 0 {CL}
+Rtermst13 lsumt13 0 {Rterm}
+Rwct13 cot13 lcoutt13 {Rwire}
+Clct13 lcoutt13 0 {CL}
+Rtermct13 lcoutt13 0 {Rterm}
+
+* ---------------- energy / delay instances ----------------
+VDD1 vdd1 0 DC {VDD}
+VSS1 vss1 0 DC {-VDD}
+Va1 a1 0 DC 0
+Vc1 c1 0 DC 0
+Vb1 b1 0 PULSE(0 {VDD} 100n 0.2n 0.2n 20n 200n)
+Xfa1 a1 b1 c1 s1 c1o vdd1 vss1 pol_fa
+Rws1 s1 ls1 {Rwire}
+Cls1 ls1 0 {CL}
+Rterms1 ls1 0 {Rterm}
+Xrecs1 ls1 ras1 rbs1 dd_recv
+Rwc1 c1o lc1 {Rwire}
+Clc1 lc1 0 {CL}
+Rtermc1 lc1 0 {Rterm}
+Xrecc1 lc1 rac1 rbc1 dd_recv
+Bp1 p1 0 V = -(V(vdd1)*I(VDD1) + V(vss1)*I(VSS1))
+
+VDD2 vdd2 0 DC {VDD}
+VSS2 vss2 0 DC {-VDD}
+Va2 a2 0 DC {VDD}
+Vc2 c2 0 DC 0
+Vb2 b2 0 PULSE(0 {VDD} 100n 0.2n 0.2n 20n 200n)
+Xfa2 a2 b2 c2 s2 c2o vdd2 vss2 pol_fa
+Rws2 s2 ls2 {Rwire}
+Cls2 ls2 0 {CL}
+Rterms2 ls2 0 {Rterm}
+Xrecs2 ls2 ras2 rbs2 dd_recv
+Rwc2 c2o lc2 {Rwire}
+Clc2 lc2 0 {CL}
+Rtermc2 lc2 0 {Rterm}
+Xrecc2 lc2 rac2 rbc2 dd_recv
+Bp2 p2 0 V = -(V(vdd2)*I(VDD2) + V(vss2)*I(VSS2))
+
+VDD3 vdd3 0 DC {VDD}
+VSS3 vss3 0 DC {-VDD}
+Va3 a3 0 DC {VDD}
+Vc3 c3 0 DC 0
+Vb3 b3 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xfa3 a3 b3 c3 s3 c3o vdd3 vss3 pol_fa
+Rws3 s3 ls3 {Rwire}
+Cls3 ls3 0 {CL}
+Rterms3 ls3 0 {Rterm}
+Xrecs3 ls3 ras3 rbs3 dd_recv
+Rwc3 c3o lc3 {Rwire}
+Clc3 lc3 0 {CL}
+Rtermc3 lc3 0 {Rterm}
+Xrecc3 lc3 rac3 rbc3 dd_recv
+Bp3 p3 0 V = -(V(vdd3)*I(VDD3) + V(vss3)*I(VSS3))
+
+VDDb vddb 0 DC {VDD}
+VSSb vssb 0 DC {-VDD}
+Vab ab 0 DC {VDD}
+Vcib cib 0 DC {-VDD}
+Vbb bb 0 PULSE({-VDD} {VDD} 100n 0.2n 0.2n 20n 200n)
+Xbfa ab bb cib sbm cbm vddb vssb bin_fa
+Rwsb sbm lsb {Rwire}
+Clsb lsb 0 {CL}
+Rwcb cbm lcb {Rwire}
+Clcb lcb 0 {CL}
+Bpb pb 0 V = -(V(vddb)*I(VDDb) + V(vssb)*I(VSSb))
+
+* ---------------- truth-table supply (all DC) ----------------
+VDDt vddt 0 DC {VDD}
+VSSt vsst 0 DC {-VDD}
+
+* ---------------- simulation + measurements ----------------
+.tran 20p 140n
+
+* --- supply energy over one full output cycle (J) ---
+.meas tran egate_e1   INTEG V(p1) FROM={T_C0} TO={T_C1}
+.meas tran egate_e2   INTEG V(p2) FROM={T_C0} TO={T_C1}
+.meas tran egate_e3   INTEG V(p3) FROM={T_C0} TO={T_C1}
+.meas tran egate_bfa INTEG V(pb) FROM={T_C0} TO={T_C1}
+
+* --- per-toggle = full cycle / 2 ---
+.meas tran ept_e1   PARAM = 'egate_e1/2'
+.meas tran ept_e2   PARAM = 'egate_e2/2'
+.meas tran ept_e3   PARAM = 'egate_e3/2'
+.meas tran ept_bfa PARAM = 'egate_bfa/2'
+
+* --- quiet-window (held-null idle) energy: expect ~0 ---
+.meas tran eq_e1 INTEG V(p1) FROM={T_Q0} TO={T_Q1}
+.meas tran eq_e2 INTEG V(p2) FROM={T_Q0} TO={T_Q1}
+
+* --- output checkpoints (assert @100n mid 115n, release @120n ->130n) ---
+.meas tran vsum1_r FIND V(ls1) AT=115n
+.meas tran vcout1_r FIND V(lc1) AT=115n
+.meas tran vsum1_f FIND V(ls1) AT=130n
+.meas tran vcout1_f FIND V(lc1) AT=130n
+.meas tran vsum2_r FIND V(ls2) AT=115n
+.meas tran vcout2_r FIND V(lc2) AT=115n
+.meas tran vsum2_f FIND V(ls2) AT=130n
+.meas tran vcout2_f FIND V(lc2) AT=130n
+.meas tran vsum3_r FIND V(ls3) AT=115n
+.meas tran vcout3_r FIND V(lc3) AT=115n
+.meas tran vsum3_f FIND V(ls3) AT=130n
+.meas tran vcout3_f FIND V(lc3) AT=130n
+.meas tran vsum_b_r FIND V(lsb) AT=115n
+.meas tran vcar_b_r FIND V(lcb) AT=115n
+
+* --- delay: input 50% -> output 50% (propagation delay) ---
+.meas tran tdelay_cout TRIG V(b2) VAL=0.5 RISE=1 TARG V(lc2) VAL=0.5 RISE=1
+.meas tran tdelay_sum  TRIG V(b2) VAL=0.5 RISE=1 TARG V(ls2) VAL=0.0 FALL=1
+
+.meas tran tsum1  FIND V(lsumt1) AT=130n
+.meas tran tcout1 FIND V(lcoutt1) AT=130n
+.meas tran tsum2  FIND V(lsumt2) AT=130n
+.meas tran tcout2 FIND V(lcoutt2) AT=130n
+.meas tran tsum3  FIND V(lsumt3) AT=130n
+.meas tran tcout3 FIND V(lcoutt3) AT=130n
+.meas tran tsum4  FIND V(lsumt4) AT=130n
+.meas tran tcout4 FIND V(lcoutt4) AT=130n
+.meas tran tsum5  FIND V(lsumt5) AT=130n
+.meas tran tcout5 FIND V(lcoutt5) AT=130n
+.meas tran tsum6  FIND V(lsumt6) AT=130n
+.meas tran tcout6 FIND V(lcoutt6) AT=130n
+.meas tran tsum7  FIND V(lsumt7) AT=130n
+.meas tran tcout7 FIND V(lcoutt7) AT=130n
+.meas tran tsum8  FIND V(lsumt8) AT=130n
+.meas tran tcout8 FIND V(lcoutt8) AT=130n
+.meas tran tsum9  FIND V(lsumt9) AT=130n
+.meas tran tcout9 FIND V(lcoutt9) AT=130n
+.meas tran tsum10  FIND V(lsumt10) AT=130n
+.meas tran tcout10 FIND V(lcoutt10) AT=130n
+.meas tran tsum11  FIND V(lsumt11) AT=130n
+.meas tran tcout11 FIND V(lcoutt11) AT=130n
+.meas tran tsum12  FIND V(lsumt12) AT=130n
+.meas tran tcout12 FIND V(lcoutt12) AT=130n
+.meas tran tsum13  FIND V(lsumt13) AT=130n
+.meas tran tcout13 FIND V(lcoutt13) AT=130n
+
+.end

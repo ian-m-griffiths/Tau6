@@ -1,0 +1,9 @@
+Tau Architecture
+Copyright (c) 2026 Ian Griffiths
+
+A balanced-ternary processor over the Eisenstein (60-degree hex) integer
+lattice, with a Lean formalization, RTL, and a binary RISC-V SoC that uses
+ternary only where it wins (transport and hex addressing).
+
+Third-party components (PicoRV32, NEORV32) are licensed under their own terms;
+see THIRD_PARTY.md.

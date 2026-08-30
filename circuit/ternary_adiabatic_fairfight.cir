@@ -1,0 +1,335 @@
+* =====================================================================
+* ternary_adiabatic_fairfight.cir
+* FAIR-FIGHT honesty check on the ADIABATIC ternary cell.
+*
+* Original claim (ternary_adiabatic.cir): ramp/resonant drive + high-Z
+* (1 MOhm) capacitive receiver = 0.165-0.30 pJ/transition, 2.5-4.5x below
+* binary 0.748 pJ/bit.  BUT it credited recovery to IDEAL sources
+* (behavioral ramp / ideal PWL rail) and used a FREE receiver (the rail
+* was just read off the cap).
+*
+* This netlist re-measures the SAME cell with those idealizations removed,
+* mirroring the ternary_fairfight.cir methodology:
+*
+*   1. REAL RAMP DRIVER  -- CMOS inverter (PMOS1/NMOS1 models from
+*      binary_baseline.cir, VTO=+/-0.4, KP 100u/200u, TOX=2n) driven by
+*      RAMPED gate pulses, sized so the saturation-region channel current
+*      delivers the line ramp (0->+1.3V push, +1.3->-1.3V pull,
+*      -1.3->0 reset).  The FET is the current limiter; its channel loss
+*      (Vrail - Vline)*I is counted via the supply integral.
+*   2. REAL LC SWITCH DRIVER -- half-bridge (PMOS to +0.6V LC rail, NMOS
+*      to 0V, NMOS to -0.6V LC rail) closing each switch for exactly
+*      T/2 = pi*sqrt(L*C) ~ 23 ns (L=40uH) / ~11 ns (L=9.4uH) and opening
+*      at the ring current zero-crossing.  The line rings 0->+1.04 (push),
+*      +1.04->-1.04 (pull), -1.04->~0 (reset); the ring energy stays in
+*      the LC tank, only Rds*I^2 escapes, and the rails deliver/absorb
+*      the net.  Rds loss IS counted via the LC-rail supply integral.
+*   3. REAL RECEIVER -- the fair-fight PMOS-input clocked sense amps
+*      (SA_A: rA>0?, SA_B: rB<0?), one evaluation per phase; their
+*      VDDSA supply energy per evaluation is measured and included.
+*
+* Cell: ternary_cell UNCHANGED from ternary_adiabatic.cir (wire 500,
+* cline 1p, diode pair DIDEAL, rload=1Meg high-Z rails, cload 0.2p,
+* rterm 1Meg).  Same line swings as the original high-Z cases (~+/-1.2V).
+*
+* Energy accounting per phase (all measured, all in one window):
+*   E_drain = net energy the driver supplies deliver during the phase
+*             (ramp cases: pwpSUP = -(V(vdd)I(VDD)+V(vss)I(VSS));
+*              LC cases:  pwpLC  = -(V(vlcp)I(VLCP)+V(vlcn)I(VLCN)) )
+*             POSITIVE = delivered; NEGATIVE = recovered to the supply.
+*   E_cell  = energy actually delivered INTO the cell at the driver-side
+*             of the sense source (apples-to-apples with the old meas)
+*   E_rec   = sense-amp supply energy for one demux evaluation
+*   E_fair  = E_drain + E_rec  (+ E_gate, reported; ~fJ for these sizes)
+*
+* Binary comparison: 0.748 pJ/bit (binary_baseline.cir ecycle/2).
+* Ternary per bit of info: divide the per-trit average by log2(3)=1.585.
+*
+* MEASURED (ngspice 44.2, final config; E in pJ; E_rec ~0.02-0.03/eval):
+*   RAMP Tr=10n (A):  push 1.88, pull 3.77, reset/null 2.04  -> cycle 7.69
+*   RAMP Tr=30n (B):  push 1.83, pull 3.67, reset/null 1.95  -> cycle 7.44
+*   LC 40uH   (C):    push 0.857, pull ~0 (free), reset -0.225 (RECOVERY)
+*                     -> cycle 0.631 (net supply; tank holds the ring energy)
+*   LC 9.4uH  (D):    push 0.762, pull ~0, reset +0.038     -> cycle 0.799
+*   per-transition (E_drv + E_rec):  ramp ~2.5-2.6 pJ/trit  (2.1-2.2x WORSE
+*     than binary 0.748 pJ/bit);  LC 40uH 0.210, LC 9.4uH 0.266 pJ/trit
+*     (4.5-5.6x BETTER).  Per bit of info (log2 3): ramp 1.58-1.63 pJ/bit,
+*     LC 0.133-0.168 pJ/bit.
+*   VERDICT: the slow-ramp claim (0.165-0.30 pJ) is dead -- the ideal ramp
+*     source was hiding 90-95% of the cost (a real FET current-limiter burns
+*     (Vrail-Vline)*I for the whole ramp; a fixed rail never recovers).  The
+*     LC-resonant scheme survives: the ring energy oscillates in the tank and
+*     the switches only burn (pi/2)(Rds/Z0)*E_ring; recovery is real (measured
+*     -0.225 pJ on the reset).  Caveats: (a) recovery needs a power-clock that
+*     accepts the return (a plain DC supply wastes it -> 0.36 pJ/trit, still
+*     2x better than binary); (b) the null state needs rail equalization
+*     (~0.05 pJ; the 1Meg rails hold their assert for tau=200ns); (c) the
+*     pull switch needs body isolation + negative gate drive (a real-process
+*     fix, cf. fairfight caveat) -- without it the "off" switch conducts on
+*     the negative line swing and dumps ~2.5 pJ.
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+* ---------- models: verbatim from binary_baseline + fairfight ----------
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4 KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+.model DIDEAL D (IS=1e-14 RS=50 CJO=0.2p TT=2n N=1.0)
+
+* ---------- cell: UNCHANGED adiabatic high-Z cell (diode receiver) -----
+.subckt ternary_cell in rA rB rwire=500 cline=1p rload=1meg cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+D1 x rA DIDEAL
+D2 rB x DIDEAL
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+* ---------- REAL RECEIVER: PMOS-input clocked sense amp (fairfight) ----
+* out = high when inP < inM (PMOS conducts more on the lower input).
+.subckt sensamp inP inM clk vddsa out outb
+M1 out  inP cs cs PMOS1 W=1u  L=0.18u
+M2 outb inM cs cs PMOS1 W=1u  L=0.18u
+M5 cs   clk vddsa vddsa PMOS1 W=0.3u L=0.18u
+M3 out  outb 0 0 NMOS1 W=0.5u L=0.18u
+M4 outb out  0 0 NMOS1 W=0.5u L=0.18u
+M6 out  clk  0 0 NMOS1 W=0.5u L=0.18u
+M7 outb clk  0 0 NMOS1 W=0.5u L=0.18u
+CLo  out  0 5f
+CLob outb 0 5f
+.ends
+
+* =====================================================================
+* SHARED SUPPLIES
+*   ramp-driver rails:  +/-1.7 V  (line peak ~1.3 V + |Vt| 0.4 V)
+*   LC power-clock rails: +0.6 V / -0.6 V  (line rings to ~2*VLC = 1.2 V)
+*   sense-amp rail: 1.0 V
+* =====================================================================
+.param VDDR = 1.7
+VDD   vdd   0 DC {VDDR}
+VSS   vss   0 DC {-VDDR}
+VLCP  vlcp  0 DC 0.6
+VLCN  vlcn  0 DC -0.6
+VDDSA vddsa 0 DC 1.0
+BpSUP pwpSUP 0 V = -(V(vdd)*I(VDD) + V(vss)*I(VSS))
+BpLC  pwpLC  0 V = -(V(vlcp)*I(VLCP) + V(vlcn)*I(VLCN))
+BpSA  pwpSA  0 V = -(V(vddsa)*I(VDDSA))
+
+* =====================================================================
+* CASE A: RAMP Tr=10n  -- REAL CMOS current-source driver
+*   PMOS pulls line 0->+1.3 through L=100n (gate ramps 1.7->0 in 10n),
+*   NMOS pulls +1.3->-1.3 (gate ramps -1.7->0 in 10n),
+*   PMOS again resets -1.3->0 (null transition).
+*   Sizing: I_sat(full on) = Q/Tr so the ramp completes in Tr:
+*     WPA: 0.83u -> PMOS I~0.4mA -> int over 10n ramp ~ 1.4pC = C*1.2
+*     WNA: 1.66u -> NMOS I~1.6mA (pull needs 2x the charge, 2.6V swing)
+* =====================================================================
+.param WPA = 0.83u
+.param WNA = 0.83u
+MPA drvA gPA vdd vdd PMOS1 W={WPA} L=0.18u
+MNA drvA gNA vss vss NMOS1 W={WNA} L=0.18u
+VgPA gPA 0 PWL(0 1.7 100n 1.7 110n 0 111n 1.7 200n 1.7 210n 0 211n 1.7)
+VgNA gNA 0 PWL(0 -1.7 150n -1.7 160n 0 161n -1.7)
+LA drvA dA 100n
+VsA dA inA DC 0
+XA inA rAa rBa ternary_cell
+BpCA pwCA 0 V = V(inA)*I(VsA)
+BpGA pwGA 0 V = V(gPA)*I(VgPA) + V(gNA)*I(VgNA)
+RbigA drvA 0 100meg
+VclkA clkA 0 PWL(0 1 120n 1 120.5n 0 122.5n 1 170n 1 170.5n 0 172.5n 1 214n 1 214.5n 0 216.5n 1)
+XsaAa 0 rAa clkA vddsa outApa outApba sensamp
+XsaAb rBa 0 clkA vddsa outBpa outBpba sensamp
+BdAa vdA 0 V = V(outApa)-V(outApba)
+BdBb vdB 0 V = V(outBpa)-V(outBpba)
+
+* =====================================================================
+* CASE B: RAMP Tr=30n  -- same real CMOS driver, slower / smaller FET
+*   WPB: 0.28u -> PMOS I~0.15mA; WNB: 0.56u -> NMOS I~0.6mA
+* =====================================================================
+.param WPB = 0.28u
+.param WNB = 0.28u
+MPB drvB gPB vdd vdd PMOS1 W={WPB} L=0.18u
+MNB drvB gNB vss vss NMOS1 W={WNB} L=0.18u
+VgPB gPB 0 PWL(0 1.7 400n 1.7 430n 0 431n 1.7 600n 1.7 630n 0 631n 1.7)
+VgNB gNB 0 PWL(0 -1.7 500n -1.7 530n 0 531n -1.7)
+LB drvB dB 100n
+VsB dB inB DC 0
+XB inB rAb rBb ternary_cell
+BpCB pwCB 0 V = V(inB)*I(VsB)
+BpGB pwGB 0 V = V(gPB)*I(VgPB) + V(gNB)*I(VgNB)
+RbigB drvB 0 100meg
+VclkB clkB 0 PWL(0 1 435n 1 435.5n 0 437.5n 1 535n 1 535.5n 0 537.5n 1 645n 1 645.5n 0 647.5n 1)
+XsaBa 0 rAb clkB vddsa outApb outApbb sensamp
+XsaBb rBb 0 clkB vddsa outBpb outBpbb sensamp
+BdAb vdAb 0 V = V(outApb)-V(outApbb)
+BdBb2 vdBb 0 V = V(outBpb)-V(outBpbb)
+
+* =====================================================================
+* CASE C: LC RESONANT L=40uH -- REAL half-bridge power-clock switches
+*   MPP: PMOS switch to +0.6V rail (line rings 0->+1.04, PUSH)
+*   MN0: NMOS switch to 0V      (line rings +1.04->-1.04, PULL, free)
+*   MNN: NMOS switch to -0.6V   (line rings -1.04->~0, RESET/null)
+*   Each switch closes for T/2 = pi*sqrt(L*C) ~ 23 ns and opens at the
+*   current zero-crossing (measured: line peaks at 723.9n with a 700n
+*   ring start).  CAC = physical drain-node cap (LEVEL=1 FETs have none;
+*   100f also stabilises the near-zero-cap LC node).
+* =====================================================================
+MPPC aC gPPC vlcp vlcp PMOS1 W=60u L=0.18u
+MN0C aC gN0C 0 vlcn NMOS1 W=10u L=0.18u
+MNNC aC gNNC vlcn vlcn NMOS1 W=10u L=0.18u
+RbigC aC 0 100meg
+CAC  aC 0 100f
+LC aC dC 40u
+VsC dC inC DC 0
+XC inC rAc rBc ternary_cell
+BpCC pwCC 0 V = V(inC)*I(VsC)
+BpGC pwGC 0 V = V(gPPC)*I(VgPPC) + V(gN0C)*I(VgN0C) + V(gNNC)*I(VgNNC)
+VgPPC gPPC 0 PWL(0 0.6 700n 0.6 703n 0 723n 0 726n 0.6)
+VgN0C gN0C 0 PWL(0 -0.6 726n -0.6 729n 1.0 747n 1.0 750n -0.6)
+VgNNC gNNC 0 PWL(0 -0.6 750n -0.6 753n 0.4 773n 0.4 776n -0.6)
+VclkC clkC 0 PWL(0 1 728n 1 728.5n 0 730.5n 1 750n 1 750.5n 0 752.5n 1 773n 1 773.5n 0 775.5n 1)
+XsaCa 0 rAc clkC vddsa outApc outApbc sensamp
+XsaCb rBc 0 clkC vddsa outBpc outBpbc sensamp
+BdAc vdAc 0 V = V(outApc)-V(outApbc)
+BdBc vdBc 0 V = V(outBpc)-V(outBpbc)
+
+* =====================================================================
+* CASE D: LC RESONANT L=9.4uH (fast) -- same real half-bridge
+*   T/2 ~ 11 ns.  Same W (fixed hardware, 2.1x faster, ~2x R/Z0 loss).
+* =====================================================================
+MPPD aD gPPD vlcp vlcp PMOS1 W=60u L=0.18u
+MN0D aD gN0D 0 vlcn NMOS1 W=10u L=0.18u
+MNND aD gNND vlcn vlcn NMOS1 W=10u L=0.18u
+RbigD aD 0 100meg
+CAD  aD 0 100f
+LD aD dD 9.4u
+VsD dD inD DC 0
+XD inD rAd rBd ternary_cell
+BpCD pwCD 0 V = V(inD)*I(VsD)
+BpGD pwGD 0 V = V(gPPD)*I(VgPPD) + V(gN0D)*I(VgN0D) + V(gNND)*I(VgNND)
+VgPPD gPPD 0 PWL(0 0.6 800n 0.6 802n 0 811n 0 813n 0.6)
+VgN0D gN0D 0 PWL(0 -0.6 813n -0.6 815n 1.0 823n 1.0 825n -0.6)
+VgNND gNND 0 PWL(0 -0.6 825n -0.6 827n 0.4 835n 0.4 837n -0.6)
+VclkD clkD 0 PWL(0 1 814n 1 814.5n 0 816.5n 1 825n 1 825.5n 0 827.5n 1 837n 1 837.5n 0 839.5n 1)
+XsaDa 0 rAd clkD vddsa outApd outApbd sensamp
+XsaDb rBd 0 clkD vddsa outBpd outBpbd sensamp
+BdAd vdAd 0 V = V(outApd)-V(outApbd)
+BdBd vdBd 0 V = V(outBpd)-V(outBpbd)
+
+* =====================================================================
+* SIMULATION + MEASUREMENTS
+* =====================================================================
+.tran 50p 900n
+
+* --- CASE A (ramp Tr=10n): push 100-135n, pull 150-190n, reset 200-218n
+.meas tran epushA_drv  INTEG V(pwpSUP) FROM=100n TO=130n
+.meas tran epushA_cell INTEG V(pwCA)   FROM=100n TO=130n
+.meas tran epushA_gate INTEG V(pwGA)   FROM=100n TO=130n
+.meas tran epushA_rec  INTEG V(pwpSA)  FROM=118n TO=123n
+.meas tran epullA_drv  INTEG V(pwpSUP) FROM=150n TO=180n
+.meas tran epullA_cell INTEG V(pwCA)   FROM=150n TO=180n
+.meas tran epullA_gate INTEG V(pwGA)   FROM=150n TO=180n
+.meas tran epullA_rec  INTEG V(pwpSA)  FROM=168n TO=173n
+.meas tran eresetA_drv INTEG V(pwpSUP) FROM=200n TO=218n
+.meas tran eresetA_cell INTEG V(pwCA)  FROM=200n TO=218n
+.meas tran eresetA_gate INTEG V(pwGA)  FROM=200n TO=218n
+.meas tran eresetA_rec INTEG V(pwpSA)  FROM=212n TO=217n
+.meas tran ecycA      INTEG V(pwpSUP) FROM=100n TO=218n
+.meas tran lineA_pk   MAX V(inA)  FROM=100n TO=130n
+.meas tran lineA_min  MIN V(inA)  FROM=150n TO=180n
+.meas tran railAa_pk  MAX V(rAa)  FROM=110n TO=130n
+.meas tran railBa_pk  MAX V(rBa)  FROM=160n TO=180n
+.meas tran demuxA_push FIND V(outApa) AT=121.5n
+.meas tran demuxB_push FIND V(outBpa) AT=121.5n
+.meas tran demuxA_pull FIND V(outApa) AT=171.5n
+.meas tran demuxB_pull FIND V(outBpa) AT=171.5n
+.meas tran demuxA_reset FIND V(outApa) AT=215.5n
+.meas tran demuxB_reset FIND V(outBpa) AT=215.5n
+
+* --- CASE B (ramp Tr=30n): push 400-475n, pull 500-575n, reset 600-650n
+.meas tran epushB_drv  INTEG V(pwpSUP) FROM=400n TO=450n
+.meas tran epushB_cell INTEG V(pwCB)   FROM=400n TO=450n
+.meas tran epushB_gate INTEG V(pwGB)   FROM=400n TO=450n
+.meas tran epushB_rec  INTEG V(pwpSA)  FROM=433n TO=438n
+.meas tran epullB_drv  INTEG V(pwpSUP) FROM=500n TO=550n
+.meas tran epullB_cell INTEG V(pwCB)   FROM=500n TO=550n
+.meas tran epullB_gate INTEG V(pwGB)   FROM=500n TO=550n
+.meas tran epullB_rec  INTEG V(pwpSA)  FROM=533n TO=538n
+.meas tran eresetB_drv INTEG V(pwpSUP) FROM=600n TO=650n
+.meas tran eresetB_cell INTEG V(pwCB)  FROM=600n TO=650n
+.meas tran eresetB_gate INTEG V(pwGB)  FROM=600n TO=650n
+.meas tran eresetB_rec INTEG V(pwpSA)  FROM=643n TO=648n
+.meas tran ecycB      INTEG V(pwpSUP) FROM=400n TO=650n
+.meas tran lineB_pk   MAX V(inB)  FROM=400n TO=450n
+.meas tran lineB_min  MIN V(inB)  FROM=500n TO=550n
+.meas tran railAb_pk  MAX V(rAb)  FROM=430n TO=450n
+.meas tran railBb_pk  MAX V(rBb)  FROM=530n TO=550n
+.meas tran demuxA_pushB FIND V(outApb) AT=436.5n
+.meas tran demuxB_pushB FIND V(outBpb) AT=436.5n
+.meas tran demuxA_pullB FIND V(outApb) AT=536.5n
+.meas tran demuxB_pullB FIND V(outBpb) AT=536.5n
+.meas tran demuxA_resetB FIND V(outApb) AT=646.5n
+.meas tran demuxB_resetB FIND V(outBpb) AT=646.5n
+
+* --- CASE C (LC 40uH): push 700-726n, pull 724-750n, reset 748-774n
+.meas tran epushC_drv  INTEG V(pwpLC)  FROM=700n TO=726n
+.meas tran epushC_cell INTEG V(pwCC)   FROM=700n TO=726n
+.meas tran epushC_gate INTEG V(pwGC)   FROM=700n TO=726n
+.meas tran epushC_rec  INTEG V(pwpSA)  FROM=726n TO=731n
+.meas tran epullC_drv  INTEG V(pwpLC)  FROM=726n TO=750n
+.meas tran epullC_cell INTEG V(pwCC)   FROM=726n TO=750n
+.meas tran epullC_gate INTEG V(pwGC)   FROM=726n TO=750n
+.meas tran epullC_rec  INTEG V(pwpSA)  FROM=747n TO=752n
+.meas tran eresetC_drv INTEG V(pwpLC)  FROM=750n TO=776n
+.meas tran eresetC_cell INTEG V(pwCC)  FROM=750n TO=776n
+.meas tran eresetC_gate INTEG V(pwGC)  FROM=750n TO=776n
+.meas tran eresetC_rec INTEG V(pwpSA)  FROM=773n TO=778n
+.meas tran ecycC      INTEG V(pwpLC)  FROM=700n TO=776n
+.meas tran lineC_pk   MAX V(inC)  FROM=700n TO=726n
+.meas tran lineC_min  MIN V(inC)  FROM=726n TO=750n
+.meas tran lineC_end  FIND V(inC)  AT=780n
+.meas tran railAc_pk  MAX V(rAc)  FROM=705n TO=726n
+.meas tran railBc_pk  MAX V(rBc)  FROM=735n TO=750n
+.meas tran demuxA_pushC FIND V(outApc) AT=729.5n
+.meas tran demuxB_pushC FIND V(outBpc) AT=729.5n
+.meas tran demuxA_pullC FIND V(outApc) AT=751.5n
+.meas tran demuxB_pullC FIND V(outBpc) AT=751.5n
+.meas tran demuxA_resetC FIND V(outApc) AT=776.5n
+.meas tran demuxB_resetC FIND V(outBpc) AT=776.5n
+
+* --- CASE D (LC 9.4uH): push 800-813n, pull 812-825n, reset 824-837n
+.meas tran epushD_drv  INTEG V(pwpLC)  FROM=800n TO=813n
+.meas tran epushD_cell INTEG V(pwCD)   FROM=800n TO=813n
+.meas tran epushD_gate INTEG V(pwGD)   FROM=800n TO=813n
+.meas tran epushD_rec  INTEG V(pwpSA)  FROM=812n TO=817n
+.meas tran epullD_drv  INTEG V(pwpLC)  FROM=813n TO=825n
+.meas tran epullD_cell INTEG V(pwCD)   FROM=813n TO=825n
+.meas tran epullD_gate INTEG V(pwGD)   FROM=813n TO=825n
+.meas tran epullD_rec  INTEG V(pwpSA)  FROM=824n TO=829n
+.meas tran eresetD_drv INTEG V(pwpLC)  FROM=825n TO=837n
+.meas tran eresetD_cell INTEG V(pwCD)  FROM=825n TO=837n
+.meas tran eresetD_gate INTEG V(pwGD)  FROM=825n TO=837n
+.meas tran eresetD_rec INTEG V(pwpSA)  FROM=835n TO=840n
+.meas tran ecycD      INTEG V(pwpLC)  FROM=800n TO=837n
+.meas tran lineD_pk   MAX V(inD)  FROM=800n TO=813n
+.meas tran lineD_min  MIN V(inD)  FROM=813n TO=825n
+.meas tran lineD_end  FIND V(inD)  AT=841n
+.meas tran railAd_pk  MAX V(rAd)  FROM=803n TO=813n
+.meas tran railBd_pk  MAX V(rBd)  FROM=819n TO=825n
+.meas tran demuxA_pushD FIND V(outApd) AT=814.5n
+.meas tran demuxB_pushD FIND V(outBpd) AT=814.5n
+.meas tran demuxA_pullD FIND V(outApd) AT=830.5n
+.meas tran demuxB_pullD FIND V(outBpd) AT=830.5n
+.meas tran demuxA_resetD FIND V(outApd) AT=846.5n
+.meas tran demuxB_resetD FIND V(outBpd) AT=846.5n
+
+* --- key waveforms for inspection ---
+.print tran v(inA) v(rAa) v(drvA) v(gPA)
+.print tran v(inC) v(rAc) v(rBc) v(aC) v(gPPC) i(VLCP) i(VLCN)
+.print tran v(inD) v(rAd) v(rBd) v(aD) i(VLCP) i(VLCN)
+
+.end

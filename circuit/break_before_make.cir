@@ -1,0 +1,400 @@
+* =====================================================================
+* break_before_make.cir  --  does non-overlapping (break-before-make)
+* gating recover the +1<->-1 crowbar of the ternary diode-direction
+* push-pull driver?
+*
+* MOTIVATION (docs/compute/ground_up/fair_binary.md SS4):
+*   The dd_not diode-direction gate costs 54.2 fJ for a null<->+1 toggle
+*   but 368.7 fJ for the full-swing +1<->-1 toggle -- a 6.8x "crowbar".
+*   Cause: the elevated-|Vt| output stage (P_HI gated by the pull rail,
+*   N_HI gated by the push rail) has a thin dead band, so during a full
+*   swing BOTH output devices conduct at once (shoot-through vdd->vss).
+*
+* HYPOTHESIS UNDER TEST: insert break-before-make (non-overlapping) rail
+*   enables so the two output devices can never conduct simultaneously.
+*   If the crowbar is really the overlap window, the +1<->-1 energy should
+*   collapse toward ~2x the null<->+1 toggle (~108 fJ = two single-rail
+*   events).  The gating logic has its OWN energy, measured separately.
+*
+* WHAT IS MEASURED (all ngspice -b, LEVEL=1, verbatim corpus models):
+*   REF_NULL   : dd_not null<->+1            (reproduce 54.2 fJ)
+*   REF_FULL   : dd_not +1<->-1              (reproduce 368.7 fJ)
+*   STACK_ON   : same output stage + series ENABLE switches held ON
+*                (isolates the series-resistance/capacitance penalty of
+*                adding the gating switches at all)
+*   BBM_TD     : break-before-make driver, non-overlap dead time swept
+*                (inverter-chain delay: 2,4,8,16,32,64 stages)
+*   HELD_NULL  : dd_not driven +1->null->-1 with a 5 ns null dwell
+*                (independent floor = two clean single-rail events,
+*                no extra logic at all)
+*
+* ACCOUNTING (honest):
+*   - the output stage (P_HI/N_HI + enable switches) runs on its own
+*     +/-1 V supplies (vdd_o/vss_o); the non-overlap LOGIC + request
+*     detectors run on separate +/-1 V supplies (vdd_n/vss_n).  So
+*     E_output and E_gate are measured independently.
+*   - the rail -> request digitizers are REAL elevated-|Vt| detectors
+*     (the same N_HI/P_HI device, so the request threshold matches the
+*     output stage's dead zone exactly).  Their energy is inside E_gate.
+*   - per-toggle = full cycle (95n..135n) / 2, verbatim corpus convention.
+*
+* NOTE: the +1<->-1 input is the same ideal PULSE(VDD,-VDD) as
+*   fair_binary.cir SS3, so REF_FULL must land on 368.7 fJ for the
+*   comparison to be apples-to-apples.
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param VDD   = 1.0
+.param Rwire = 100
+.param CLgate= 10f          ; one next-gate input (gate load)
+.param Rterm = 100k         ; null-return termination (polar wires)
+
+* ---------------- models (verbatim from the corpus) --------------------
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+.model N_HI  NMOS(LEVEL=1 VTO=1.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model P_HI  PMOS(LEVEL=1 VTO=-1.4 KP=100u LAMBDA=0.05 TOX=2n)
+.model DD D (IS=1e-9 RS=200 CJO=2f TT=1p N=1.05)
+
+* ---------------- diode-direction receiver (verbatim) ------------------
+.subckt dd_recv win rA rB
+D1 win rA DD
+D2 rB win DD
+RkA rA 0 100k
+RkB rB 0 100k
+CkA rA 0 2f
+CkB rB 0 2f
+.ends
+
+* ---------------- reference dd_not (verbatim fair_binary.cir) ----------
+.subckt dd_not win wout vdd vss
+Xr win ra rb dd_recv
+Mp wout rb vdd vdd P_HI W=4u L=0.18u
+Mn wout ra vss vss N_HI W=4u L=0.18u
+.ends
+
+* ---------------- CMOS logic gates (bipolar +/-VDD, verbatim) ----------
+.subckt inv in out vdd vss
+Mp out in vdd vdd PMOS1 W=4u  L=0.18u
+Mn out in vss vss NMOS1 W=2u  L=0.18u
+.ends
+
+.subckt nand2 a b out vdd vss
+Mp1 out a vdd vdd PMOS1 W=4u  L=0.18u
+Mp2 out b vdd vdd PMOS1 W=4u  L=0.18u
+Mn1 out a mid vss NMOS1 W=4u  L=0.18u
+Mn2 mid b vss vss NMOS1 W=4u  L=0.18u
+Cmid mid 0 1f
+.ends
+
+.subckt and2 a b out vdd vss
+Xn a b mid vdd vss nand2
+Xi mid out vdd vss inv
+.ends
+
+* ---------------- inverter-chain delay (non-inverting, no RC) ----------
+* Dead time is set by the number of fast inverter stages (each ~16 ps at
+* +/-1 V), the standard CMOS non-overlap delay.  Nested doubling keeps the
+* netlist short.  All chains are non-inverting (even stage count).
+.subckt dly2 in out vdd vss
+Xi1 in m1 vdd vss inv
+Xi2 m1 out vdd vss inv
+.ends
+.subckt dly4 in out vdd vss
+Xd1 in m vdd vss dly2
+Xd2 m out vdd vss dly2
+.ends
+.subckt dly8 in out vdd vss
+Xd1 in m vdd vss dly4
+Xd2 m out vdd vss dly4
+.ends
+.subckt dly16 in out vdd vss
+Xd1 in m vdd vss dly8
+Xd2 m out vdd vss dly8
+.ends
+.subckt dly32 in out vdd vss
+Xd1 in m vdd vss dly16
+Xd2 m out vdd vss dly16
+.ends
+.subckt dly64 in out vdd vss
+Xd1 in m vdd vss dly32
+Xd2 m out vdd vss dly32
+.ends
+
+* =====================================================================
+* OUTPUT STAGE with series ENABLE switches.
+*   ra gates N_HI (pull-down direction), rb gates P_HI (pull-up).
+*   enn (NMOS enable, +1 = push allowed) and epb (PMOS enable-bar,
+*   -1 = pull allowed) are non-overlapping logic signals that break the
+*   vdd->vss shoot-through path when both are deasserted.
+*   Same P_HI/N_HI devices (W=4u) as the reference; enable switches are
+*   W=8u to keep the added series resistance small.
+* =====================================================================
+.subckt dd_outstage ra rb wout vdd_o vss_o enn epb
+Mp  mp   rb  vdd_o vdd_o P_HI  W=4u L=0.18u
+Mep wout epb mp   vdd_o PMOS1  W=8u L=0.18u
+Mn  mn   ra  vss_o vss_o N_HI  W=4u L=0.18u
+Men wout enn mn   vss_o NMOS1  W=8u L=0.18u
+Rmp mp vdd_o 10meg
+Rmn mn vss_o 10meg
+Cmp mp 0 1f
+Cmn mn 0 1f
+.ends
+
+* =====================================================================
+* BREAK-BEFORE-MAKE driver (device under test).
+*   rails -> REAL elevated-|Vt| request detectors (P=push, N=dn=pull)
+*          -> non-overlap generator (NOC):  ENn = P & ~delay(N)
+*                                           ENp = N & ~delay(P)
+*          -> output stage gated by ENn / epb=~ENp.
+*   The delay chains (between p->pd1 and dn->nd1) are instantiated by the
+*   CALLER so the dead time can be swept without duplicating the driver.
+* =====================================================================
+.subckt dd_not_bbm win wout p dn vdd_o vss_o vdd_n vss_n nd1 pd1
+Xr win ra rb dd_recv
+* push detector: N_HI (gate=ra) sinks dp to vss when ra>0.4 (push);
+*   Rdp holds dp=vdd otherwise.  p = NOT(dp) = +1 on push.
+Mdp dp ra vss_n vss_n N_HI W=1u L=0.18u
+Rdp dp vdd_n 100k
+Xi0 dp p vdd_n vss_n inv
+* pull detector: P_HI (gate=rb) sources dn to vdd when rb<-0.4 (pull);
+*   Rdn holds dn=vss otherwise.  dn = N = +1 on pull.
+Mdn dn rb vdd_n vdd_n P_HI W=1u L=0.18u
+Rdn dn vss_n 100k
+* non-overlap generator (real CMOS on vdd_n/vss_n)
+Xi1 nd1 ndb vdd_n vss_n inv
+Xi2 pd1 pdb vdd_n vss_n inv
+Xa1 p ndb enn vdd_n vss_n and2
+Xa2 dn pdb enp vdd_n vss_n and2
+Xi3 enp epb vdd_n vss_n inv
+* gated output stage
+Xout ra rb wout vdd_o vss_o enn epb dd_outstage
+.ends
+
+* =====================================================================
+* REFERENCE CASES
+* =====================================================================
+
+* ---------- REF_NULL: dd_not, null <-> +1  (expect 54.2 fJ/toggle) ----
+VDD_n0 vdd_n0 0 DC {VDD}
+VSS_n0 vss_n0 0 DC {-VDD}
+Vin_n0 in_n0 0 PULSE(0 {VDD} 100n 0.2n 0.2n 5n 200n)
+Xgn in_n0 out_n0 vdd_n0 vss_n0 dd_not
+Rw_n0 out_n0 l_n0 {Rwire}
+Cl_n0 l_n0 0 {CLgate}
+Rterm_n0 l_n0 0 {Rterm}
+Xrec_n0 l_n0 ra_n0 rb_n0 dd_recv
+Bpg_n0 pg_n0 0 V = -(V(vdd_n0)*I(VDD_n0) + V(vss_n0)*I(VSS_n0))
+
+* ---------- REF_FULL: dd_not, +1 <-> -1  (expect 368.7 fJ/toggle) -----
+VDD_r0 vdd_r0 0 DC {VDD}
+VSS_r0 vss_r0 0 DC {-VDD}
+Vin_r0 in_r0 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xgr in_r0 out_r0 vdd_r0 vss_r0 dd_not
+Rw_r0 out_r0 l_r0 {Rwire}
+Cl_r0 l_r0 0 {CLgate}
+Rterm_r0 l_r0 0 {Rterm}
+Xrec_r0 l_r0 ra_r0 rb_r0 dd_recv
+Bpg_r0 pg_r0 0 V = -(V(vdd_r0)*I(VDD_r0) + V(vss_r0)*I(VSS_r0))
+
+* ---------- STACK_ON: series-enable stage, enables held ON ------------
+* (isolates the added series-resistance/capacitance penalty from the
+*  non-overlap logic itself)
+VDD_s0 vdd_s0 0 DC {VDD}
+VSS_s0 vss_s0 0 DC {-VDD}
+Vin_s0 in_s0 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xrs0 in_s0 ras0 rbs0 dd_recv
+Xsout ras0 rbs0 out_s0 vdd_s0 vss_s0 enn_s0 epb_s0 dd_outstage
+Venn_s0 enn_s0 0 DC {VDD}      ; NMOS enable always on
+Vepb_s0 epb_s0 0 DC {-VDD}     ; PMOS enable always on
+Rw_s0 out_s0 l_s0 {Rwire}
+Cl_s0 l_s0 0 {CLgate}
+Rterm_s0 l_s0 0 {Rterm}
+Xrec_s0 l_s0 ra_s0 rb_s0 dd_recv
+Bpg_s0 pg_s0 0 V = -(V(vdd_s0)*I(VDD_s0) + V(vss_s0)*I(VSS_s0))
+
+* ---------- HELD_NULL floor: dd_not, +1 -> null -> -1 -> null -> +1 ----
+* (5 ns null dwell; a full reversal = two clean single-rail events)
+VDD_h0 vdd_h0 0 DC {VDD}
+VSS_h0 vss_h0 0 DC {-VDD}
+Vin_h0 in_h0 0 PWL(0 1.0 100n 1.0 100.2n 0.0 105.2n 0.0 105.4n -1.0
++ 120.4n -1.0 120.6n 0.0 125.6n 0.0 125.8n 1.0 140n 1.0)
+Xgh in_h0 out_h0 vdd_h0 vss_h0 dd_not
+Rw_h0 out_h0 l_h0 {Rwire}
+Cl_h0 l_h0 0 {CLgate}
+Rterm_h0 l_h0 0 {Rterm}
+Xrec_h0 l_h0 ra_h0 rb_h0 dd_recv
+Bpg_h0 pg_h0 0 V = -(V(vdd_h0)*I(VDD_h0) + V(vss_h0)*I(VSS_h0))
+
+* =====================================================================
+* BREAK-BEFORE-MAKE SWEEP  (inverter-chain dead time)
+*   TD ~ 2,4,8,16,32,64 inverter stages  (~32 ps .. ~1 ns)
+*   output supplies (vdd_bo/vss_bo) and logic supplies (vdd_bn/vss_bn)
+*   are SEPARATE so E_output and E_gate are measured independently.
+* =====================================================================
+
+* ---------- BBM TD~0 (dly2) -------------------------------------------
+VDD_b0o vdd_b0o 0 DC {VDD}
+VSS_b0o vss_b0o 0 DC {-VDD}
+VDD_b0n vdd_b0n 0 DC {VDD}
+VSS_b0n vss_b0n 0 DC {-VDD}
+Vin_b0 in_b0 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xb0 in_b0 out_b0 p0 dn0 vdd_b0o vss_b0o vdd_b0n vss_b0n nd1_0 pd1_0 dd_not_bbm
+Xd1p_0 p0  pd1_0 vdd_b0n vss_b0n dly2
+Xd1n_0 dn0 nd1_0 vdd_b0n vss_b0n dly2
+Rw_b0 out_b0 l_b0 {Rwire}
+Cl_b0 l_b0 0 {CLgate}
+Rterm_b0 l_b0 0 {Rterm}
+Xrec_b0 l_b0 ra_b0 rb_b0 dd_recv
+Bpgo_b0 pgo_b0 0 V = -(V(vdd_b0o)*I(VDD_b0o) + V(vss_b0o)*I(VSS_b0o))
+Bpgn_b0 pgn_b0 0 V = -(V(vdd_b0n)*I(VDD_b0n) + V(vss_b0n)*I(VSS_b0n))
+
+* ---------- BBM TD~64ps (dly4) ----------------------------------------
+VDD_b1o vdd_b1o 0 DC {VDD}
+VSS_b1o vss_b1o 0 DC {-VDD}
+VDD_b1n vdd_b1n 0 DC {VDD}
+VSS_b1n vss_b1n 0 DC {-VDD}
+Vin_b1 in_b1 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xb1 in_b1 out_b1 p1 dn1 vdd_b1o vss_b1o vdd_b1n vss_b1n nd1_1 pd1_1 dd_not_bbm
+Xd1p_1 p1  pd1_1 vdd_b1n vss_b1n dly4
+Xd1n_1 dn1 nd1_1 vdd_b1n vss_b1n dly4
+Rw_b1 out_b1 l_b1 {Rwire}
+Cl_b1 l_b1 0 {CLgate}
+Rterm_b1 l_b1 0 {Rterm}
+Xrec_b1 l_b1 ra_b1 rb_b1 dd_recv
+Bpgo_b1 pgo_b1 0 V = -(V(vdd_b1o)*I(VDD_b1o) + V(vss_b1o)*I(VSS_b1o))
+Bpgn_b1 pgn_b1 0 V = -(V(vdd_b1n)*I(VDD_b1n) + V(vss_b1n)*I(VSS_b1n))
+
+* ---------- BBM TD~128ps (dly8) ---------------------------------------
+VDD_b2o vdd_b2o 0 DC {VDD}
+VSS_b2o vss_b2o 0 DC {-VDD}
+VDD_b2n vdd_b2n 0 DC {VDD}
+VSS_b2n vss_b2n 0 DC {-VDD}
+Vin_b2 in_b2 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xb2 in_b2 out_b2 p2 dn2 vdd_b2o vss_b2o vdd_b2n vss_b2n nd1_2 pd1_2 dd_not_bbm
+Xd1p_2 p2  pd1_2 vdd_b2n vss_b2n dly8
+Xd1n_2 dn2 nd1_2 vdd_b2n vss_b2n dly8
+Rw_b2 out_b2 l_b2 {Rwire}
+Cl_b2 l_b2 0 {CLgate}
+Rterm_b2 l_b2 0 {Rterm}
+Xrec_b2 l_b2 ra_b2 rb_b2 dd_recv
+Bpgo_b2 pgo_b2 0 V = -(V(vdd_b2o)*I(VDD_b2o) + V(vss_b2o)*I(VSS_b2o))
+Bpgn_b2 pgn_b2 0 V = -(V(vdd_b2n)*I(VDD_b2n) + V(vss_b2n)*I(VSS_b2n))
+
+* ---------- BBM TD~256ps (dly16) --------------------------------------
+VDD_b3o vdd_b3o 0 DC {VDD}
+VSS_b3o vss_b3o 0 DC {-VDD}
+VDD_b3n vdd_b3n 0 DC {VDD}
+VSS_b3n vss_b3n 0 DC {-VDD}
+Vin_b3 in_b3 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xb3 in_b3 out_b3 p3 dn3 vdd_b3o vss_b3o vdd_b3n vss_b3n nd1_3 pd1_3 dd_not_bbm
+Xd1p_3 p3  pd1_3 vdd_b3n vss_b3n dly16
+Xd1n_3 dn3 nd1_3 vdd_b3n vss_b3n dly16
+Rw_b3 out_b3 l_b3 {Rwire}
+Cl_b3 l_b3 0 {CLgate}
+Rterm_b3 l_b3 0 {Rterm}
+Xrec_b3 l_b3 ra_b3 rb_b3 dd_recv
+Bpgo_b3 pgo_b3 0 V = -(V(vdd_b3o)*I(VDD_b3o) + V(vss_b3o)*I(VSS_b3o))
+Bpgn_b3 pgn_b3 0 V = -(V(vdd_b3n)*I(VDD_b3n) + V(vss_b3n)*I(VSS_b3n))
+
+* ---------- BBM TD~512ps (dly32) --------------------------------------
+VDD_b4o vdd_b4o 0 DC {VDD}
+VSS_b4o vss_b4o 0 DC {-VDD}
+VDD_b4n vdd_b4n 0 DC {VDD}
+VSS_b4n vss_b4n 0 DC {-VDD}
+Vin_b4 in_b4 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xb4 in_b4 out_b4 p4 dn4 vdd_b4o vss_b4o vdd_b4n vss_b4n nd1_4 pd1_4 dd_not_bbm
+Xd1p_4 p4  pd1_4 vdd_b4n vss_b4n dly32
+Xd1n_4 dn4 nd1_4 vdd_b4n vss_b4n dly32
+Rw_b4 out_b4 l_b4 {Rwire}
+Cl_b4 l_b4 0 {CLgate}
+Rterm_b4 l_b4 0 {Rterm}
+Xrec_b4 l_b4 ra_b4 rb_b4 dd_recv
+Bpgo_b4 pgo_b4 0 V = -(V(vdd_b4o)*I(VDD_b4o) + V(vss_b4o)*I(VSS_b4o))
+Bpgn_b4 pgn_b4 0 V = -(V(vdd_b4n)*I(VDD_b4n) + V(vss_b4n)*I(VSS_b4n))
+
+* ---------- BBM TD~1ns (dly64) ----------------------------------------
+VDD_b5o vdd_b5o 0 DC {VDD}
+VSS_b5o vss_b5o 0 DC {-VDD}
+VDD_b5n vdd_b5n 0 DC {VDD}
+VSS_b5n vss_b5n 0 DC {-VDD}
+Vin_b5 in_b5 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xb5 in_b5 out_b5 p5 dn5 vdd_b5o vss_b5o vdd_b5n vss_b5n nd1_5 pd1_5 dd_not_bbm
+Xd1p_5 p5  pd1_5 vdd_b5n vss_b5n dly64
+Xd1n_5 dn5 nd1_5 vdd_b5n vss_b5n dly64
+Rw_b5 out_b5 l_b5 {Rwire}
+Cl_b5 l_b5 0 {CLgate}
+Rterm_b5 l_b5 0 {Rterm}
+Xrec_b5 l_b5 ra_b5 rb_b5 dd_recv
+Bpgo_b5 pgo_b5 0 V = -(V(vdd_b5o)*I(VDD_b5o) + V(vss_b5o)*I(VSS_b5o))
+Bpgn_b5 pgn_b5 0 V = -(V(vdd_b5n)*I(VDD_b5n) + V(vss_b5n)*I(VSS_b5n))
+
+* =====================================================================
+* SIMULATION + MEASUREMENTS  (full cycle 95n..135n, verbatim convention)
+* =====================================================================
+.tran 20p 140n
+
+* --- references ---
+.meas tran e_null  INTEG V(pg_n0) FROM=95n TO=135n
+.meas tran e_full  INTEG V(pg_r0) FROM=95n TO=135n
+.meas tran e_stack INTEG V(pg_s0) FROM=95n TO=135n
+.meas tran e_held  INTEG V(pg_h0) FROM=95n TO=135n
+.meas tran pt_null  PARAM = 'e_null/2'
+.meas tran pt_full  PARAM = 'e_full/2'
+.meas tran pt_stack PARAM = 'e_stack/2'
+.meas tran pt_held  PARAM = 'e_held/2'
+
+* --- BBM output-stage energy (supplies vdd_bo/vss_bo) ---
+.meas tran eo_b0 INTEG V(pgo_b0) FROM=95n TO=135n
+.meas tran eo_b1 INTEG V(pgo_b1) FROM=95n TO=135n
+.meas tran eo_b2 INTEG V(pgo_b2) FROM=95n TO=135n
+.meas tran eo_b3 INTEG V(pgo_b3) FROM=95n TO=135n
+.meas tran eo_b4 INTEG V(pgo_b4) FROM=95n TO=135n
+.meas tran eo_b5 INTEG V(pgo_b5) FROM=95n TO=135n
+
+* --- BBM gating-logic energy (supplies vdd_bn/vss_bn) ---
+.meas tran en_b0 INTEG V(pgn_b0) FROM=95n TO=135n
+.meas tran en_b1 INTEG V(pgn_b1) FROM=95n TO=135n
+.meas tran en_b2 INTEG V(pgn_b2) FROM=95n TO=135n
+.meas tran en_b3 INTEG V(pgn_b3) FROM=95n TO=135n
+.meas tran en_b4 INTEG V(pgn_b4) FROM=95n TO=135n
+.meas tran en_b5 INTEG V(pgn_b5) FROM=95n TO=135n
+
+* --- per-toggle = full cycle / 2 ---
+.meas tran pt_o_b0 PARAM = 'eo_b0/2'
+.meas tran pt_o_b1 PARAM = 'eo_b1/2'
+.meas tran pt_o_b2 PARAM = 'eo_b2/2'
+.meas tran pt_o_b3 PARAM = 'eo_b3/2'
+.meas tran pt_o_b4 PARAM = 'eo_b4/2'
+.meas tran pt_o_b5 PARAM = 'eo_b5/2'
+.meas tran pt_n_b0 PARAM = 'en_b0/2'
+.meas tran pt_n_b1 PARAM = 'en_b1/2'
+.meas tran pt_n_b2 PARAM = 'en_b2/2'
+.meas tran pt_n_b3 PARAM = 'en_b3/2'
+.meas tran pt_n_b4 PARAM = 'en_b4/2'
+.meas tran pt_n_b5 PARAM = 'en_b5/2'
+
+* --- measured dead time (enable-off gap), push->pull @100n ---
+.meas tran td_b0 TRIG V(xb0.enn) VAL=0 FALL=1 TARG V(xb0.enp) VAL=0 RISE=1
+.meas tran td_b1 TRIG V(xb1.enn) VAL=0 FALL=1 TARG V(xb1.enp) VAL=0 RISE=1
+.meas tran td_b2 TRIG V(xb2.enn) VAL=0 FALL=1 TARG V(xb2.enp) VAL=0 RISE=1
+.meas tran td_b3 TRIG V(xb3.enn) VAL=0 FALL=1 TARG V(xb3.enp) VAL=0 RISE=1
+.meas tran td_b4 TRIG V(xb4.enn) VAL=0 FALL=1 TARG V(xb4.enp) VAL=0 RISE=1
+.meas tran td_b5 TRIG V(xb5.enn) VAL=0 FALL=1 TARG V(xb5.enp) VAL=0 RISE=1
+
+* --- truth-table checkpoints (output resolved at mid-pulse) ---
+* REF_FULL / STACK_ON / BBM: input +1 @111n (out ~-1), -1 @131n (out ~+1)
+.meas tran vw_ref_r FIND V(l_r0) AT=111n
+.meas tran vw_ref_f FIND V(l_r0) AT=131n
+.meas tran vw_stk_r FIND V(l_s0) AT=111n
+.meas tran vw_stk_f FIND V(l_s0) AT=131n
+.meas tran vw_b0_r FIND V(l_b0) AT=111n
+.meas tran vw_b0_f FIND V(l_b0) AT=131n
+.meas tran vw_b5_r FIND V(l_b5) AT=111n
+.meas tran vw_b5_f FIND V(l_b5) AT=131n
+* HELD_NULL: null @103n (out ~0), -1 @111n (out ~+1)
+.meas tran vw_hn_0 FIND V(l_h0) AT=103n
+.meas tran vw_hn_p FIND V(l_h0) AT=111n
+
+.end

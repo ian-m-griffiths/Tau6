@@ -1,0 +1,415 @@
+* =====================================================================
+* polar_gates.cir  --  NATIVE single-wire polar ternary GATES, measured.
+*
+* WHY THIS EXISTS (the reframe)
+*   The prior gate benchmark (gate_energy.cir / gate_area.md) SYNTHESIZED
+*   "ternary" gates from a BINARY standard-cell library, encoding each
+*   trit as TWO boolean wires (one-hot-per-direction: 01=+1, 00=0,
+*   10=-1, 11=NEVER).  That is binary emulation: 3-level logic built
+*   from 2-level cells, and it loses 2-4.3x on area / 1.2-3.1x on energy
+*   because it pays the 2-threshold cost in a library with no ternary
+*   cell and wastes a 4th state (0.79 bits/wire).
+*
+*   THIS netlist measures the NATIVE representation we already use for
+*   communication (ternary_cell.cir / ternary_fairfight.cir): ONE wire
+*   carrying THREE levels -- push = +V, null = 0, pull = -V.  That is
+*   1.585 bits/wire with no wasted 4th state.  Each gate below is a
+*   self-restoring cell: it reads 2 polar (single-wire) inputs and
+*   drives one polar (single-wire) output, reusing the SAME topology as
+*   the comm cell:
+*
+*      [polar wire] -> [2 sense amps: 2-threshold demux] -> [transistor
+*      logic] -> [push-pull driver] -> [polar wire]
+*
+*   The 2-threshold demux is two PMOS-input sense amplifiers (the comm
+*   cell's receiver) comparing the wire against 0 V: one detects
+*   "wire > 0" (push), the other "wire < 0" (pull); null = "neither
+*   fired".  The push-pull driver (PMOS to +VDD, NMOS to -VDD) is the
+*   comm cell's driver.  The sense amp is CLOCKED (precharge + eval), so
+*   the gate is a DYNAMIC / pipelined cell: the input SAs hold their
+*   resolved value for the whole eval phase, the logic + driver produce
+*   a stable output, and the output SAs (next stage) sample it.
+*
+*   NULL is the crux.  The 0 V wire sits exactly at the sense amp's
+*   threshold, so the null is META-STABLE (the amp sits at a saddle and
+*   draws continuous current, and kickback ~0.2 V can tip it).  This is
+*   a REAL cost of the single-wire representation that the 2-wire
+*   emulation never paid: binary's two rails are always driven full-
+*   swing and never sit at a threshold.  The comm cell's diode rectifier
+*   (ternary_cell.cir) moves the null to "neither rail charged", but
+*   adds a static rail load and leaves the push rail at 0 V for BOTH
+*   "pull" and "null" (so its push SA is meta-stable in 2 of 3 states);
+*   reading the wire directly is strictly better (meta-stable in 1 of 3
+*   states) and is what this netlist measures.
+*
+* FAIR-FIGHT HONESTY (same rules as ternary_fairfight.cir / gate_energy.cir)
+*   - REAL receiver (sense amps, no ideal comparators), REAL push-pull
+*     driver (no ideal current sources).  Energy = integral of supply
+*     V*I over one FULL output cycle (assert + release), halved for
+*     "per toggle".  A full cycle is measured, not one edge.
+*   - Inputs are IDEAL voltage sources (the previous gate's output is
+*     abstracted; its cost is symmetric to this gate's own output
+*     driver, so it cancels per gate).  This is exactly gate_energy.cir's
+*     convention, so the numbers are directly comparable to it.
+*   - LEVEL=1 models, no body diodes, no device mismatch (generous to
+*     ternary, whose 2-threshold receiver has 2x the offset budget).
+*   - The toggle is the CHEAPEST ternary toggle (null <-> +1, one wire
+*     half-swing) -- generous to ternary; a +1<->-1 toggle swings the
+*     full +/-V and costs ~2x the wire energy.
+*
+* RAILS / REPRESENTATION (binary and ternary directly comparable)
+*   Everything runs on +/- VDD = +/- 1.0 V.
+*     binary : "0" = -1 V,  "1" = +1 V   (2-level signal)
+*     ternary: "-1" = -1 V, "0" = 0 V, "+1" = +1 V  (3-level signal)
+*   The SAME sense amp (vs 0 V) is the receiver for both: binary uses
+*   ONE threshold (1 SA), ternary uses TWO (2 SAs).  This isolates the
+*   "1 vs 2 threshold" tax at identical rails and common mode.
+*
+* ENERGY ACCOUNTING (per gate, one full output cycle = 2 toggles)
+*   E_gate = supply energy of the gate: input demux SAs + logic +
+*            push-pull output driver.  Binary has no input demux (its
+*            inverter IS its driver + gate).
+*   E_rec  = supply energy of the output RECEIVER (next stage's demux):
+*            1 SA (binary) or 2 SAs (ternary).
+*   per-toggle = (E_gate + E_rec) / 2.
+*
+* TIMING (each SA is a pipeline stage; input SAs must settle and HOLD
+* before the output SAs read the gate's answer; 10 ns hold = a ~100 MHz
+* gate cycle)
+*   input toggles: assert at 100 ns, release at 120 ns
+*   input demux SAs eval (hold): 105..115 ns, then 125..175 ns
+*   output receiver SAs eval: 110..112 ns, 130..132 ns
+*   full cycle window: 95..135 ns ; quiet (DC-short) window: 10..85 ns
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param VDD   = 1.0
+.param Rwire = 100
+.param CL    = 10f         ; one output wire drives ~1 next-gate input
+.param Rterm = 100k        ; null-return termination on each polar wire
+.param T_C0 = 95n
+.param T_C1 = 135n
+.param T_Q0 = 10n
+.param T_Q1 = 85n
+
+* ---------------- models (verbatim from ternary_fairfight.cir) --------
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+
+* ---------------- sense amp (7 T, bipolar rails +/-VDD) ---------------
+* PMOS diff pair (M1/M2) reads inP vs inM; PMOS tail (M5, gate=clk,
+* active low); NMOS cross-coupled loads (M3/M4) regenerate; NMOS
+* precharge (M6/M7, gate=clk, active high) resets outputs to vss.
+* out = +VDD when inP < inM (the lower PMOS gate conducts more).
+* clk = +VDD (precharge) / -VDD (eval).  Reference "vs 0" is the GLOBAL
+* ground node (node 0), which is the null level of the polar wire.
+.subckt sensamp inP inM clk vdd vss out outb
+M1 out  inP cs  cs  PMOS1 W=1u  L=0.18u
+M2 outb inM cs  cs  PMOS1 W=1u  L=0.18u
+M5 cs   clk vdd vdd PMOS1 W=0.3u L=0.18u
+M3 out  outb vss vss NMOS1 W=0.5u L=0.18u
+M4 outb out  vss vss NMOS1 W=0.5u L=0.18u
+M6 out  clk  vss vss NMOS1 W=0.5u L=0.18u
+M7 outb clk  vss vss NMOS1 W=0.5u L=0.18u
+CLo  out  0 5f
+CLob outb 0 5f
+.ends
+
+* ---------------- push-pull driver (2 T) ------------------------------
+* gp = active-low push enable (PMOS on when gp = -VDD),
+* gn = active-high pull enable (NMOS on when gn = +VDD).
+* null = (gp = +VDD, gn = -VDD): both off, wire returns to 0 via Rterm.
+.subckt driver gp gn out vdd vss
+Mp out gp vdd vdd PMOS1 W=4u  L=0.18u
+Mn out gn vss vss NMOS1 W=2u  L=0.18u
+.ends
+
+* ---------------- static CMOS primitives (bipolar rails +/-VDD) --------
+.subckt inv in out vdd vss
+Mp out in vdd vdd PMOS1 W=4u  L=0.18u
+Mn out in vss vss NMOS1 W=2u  L=0.18u
+.ends
+
+.subckt nand2 a b out vdd vss
+Mp1 out a vdd vdd PMOS1 W=4u  L=0.18u
+Mp2 out b vdd vdd PMOS1 W=4u  L=0.18u
+Mn1 out a mid vss NMOS1 W=4u  L=0.18u
+Mn2 mid b vss vss NMOS1 W=4u  L=0.18u
+Cmid mid 0 1f
+.ends
+
+.subckt nor2 a b out vdd vss
+Mp1 mid a vdd vdd PMOS1 W=8u  L=0.18u
+Mp2 out b mid vdd PMOS1 W=8u  L=0.18u
+Mn1 out a vss vss NMOS1 W=2u  L=0.18u
+Mn2 out b vss vss NMOS1 W=2u  L=0.18u
+Cmid mid 0 1f
+.ends
+
+.subckt and2 a b out vdd vss
+X1 a b mid vdd vss nand2
+X2 mid out vdd vss inv
+.ends
+
+.subckt or2 a b out vdd vss
+X1 a b mid vdd vss nor2
+X2 mid out vdd vss inv
+.ends
+
+.subckt or3 a b c out vdd vss
+X1 a b m1 vdd vss or2
+X2 m1 c out vdd vss or2
+.ends
+
+* =====================================================================
+* NATIVE POLAR GATES  (input = single polar wire, output = single wire)
+*   Each gate demuxes its input(s) with 2 sense amps per wire (push vs 0,
+*   pull vs 0), computes push/pull enables with static CMOS, and drives
+*   the output wire with a push-pull driver.
+* =====================================================================
+
+* negation (+1 <-> -1, null -> null).  "Free" logic (a swap of push and
+* pull), but still pays the 2-threshold input demux + the output driver.
+.subckt pol_neg wa wo clk vdd vss
+Xpush 0  wa clk vdd vss push pushb sensamp   ; push = (wa > 0)
+Xpull wa 0  clk vdd vss pull pullb sensamp   ; pull = (wa < 0)
+Xgpinv pull gp vdd vss inv                   ; output push = input pull
+Xdrv gp push wo vdd vss driver               ; output pull = input push
+.ends
+
+* MIN (meet, order -1 < 0 < +1): push = Pa&Pb, pull = Na|Nb
+.subckt pol_min wa wb wo clk vdd vss
+Xpa 0  wa clk vdd vss Pa Pab sensamp
+Xna wa 0  clk vdd vss Na Nab sensamp
+Xpb 0  wb clk vdd vss Pb Pbb sensamp
+Xnb wb 0  clk vdd vss Nb Nbb sensamp
+Xpand Pa Pb pusho vdd vss and2
+Xnor  Na Nb pullo vdd vss or2
+Xgpinv pusho gp vdd vss inv
+Xdrv gp pullo wo vdd vss driver
+.ends
+
+* MAX (join): push = Pa|Pb, pull = Na&Nb
+.subckt pol_max wa wb wo clk vdd vss
+Xpa 0  wa clk vdd vss Pa Pab sensamp
+Xna wa 0  clk vdd vss Na Nab sensamp
+Xpb 0  wb clk vdd vss Pb Pbb sensamp
+Xnb wb 0  clk vdd vss Nb Nbb sensamp
+Xpor  Pa Pb pusho vdd vss or2
+Xnand Na Nb pullo vdd vss and2
+Xgpinv pusho gp vdd vss inv
+Xdrv gp pullo wo vdd vss driver
+.ends
+
+* mod-3 sum (a+b mod 3, balanced; the 2-input field addition = "ternary
+* XOR", the completeness ingredient; the 3-input carry is a follow-up):
+*   push = (Pa&b0)|(a0&Pb)|(Na&Nb),  pull = (Na&b0)|(a0&Nb)|(Pa&Pb)
+*   where a0 = NOR(Pa,Na), b0 = NOR(Pb,Nb)  (null detect)
+.subckt pol_sum wa wb wo clk vdd vss
+Xpa 0  wa clk vdd vss Pa Pab sensamp
+Xna wa 0  clk vdd vss Na Nab sensamp
+Xpb 0  wb clk vdd vss Pb Pbb sensamp
+Xnb wb 0  clk vdd vss Nb Nbb sensamp
+Xa0 Pa Na a0 vdd vss nor2
+Xb0 Pb Nb b0 vdd vss nor2
+Xp1 Pa b0 t1 vdd vss and2
+Xp2 a0 Pb t2 vdd vss and2
+Xp3 Na Nb t3 vdd vss and2
+Xpor3 t1 t2 t3 pusho vdd vss or3
+Xn1 Na b0 t4 vdd vss and2
+Xn2 a0 Nb t5 vdd vss and2
+Xn3 Pa Pb t6 vdd vss and2
+Xnor3 t4 t5 t6 pullo vdd vss or3
+Xgpinv pusho gp vdd vss inv
+Xdrv gp pullo wo vdd vss driver
+.ends
+
+* ---------------- shared clocks --------------------------------------
+*   clk_in  : eval (low) 105..115 ns (hold push), precharge 115..125 ns,
+*             eval 125..175 ns (hold null).  (width 10 ns, period 20 ns)
+*   clk_out : output receiver samples at 110 ns and 130 ns
+*             (width 2 ns, period 20 ns).
+* (high = precharge, low = eval)
+VCLKIN  clk_in  0 PULSE({VDD} {-VDD} 105n 0.1n 0.1n 10n 20n)
+VCLKOUT clk_out 0 PULSE({VDD} {-VDD} 110n 0.1n 0.1n 2n 20n)
+
+* =====================================================================
+* GATE 1: BINARY NOT  (control)  in: +1 -> -1 -> +1  =>  out: -1 -> +1 -> -1
+* =====================================================================
+VDDg1 vdd_g1 0 DC {VDD}
+VSSg1 vss_g1 0 DC {-VDD}
+VDDr1 vdd_r1 0 DC {VDD}
+VSSr1 vss_r1 0 DC {-VDD}
+Vin1 in1 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xg1 in1 out1 vdd_g1 vss_g1 inv
+Rw1 out1 l1 {Rwire}
+Cl1 l1 0 {CL}
+Xrec1 0 l1 clk_out vdd_r1 vss_r1 r1 r1b sensamp   ; 1-threshold receiver
+Bpg1 pg1 0 V = -(V(vdd_g1)*I(VDDg1) + V(vss_g1)*I(VSSg1))
+Bpr1 pr1 0 V = -(V(vdd_r1)*I(VDDr1) + V(vss_r1)*I(VSSr1))
+
+* =====================================================================
+* GATE 2: BINARY NAND  (control)  a=+1 const, b: +1->-1->+1 => out: -1->+1->-1
+* =====================================================================
+VDDg2 vdd_g2 0 DC {VDD}
+VSSg2 vss_g2 0 DC {-VDD}
+VDDr2 vdd_r2 0 DC {VDD}
+VSSr2 vss_r2 0 DC {-VDD}
+Va2 a2 0 DC {VDD}                          ; held +1 (a=1)
+Vin2 in2 0 PULSE({VDD} {-VDD} 100n 0.2n 0.2n 20n 200n)
+Xg2 a2 in2 out2 vdd_g2 vss_g2 nand2
+Rw2 out2 l2 {Rwire}
+Cl2 l2 0 {CL}
+Xrec2 0 l2 clk_out vdd_r2 vss_r2 r2 r2b sensamp
+Bpg2 pg2 0 V = -(V(vdd_g2)*I(VDDg2) + V(vss_g2)*I(VSSg2))
+Bpr2 pr2 0 V = -(V(vdd_r2)*I(VDDr2) + V(vss_r2)*I(VSSr2))
+
+* =====================================================================
+* GATE 3: POLAR NEGATION  in: null -> +1 -> null => out: null -> -1 -> null
+* =====================================================================
+VDDg3 vdd_g3 0 DC {VDD}
+VSSg3 vss_g3 0 DC {-VDD}
+VDDr3 vdd_r3 0 DC {VDD}
+VSSr3 vss_r3 0 DC {-VDD}
+Vin3 in3 0 PULSE(0 {VDD} 100n 0.2n 0.2n 20n 200n)
+Xg3 in3 out3 clk_in vdd_g3 vss_g3 pol_neg
+Rw3 out3 l3 {Rwire}
+Cl3 l3 0 {CL}
+Rterm3 l3 0 {Rterm}
+Xrecp3 0  l3 clk_out vdd_r3 vss_r3 rp3 rpb3 sensamp   ; push receiver
+Xrecn3 l3 0  clk_out vdd_r3 vss_r3 rn3 rnb3 sensamp   ; pull receiver
+Bpg3 pg3 0 V = -(V(vdd_g3)*I(VDDg3) + V(vss_g3)*I(VSSg3))
+Bpr3 pr3 0 V = -(V(vdd_r3)*I(VDDr3) + V(vss_r3)*I(VSSr3))
+
+* =====================================================================
+* GATE 4: POLAR MIN  a=+1 const, b: null->+1->null => out: null->+1->null
+* =====================================================================
+VDDg4 vdd_g4 0 DC {VDD}
+VSSg4 vss_g4 0 DC {-VDD}
+VDDr4 vdd_r4 0 DC {VDD}
+VSSr4 vss_r4 0 DC {-VDD}
+Va4 a4 0 DC {VDD}                          ; held +1 (push)
+Vin4 in4 0 PULSE(0 {VDD} 100n 0.2n 0.2n 20n 200n)
+Xg4 a4 in4 out4 clk_in vdd_g4 vss_g4 pol_min
+Rw4 out4 l4 {Rwire}
+Cl4 l4 0 {CL}
+Rterm4 l4 0 {Rterm}
+Xrecp4 0  l4 clk_out vdd_r4 vss_r4 rp4 rpb4 sensamp
+Xrecn4 l4 0  clk_out vdd_r4 vss_r4 rn4 rnb4 sensamp
+Bpg4 pg4 0 V = -(V(vdd_g4)*I(VDDg4) + V(vss_g4)*I(VSSg4))
+Bpr4 pr4 0 V = -(V(vdd_r4)*I(VDDr4) + V(vss_r4)*I(VSSr4))
+
+* =====================================================================
+* GATE 5: POLAR MAX  a=null const, b: null->+1->null => out: null->+1->null
+* =====================================================================
+VDDg5 vdd_g5 0 DC {VDD}
+VSSg5 vss_g5 0 DC {-VDD}
+VDDr5 vdd_r5 0 DC {VDD}
+VSSr5 vss_r5 0 DC {-VDD}
+Va5 a5 0 DC 0                                ; held null
+Vin5 in5 0 PULSE(0 {VDD} 100n 0.2n 0.2n 20n 200n)
+Xg5 a5 in5 out5 clk_in vdd_g5 vss_g5 pol_max
+Rw5 out5 l5 {Rwire}
+Cl5 l5 0 {CL}
+Rterm5 l5 0 {Rterm}
+Xrecp5 0  l5 clk_out vdd_r5 vss_r5 rp5 rpb5 sensamp
+Xrecn5 l5 0  clk_out vdd_r5 vss_r5 rn5 rnb5 sensamp
+Bpg5 pg5 0 V = -(V(vdd_g5)*I(VDDg5) + V(vss_g5)*I(VSSg5))
+Bpr5 pr5 0 V = -(V(vdd_r5)*I(VDDr5) + V(vss_r5)*I(VSSr5))
+
+* =====================================================================
+* GATE 6: POLAR mod-3 SUM  a=null const, b: null->+1->null => out: null->+1->null
+* =====================================================================
+VDDg6 vdd_g6 0 DC {VDD}
+VSSg6 vss_g6 0 DC {-VDD}
+VDDr6 vdd_r6 0 DC {VDD}
+VSSr6 vss_r6 0 DC {-VDD}
+Va6 a6 0 DC 0                                ; held null
+Vin6 in6 0 PULSE(0 {VDD} 100n 0.2n 0.2n 20n 200n)
+Xg6 a6 in6 out6 clk_in vdd_g6 vss_g6 pol_sum
+Rw6 out6 l6 {Rwire}
+Cl6 l6 0 {CL}
+Rterm6 l6 0 {Rterm}
+Xrecp6 0  l6 clk_out vdd_r6 vss_r6 rp6 rpb6 sensamp
+Xrecn6 l6 0  clk_out vdd_r6 vss_r6 rn6 rnb6 sensamp
+Bpg6 pg6 0 V = -(V(vdd_g6)*I(VDDg6) + V(vss_g6)*I(VSSg6))
+Bpr6 pr6 0 V = -(V(vdd_r6)*I(VDDr6) + V(vss_r6)*I(VSSr6))
+
+* =====================================================================
+* SIMULATION + MEASUREMENTS  (full cycle 95..135 ns, quiet 10..85 ns)
+* =====================================================================
+.tran 20p 140n
+
+* --- per-stage energy over one full output cycle (J) ---
+.meas tran egate_1 INTEG V(pg1) FROM={T_C0} TO={T_C1}
+.meas tran erec_1  INTEG V(pr1) FROM={T_C0} TO={T_C1}
+.meas tran egate_2 INTEG V(pg2) FROM={T_C0} TO={T_C1}
+.meas tran erec_2  INTEG V(pr2) FROM={T_C0} TO={T_C1}
+.meas tran egate_3 INTEG V(pg3) FROM={T_C0} TO={T_C1}
+.meas tran erec_3  INTEG V(pr3) FROM={T_C0} TO={T_C1}
+.meas tran egate_4 INTEG V(pg4) FROM={T_C0} TO={T_C1}
+.meas tran erec_4  INTEG V(pr4) FROM={T_C0} TO={T_C1}
+.meas tran egate_5 INTEG V(pg5) FROM={T_C0} TO={T_C1}
+.meas tran erec_5  INTEG V(pr5) FROM={T_C0} TO={T_C1}
+.meas tran egate_6 INTEG V(pg6) FROM={T_C0} TO={T_C1}
+.meas tran erec_6  INTEG V(pr6) FROM={T_C0} TO={T_C1}
+
+* --- truth-table checkpoints (wire + receiver latches, 1 ns after the
+*     output SA eval starts at 110 ns / 130 ns) ---
+.meas tran vw_1_r  FIND V(l1) AT=111n
+.meas tran vr_1_r  FIND V(r1) AT=111n
+.meas tran vw_1_f  FIND V(l1) AT=131n
+.meas tran vr_1_f  FIND V(r1) AT=131n
+.meas tran vw_2_r  FIND V(l2) AT=111n
+.meas tran vr_2_r  FIND V(r2) AT=111n
+.meas tran vw_2_f  FIND V(l2) AT=131n
+.meas tran vr_2_f  FIND V(r2) AT=131n
+.meas tran vw_3_r  FIND V(l3) AT=111n
+.meas tran vrP_3_r FIND V(rp3) AT=111n
+.meas tran vrN_3_r FIND V(rn3) AT=111n
+.meas tran vw_3_f  FIND V(l3) AT=131n
+.meas tran vrP_3_f FIND V(rp3) AT=131n
+.meas tran vrN_3_f FIND V(rn3) AT=131n
+.meas tran vw_4_r  FIND V(l4) AT=111n
+.meas tran vrP_4_r FIND V(rp4) AT=111n
+.meas tran vrN_4_r FIND V(rn4) AT=111n
+.meas tran vw_4_f  FIND V(l4) AT=131n
+.meas tran vrP_4_f FIND V(rp4) AT=131n
+.meas tran vrN_4_f FIND V(rn4) AT=131n
+.meas tran vw_5_r  FIND V(l5) AT=111n
+.meas tran vrP_5_r FIND V(rp5) AT=111n
+.meas tran vrN_5_r FIND V(rn5) AT=111n
+.meas tran vw_5_f  FIND V(l5) AT=131n
+.meas tran vrP_5_f FIND V(rp5) AT=131n
+.meas tran vrN_5_f FIND V(rn5) AT=131n
+.meas tran vw_6_r  FIND V(l6) AT=111n
+.meas tran vrP_6_r FIND V(rp6) AT=111n
+.meas tran vrN_6_r FIND V(rn6) AT=111n
+.meas tran vw_6_f  FIND V(l6) AT=131n
+.meas tran vrP_6_f FIND V(rp6) AT=131n
+.meas tran vrN_6_f FIND V(rn6) AT=131n
+
+* --- per-toggle totals (full cycle / 2) ---
+.meas tran etot_1    PARAM = 'egate_1 + erec_1'
+.meas tran etot_1_pt PARAM = 'etot_1/2'
+.meas tran etot_2    PARAM = 'egate_2 + erec_2'
+.meas tran etot_2_pt PARAM = 'etot_2/2'
+.meas tran etot_3    PARAM = 'egate_3 + erec_3'
+.meas tran etot_3_pt PARAM = 'etot_3/2'
+.meas tran etot_4    PARAM = 'egate_4 + erec_4'
+.meas tran etot_4_pt PARAM = 'etot_4/2'
+.meas tran etot_5    PARAM = 'egate_5 + erec_5'
+.meas tran etot_5_pt PARAM = 'etot_5/2'
+.meas tran etot_6    PARAM = 'egate_6 + erec_6'
+.meas tran etot_6_pt PARAM = 'etot_6/2'
+
+* --- diagnostics: quiet-window energy (DC-short check; expect ~0) ---
+.meas tran eq_1 INTEG V(pg1) FROM={T_Q0} TO={T_Q1}
+.meas tran eq_2 INTEG V(pg2) FROM={T_Q0} TO={T_Q1}
+.meas tran eq_3 INTEG V(pg3) FROM={T_Q0} TO={T_Q1}
+.meas tran eq_4 INTEG V(pg4) FROM={T_Q0} TO={T_Q1}
+.meas tran eq_5 INTEG V(pg5) FROM={T_Q0} TO={T_Q1}
+.meas tran eq_6 INTEG V(pg6) FROM={T_Q0} TO={T_Q1}
+
+.end

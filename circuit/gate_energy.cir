@@ -1,0 +1,402 @@
+* =====================================================================
+* gate_energy.cir  --  fair-fight energy of GATES: ternary vs binary
+*
+* The question (docs/TERNARY_COMPUTE_SURVEY.md, the core inequality):
+*   "Compute is not communication.  The null is free on the wire but not
+*    in a gate -- a gate must still resolve 'is this -1, 0, or +1?' every
+*    toggle.  Every ternary gate pays a 2-threshold measurement tax per
+*    cycle; a binary gate pays 1 threshold.  Does radix economy
+*    (3/ln3 ~ 2.73, 1.585 bits/trit) beat that per-gate receiver tax?"
+*
+* This netlist measures it, under the SAME honesty rules as
+* ternary_fairfight.cir: REAL CMOS driver (no ideal current sources) +
+* REAL receiver (PMOS-input clocked sense amp), energy = integral of
+* supply V*I over the toggle window.
+*
+* ---------------------------------------------------------------------
+* WHAT IS MEASURED (per gate, one FULL output cycle = rise + fall):
+*   E_gate = energy delivered by the GATE's own VDD supply during one
+*            full output cycle (0->1->0 for binary, null->+1->null for
+*            ternary; one wire charges then discharges).  This is the
+*            "combinational network" cost -- no sense amp.
+*   E_rec  = energy delivered by the RECEIVER's VDDSA supply (the clocked
+*            sense amp firing once PER TRANSITION, i.e. twice per cycle).
+*            Binary: 1 sense amp.  Ternary: 2 sense amps (push vs 0,
+*            pull vs 0) -- the "2 thresholds".
+*   per-toggle = (E_gate + E_rec) / 2     [one output transition]
+*
+* A FULL cycle is measured (not just one edge) because the gates are
+* asymmetric: a binary NAND's output RISE charges its internal series
+* node (expensive) while its FALL is ~free; a ternary min's push path is
+* the mirror image (cheap rise, expensive fall).  Averaging both edges is
+* the only fair "per toggle".  The sense amp fires on BOTH edges (once
+* per transition), so E_rec covers two evaluations and is halved too.
+*
+* The two components are reported separately so the report can give BOTH
+* stories: (a) the literal "1-threshold vs 2-threshold" sense-amp tax
+* (E_rec), and (b) the honest combinational-gate reality where there is
+* no clocked sense amp and the "receiver" is just the next gate's input
+* capacitance (which the driver already charges inside E_gate).
+*
+* ---------------------------------------------------------------------
+* TRIT ENCODING (rtl/trit_functions.vh): 2 wires per trit, one-hot:
+*   2'b01 = +1 (push wire high)    2'b00 = 0 (null, nothing high)
+*   2'b10 = -1 (pull wire high)    2'b11 = NEVER
+* Gates (boolean forms straight from the RTL macro):
+*   tneg  : push_out = pull_in, pull_out = push_in   (a wire swap)
+*   tand  : push = a_p & b_p,  pull = a_n | b_n      (min / lattice meet)
+*   tor   : push = a_p | b_p,  pull = a_n & b_n      (max / lattice join)
+*   tsum  : mod-3 sum (tadd1 sum output, cin=0):
+*           sp = (ap&b0)|(a0&bp)|(an&bn),  sn = (an&b0)|(a0&bn)|(ap&bp)
+*           where a0 = ~ap&~an, b0 = ~bp&~bn (null detect)
+*
+* ---------------------------------------------------------------------
+* FAIRNESS / CAVEATS (same class as every fair fight in this dir):
+*   - LEVEL=1 models, no body diodes, no device mismatch (sense-amp
+*     offsets ignored: GENEROUS to ternary, whose 2-threshold receiver
+*     has 2x the offset budget of the 1-threshold receiver).
+*   - The clocked sense amp is a LINE receiver, not a gate receiver.  In
+*     a real combinational gate network there is no clock; the "receiver"
+*     is the next gate's static input.  E_gate alone is that story; E_rec
+*     is the literal "2 thresholds vs 1" tax the survey asks about.
+*   - Both the binary and ternary receivers use the SAME "wire vs 0"
+*     reference so the "1 vs 2 sense amps" tax is isolated at identical
+*     common mode.  (The PMOS input pair dies at VDD/2 common mode --
+*     pam4.cir -- so a VDD/2 binary reference is unusable; "vs 0" is a
+*     valid 1-threshold detector.)
+*   - Gate sizes are uniform (PMOS 4u / NMOS 2u per stage, series stacks
+*     doubled for symmetric drive) so no gate is over/under-built.
+*   - The toggle used is the CHEAPEST ternary toggle (null<->+1, one wire
+*     swings) -- GENEROUS to ternary.  A +1<->-1 transition swings two
+*     wires and costs ~2x the wire energy.
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param VDD  = 1.0
+.param Rwire = 100
+.param CL    = 10f         ; one output wire drives ~1 next-gate input
+
+* ---------------- models (verbatim from ternary_fairfight.cir) --------
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+
+* ---------------- REAL RECEIVER: PMOS-input clocked sense amp ---------
+* (verbatim from ternary_fairfight.cir).  out = high when inP < inM.
+.subckt sensamp inP inM clk vddsa out outb
+M1 out  inP cs cs PMOS1 W=1u  L=0.18u
+M2 outb inM cs cs PMOS1 W=1u  L=0.18u
+M5 cs   clk vddsa vddsa PMOS1 W=0.3u L=0.18u
+M3 out  outb 0 0 NMOS1 W=0.5u L=0.18u
+M4 outb out  0 0 NMOS1 W=0.5u L=0.18u
+M6 out  clk  0 0 NMOS1 W=0.5u L=0.18u
+M7 outb clk  0 0 NMOS1 W=0.5u L=0.18u
+CLo  out  0 5f
+CLob outb 0 5f
+.ends
+
+* ---------------- static-CMOS primitives ------------------------------
+* uniform output driver = inverter (also the "driver" stage of every gate)
+.subckt inv in out vdd gnd
+Mp out in vdd vdd PMOS1 W=4u  L=0.18u
+Mn out in gnd gnd NMOS1 W=2u  L=0.18u
+.ends
+
+.subckt nand2 a b out vdd gnd
+Mp1 out a vdd vdd PMOS1 W=4u  L=0.18u
+Mp2 out b vdd vdd PMOS1 W=4u  L=0.18u
+Mn1 out a mid gnd NMOS1 W=4u  L=0.18u
+Mn2 mid b gnd gnd NMOS1 W=4u  L=0.18u
+Cmid mid 0 1f     ; shared source/drain junction cap (real, also fixes the
+                  ; floating series-node convergence of LEVEL=1)
+.ends
+
+.subckt nor2 a b out vdd gnd
+Mp1 mid a vdd vdd PMOS1 W=8u  L=0.18u
+Mp2 out b mid vdd PMOS1 W=8u  L=0.18u
+Mn1 out a gnd gnd NMOS1 W=2u  L=0.18u
+Mn2 out b gnd gnd NMOS1 W=2u  L=0.18u
+Cmid mid 0 1f     ; same junction cap on the shared PMOS source/drain node
+.ends
+
+.subckt and2 a b out vdd gnd
+X1 a b mid vdd gnd nand2
+X2 mid out vdd gnd inv
+.ends
+
+.subckt or2 a b out vdd gnd
+X1 a b mid vdd gnd nor2
+X2 mid out vdd gnd inv
+.ends
+
+.subckt or3 a b c out vdd gnd
+X1 a b m1 vdd gnd or2
+X2 m1 c out vdd gnd or2
+.ends
+
+* ---------------- TERNARY GATE cells (2-wire push/pull output) --------
+* negation = a pure WIRE SWAP (rtl/trit_functions.vh: tneg = {t[0],t[1]}).
+* Zero transistors -- the whole point of balanced ternary: +1<->-1 is just
+* crossing the two wires.  Modeled with 0 V sources (ideal shorts, zero
+* energy) so pout=nin and nout=pin.
+.subckt tneg pin nin pout nout vdd gnd
+VswP pout nin DC 0
+VswN nout pin DC 0
+.ends
+
+* min (AND / lattice meet): push = a_p&b_p, pull = a_n|b_n
+.subckt tand ap an bp bn pout nout vdd gnd
+Xp ap bp pout vdd gnd and2
+Xn an bn nout vdd gnd or2
+.ends
+
+* max (OR / lattice join): push = a_p|b_p, pull = a_n&b_n
+.subckt tor ap an bp bn pout nout vdd gnd
+Xp ap bp pout vdd gnd or2
+Xn an bn nout vdd gnd and2
+.ends
+
+* mod-3 sum (tadd1 sum, cin=0): sp/sn as derived in the header
+.subckt tsum ap an bp bn pout nout vdd gnd
+Xa0 ap an a0 vdd gnd nor2
+Xb0 bp bn b0 vdd gnd nor2
+Xp1 ap b0 t1 vdd gnd and2
+Xp2 a0 bp t2 vdd gnd and2
+Xp3 an bn t3 vdd gnd and2
+Xp  t1 t2 t3 pout vdd gnd or3
+Xn1 an b0 t4 vdd gnd and2
+Xn2 a0 bn t5 vdd gnd and2
+Xn3 ap bp t6 vdd gnd and2
+Xn  t4 t5 t6 nout vdd gnd or3
+.ends
+
+* ---------------- BINARY GATE cells ----------------------------------
+.subckt bin_not in out vdd gnd
+X1 in out vdd gnd inv
+.ends
+
+.subckt bin_nand a b out vdd gnd
+X1 a b out vdd gnd nand2
+.ends
+
+.subckt bin_nor a b out vdd gnd
+X1 a b out vdd gnd nor2
+.ends
+
+* =====================================================================
+* SHARED: the sense-amp clock, periodic (evaluates after EACH transition)
+* (clock energy excluded from E_rec, same convention as the fair fight).
+* =====================================================================
+VCLK clk 0 PULSE(1 0 52n 0.1n 0.1n 1.5n 20n)
+
+* =====================================================================
+* GATE 1: BINARY NOT  (in: 1->0->1  =>  out: 0->1->0)
+* =====================================================================
+VDD1  vdd1  0 DC {VDD}
+VDDSA1 vddsa1 0 DC {VDD}
+Vin1 in1 0 PULSE(1 0 50n 0.2n 0.2n 20n 200n)
+Xg1  in1 out1 vdd1 0 bin_not
+Rw1  out1 l1 {Rwire}
+Cl1  l1 0 {CL}
+Xsa1 0 l1 clk vddsa1 s1o s1ob sensamp
+Bpwr1  pwr1  0 V = -(V(vdd1)*I(VDD1))
+Bpwrsa1 pwrsa1 0 V = -(V(vddsa1)*I(VDDSA1))
+Bd1 d1 0 V = V(s1o)-V(s1ob)
+
+* =====================================================================
+* GATE 2: BINARY NAND  (a=1, b:1->0->1  =>  out: 0->1->0)
+* =====================================================================
+VDD2  vdd2  0 DC {VDD}
+VDDSA2 vddsa2 0 DC {VDD}
+Va2 a2 0 DC 1
+Vb2 b2 0 PULSE(1 0 50n 0.2n 0.2n 20n 200n)
+Xg2  a2 b2 out2 vdd2 0 bin_nand
+Rw2  out2 l2 {Rwire}
+Cl2  l2 0 {CL}
+Xsa2 0 l2 clk vddsa2 s2o s2ob sensamp
+Bpwr2  pwr2  0 V = -(V(vdd2)*I(VDD2))
+Bpwrsa2 pwrsa2 0 V = -(V(vddsa2)*I(VDDSA2))
+Bd2 d2 0 V = V(s2o)-V(s2ob)
+
+* =====================================================================
+* GATE 3: BINARY NOR  (a=0, b:1->0->1  =>  out: 0->1->0)
+* =====================================================================
+VDD3  vdd3  0 DC {VDD}
+VDDSA3 vddsa3 0 DC {VDD}
+Va3 a3 0 DC 0
+Vb3 b3 0 PULSE(1 0 50n 0.2n 0.2n 20n 200n)
+Xg3  a3 b3 out3 vdd3 0 bin_nor
+Rw3  out3 l3 {Rwire}
+Cl3  l3 0 {CL}
+Xsa3 0 l3 clk vddsa3 s3o s3ob sensamp
+Bpwr3  pwr3  0 V = -(V(vdd3)*I(VDD3))
+Bpwrsa3 pwrsa3 0 V = -(V(vddsa3)*I(VDDSA3))
+Bd3 d3 0 V = V(s3o)-V(s3ob)
+
+* =====================================================================
+* GATE 4: TERNARY NOT (tneg)  (in: null->+1->null => out: null->-1->null,
+* pull wire toggles; push wire (free swap of the idle pull input) stays 0)
+* =====================================================================
+VDD4  vdd4  0 DC {VDD}
+VDDSA4 vddsa4 0 DC {VDD}
+Vp4 p4 0 PULSE(0 1 50n 0.2n 0.2n 20n 200n)
+Vn4 n4 0 DC 0
+Xg4  p4 n4 pout4 nout4 vdd4 0 tneg
+Rwp4 pout4 lp4 {Rwire}
+Clp4 lp4 0 {CL}
+Rwn4 nout4 ln4 {Rwire}
+Cln4 ln4 0 {CL}
+XsaP4 0 lp4 clk vddsa4 sP4o sP4ob sensamp
+XsaN4 0 ln4 clk vddsa4 sN4o sN4ob sensamp
+Bpwr4  pwr4  0 V = -(V(vdd4)*I(VDD4))
+Bpwrsa4 pwrsa4 0 V = -(V(vddsa4)*I(VDDSA4))
+BdP4 dP4 0 V = V(sP4o)-V(sP4ob)
+BdN4 dN4 0 V = V(sN4o)-V(sN4ob)
+
+* =====================================================================
+* GATE 5: TERNARY min (tand)  (a=+1 const, b: null->+1->null => +1 pulse)
+* =====================================================================
+VDD5  vdd5  0 DC {VDD}
+VDDSA5 vddsa5 0 DC {VDD}
+Vap5 ap5 0 DC 1
+Van5 an5 0 DC 0
+Vbp5 bp5 0 PULSE(0 1 50n 0.2n 0.2n 20n 200n)
+Vbn5 bn5 0 DC 0
+Xg5  ap5 an5 bp5 bn5 pout5 nout5 vdd5 0 tand
+Rwp5 pout5 lp5 {Rwire}
+Clp5 lp5 0 {CL}
+Rwn5 nout5 ln5 {Rwire}
+Cln5 ln5 0 {CL}
+XsaP5 0 lp5 clk vddsa5 sP5o sP5ob sensamp
+XsaN5 0 ln5 clk vddsa5 sN5o sN5ob sensamp
+Bpwr5  pwr5  0 V = -(V(vdd5)*I(VDD5))
+Bpwrsa5 pwrsa5 0 V = -(V(vddsa5)*I(VDDSA5))
+BdP5 dP5 0 V = V(sP5o)-V(sP5ob)
+BdN5 dN5 0 V = V(sN5o)-V(sN5ob)
+
+* =====================================================================
+* GATE 6: TERNARY max (tor)  (a=null const, b: null->+1->null => +1 pulse)
+* =====================================================================
+VDD6  vdd6  0 DC {VDD}
+VDDSA6 vddsa6 0 DC {VDD}
+Vap6 ap6 0 DC 0
+Van6 an6 0 DC 0
+Vbp6 bp6 0 PULSE(0 1 50n 0.2n 0.2n 20n 200n)
+Vbn6 bn6 0 DC 0
+Xg6  ap6 an6 bp6 bn6 pout6 nout6 vdd6 0 tor
+Rwp6 pout6 lp6 {Rwire}
+Clp6 lp6 0 {CL}
+Rwn6 nout6 ln6 {Rwire}
+Cln6 ln6 0 {CL}
+XsaP6 0 lp6 clk vddsa6 sP6o sP6ob sensamp
+XsaN6 0 ln6 clk vddsa6 sN6o sN6ob sensamp
+Bpwr6  pwr6  0 V = -(V(vdd6)*I(VDD6))
+Bpwrsa6 pwrsa6 0 V = -(V(vddsa6)*I(VDDSA6))
+BdP6 dP6 0 V = V(sP6o)-V(sP6ob)
+BdN6 dN6 0 V = V(sN6o)-V(sN6ob)
+
+* =====================================================================
+* GATE 7: TERNARY mod-3 sum (tsum)  (a=null const, b: null->+1->null)
+* =====================================================================
+VDD7  vdd7  0 DC {VDD}
+VDDSA7 vddsa7 0 DC {VDD}
+Vap7 ap7 0 DC 0
+Van7 an7 0 DC 0
+Vbp7 bp7 0 PULSE(0 1 50n 0.2n 0.2n 20n 200n)
+Vbn7 bn7 0 DC 0
+Xg7  ap7 an7 bp7 bn7 pout7 nout7 vdd7 0 tsum
+Rwp7 pout7 lp7 {Rwire}
+Clp7 lp7 0 {CL}
+Rwn7 nout7 ln7 {Rwire}
+Cln7 ln7 0 {CL}
+XsaP7 0 lp7 clk vddsa7 sP7o sP7ob sensamp
+XsaN7 0 ln7 clk vddsa7 sN7o sN7ob sensamp
+Bpwr7  pwr7  0 V = -(V(vdd7)*I(VDD7))
+Bpwrsa7 pwrsa7 0 V = -(V(vddsa7)*I(VDDSA7))
+BdP7 dP7 0 V = V(sP7o)-V(sP7ob)
+BdN7 dN7 0 V = V(sN7o)-V(sN7ob)
+
+* =====================================================================
+* SIMULATION + MEASUREMENTS
+* Full cycle: input transitions at 50 ns (rise) and 70.2 ns (fall);
+* sense amps evaluate at 52 ns and 72 ns.  Integrate 49-80 ns for the
+* whole cycle (both edges + both receiver evaluations).
+* =====================================================================
+.tran 10p 80n
+
+* --- binary NOT ---
+.meas tran egate_not  INTEG V(pwr1)   FROM=49n TO=80n
+.meas tran erec_not   INTEG V(pwrsa1) FROM=49n TO=80n
+.meas tran vout_not   FIND V(l1)  AT=53n
+.meas tran d_not      FIND V(d1)  AT=53n
+
+* --- binary NAND ---
+.meas tran egate_nand INTEG V(pwr2)   FROM=49n TO=80n
+.meas tran erec_nand  INTEG V(pwrsa2) FROM=49n TO=80n
+.meas tran vout_nand  FIND V(l2)  AT=53n
+.meas tran d_nand     FIND V(d2)  AT=53n
+
+* --- binary NOR ---
+.meas tran egate_nor  INTEG V(pwr3)   FROM=49n TO=80n
+.meas tran erec_nor   INTEG V(pwrsa3) FROM=49n TO=80n
+.meas tran vout_nor   FIND V(l3)  AT=53n
+.meas tran d_nor      FIND V(d3)  AT=53n
+
+* --- ternary NOT (tneg) ---
+.meas tran egate_tneg INTEG V(pwr4)   FROM=49n TO=80n
+.meas tran erec_tneg  INTEG V(pwrsa4) FROM=49n TO=80n
+.meas tran vpush_tneg FIND V(lp4) AT=53n
+.meas tran vpull_tneg FIND V(ln4) AT=53n
+.meas tran dP_tneg    FIND V(dP4) AT=53n
+.meas tran dN_tneg    FIND V(dN4) AT=53n
+
+* --- ternary min (tand) ---
+.meas tran egate_tand INTEG V(pwr5)   FROM=49n TO=80n
+.meas tran erec_tand  INTEG V(pwrsa5) FROM=49n TO=80n
+.meas tran vpush_tand FIND V(lp5) AT=53n
+.meas tran vpull_tand FIND V(ln5) AT=53n
+.meas tran dP_tand    FIND V(dP5) AT=53n
+.meas tran dN_tand    FIND V(dN5) AT=53n
+
+* --- ternary max (tor) ---
+.meas tran egate_tor  INTEG V(pwr6)   FROM=49n TO=80n
+.meas tran erec_tor   INTEG V(pwrsa6) FROM=49n TO=80n
+.meas tran vpush_tor  FIND V(lp6) AT=53n
+.meas tran vpull_tor  FIND V(ln6) AT=53n
+.meas tran dP_tor     FIND V(dP6) AT=53n
+.meas tran dN_tor     FIND V(dN6) AT=53n
+
+* --- ternary mod-3 sum (tsum) ---
+.meas tran egate_tsum INTEG V(pwr7)   FROM=49n TO=80n
+.meas tran erec_tsum  INTEG V(pwrsa7) FROM=49n TO=80n
+.meas tran vpush_tsum FIND V(lp7) AT=53n
+.meas tran vpull_tsum FIND V(ln7) AT=53n
+.meas tran dP_tsum    FIND V(dP7) AT=53n
+.meas tran dN_tsum    FIND V(dN7) AT=53n
+
+* --- per-toggle (one transition) = full-cycle / 2 ---
+.meas tran egate_not_pt  PARAM = 'egate_not/2'
+.meas tran erec_not_pt   PARAM = 'erec_not/2'
+.meas tran egate_nand_pt PARAM = 'egate_nand/2'
+.meas tran erec_nand_pt  PARAM = 'erec_nand/2'
+.meas tran egate_nor_pt  PARAM = 'egate_nor/2'
+.meas tran erec_nor_pt   PARAM = 'erec_nor/2'
+.meas tran egate_tneg_pt PARAM = 'egate_tneg/2'
+.meas tran erec_tneg_pt  PARAM = 'erec_tneg/2'
+.meas tran egate_tand_pt PARAM = 'egate_tand/2'
+.meas tran erec_tand_pt  PARAM = 'erec_tand/2'
+.meas tran egate_tor_pt  PARAM = 'egate_tor/2'
+.meas tran erec_tor_pt   PARAM = 'erec_tor/2'
+.meas tran egate_tsum_pt PARAM = 'egate_tsum/2'
+.meas tran erec_tsum_pt  PARAM = 'erec_tsum/2'
+
+* --- diagnostics: quiet-window gate energy (DC-short check; expect ~0) ---
+.meas tran eq_not   INTEG V(pwr1) FROM=10n TO=40n
+.meas tran eq_nand  INTEG V(pwr2) FROM=10n TO=40n
+.meas tran eq_nor   INTEG V(pwr3) FROM=10n TO=40n
+.meas tran eq_tneg  INTEG V(pwr4) FROM=10n TO=40n
+.meas tran eq_tand  INTEG V(pwr5) FROM=10n TO=40n
+.meas tran eq_tor   INTEG V(pwr6) FROM=10n TO=40n
+.meas tran eq_tsum  INTEG V(pwr7) FROM=10n TO=40n
+
+.end

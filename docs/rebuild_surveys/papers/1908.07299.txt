@@ -1,0 +1,443 @@
+                                                       Comparing binary and ternary adders and
+                                                                     multipliers
+                                                                                                    Daniel Etiemble
+                                                                                         Computer Science Laboratory (LRI)
+                                                                                               Paris Sud University
+                                                                                                  Orsay, France
+                                                                                                     de@lri.fr
+arXiv:1908.07299v1 [cs.AR] 20 Aug 2019
+
+
+
+
+                                            Abstract—While many papers have proposed implementations                                      TABLE I
+                                         of ternary adders and ternary multipliers, no comparisons have                     N UMBER OF TERNARY AND BINARY WIRES
+                                         generally been done with the corresponding binary ones. We
+                                         compare the implementations of binary and ternary adders and                         Number of bits    8   16   32   64
+                                                                                                                              Number of trits   5   11   21   41
+                                         multipliers with the same computing capability according to the
+                                         basic blocks that are 1-bit and 1-trit adders and 1-bit and 1-trit
+                                         multipliers. Then we compare the complexity of these basic blocks
+                                         by using the same CNTFET technology to evaluate the overall             • Section 2 compares the number of 1-bit full adders to
+                                         complexity of N-bit adders and M-trit adders on one side, and             implement N-bit adders with the number of 1-trit full
+                                         NxN bit multipliers and MxM trits multipliers with M = N/IR               adders to implement M-trit adders
+                                         (IR = log(3)/log(2) is the information ratio). While ternary adders
+                                                                                                                 • Section 3 compares the number of 1-bit multipliers and
+                                         and multipliers have less input and output connections and use
+                                         less basic building blocks, the complexity of the ternary building        1-bit full adders to implement an N*N bit multiplier with
+                                         blocks is too high and the ternary adders and multipliers cannot          the number of 1-trit multipliers and 1-trit full adders to
+                                         compete with the binary ones.                                             implement a M*M trit multiplier.
+                                                                                                                 • Section 4 defines the methodology to compare the com-
+                                                                I. I NTRODUCTION                                   plexity of binary and ternary circuits
+                                                                                                                 • Section 5 compares the hardware complexity of 1-bit full
+                                            Many papers have been published on the design and per-                 adder and 1-trit full adder and the overall complexity of
+                                         formance of ternary circuits at different levels: inverters, basic        N-bit and M-trit adders.
+                                         gates, arithmetic circuits, flip-flops and SRAMs, etc. Some             • Section 6 compares the hardware complexity of 1-bit
+                                         of these papers will be quoted in this text. However, these               multiplier and 1-trit multiplier and the overall complexity
+                                         papers generally do not compare the ternary circuits with                 of N x N bit multipliers and M x M trit multipliers.
+                                         the corresponding binary ones. Having presenting such a                 • A conclusion summarizes the results of the comparison.
+                                         comparison in 1988 [1], we want to do it again more than 30
+                                         years later to determine if ternary circuits can compete with                                   II. A DDERS
+                                         the binary ones. As ternary wires carry more information, N           A. Carry-Propagate Adders (CPAs)
+                                         bits are approximately equivalent to M trits according to the
+                                         relation M = N/IR where IR = log(3)/log(2) = 1.585 is the                1) The carry propagate approach: The most straightfor-
+                                         information ratio per wire. Table I presents the correspondence       ward implementation of N-bit or M-trit adders is the carry
+                                         for some values of N. Due to rounding, N/M ranges from 1.5            propagate scheme, also called “Ripple-Carry Adder". It is pre-
+                                         to 1.6 in Table I.                                                    sented in Figure 1 for a 4-digit adder. For the binary version,
+                                            We restrict the comparison to the arithmetic circuits, which       Ai, Bi and Ci are binary values. For the ternary version, Ai
+                                         are typical implementations of combinational logic. We com-           and Bi are ternary values, while Ci are binary values. In the
+                                         pare ternary and binary circuits having approximately the             literature, ternary adders are sometimes presented with ternary
+                                         same computing capability. For adders or multipliers, it means        carries. We consider them as ternary compressors that could be
+                                         comparing N-bit circuits with M-trit circuits according to            used in Wallace trees for multiplication. For ternary additions,
+                                         Table I. Adders and multipliers are examined. It turns out that       the carries are always binary.
+                                         their structure depends on two basic circuits: the 1-bit or 1-trit       2) 8-bit CPA versus 5-trit CPA: An 8-bit CPA uses eight
+                                         full adder (FA), and the 1-bit or 1-trit multiplier.                  1-bit full adder while a 5-trit CPA uses five 1-trit full adder.
+                                                                                                               The comparison is straightforward: a 5-trit multiplier will be
+                                           •   The adders use 1-bit/1-trit full adders                         more efficient iff the 1-trit adder complexity is no more than
+                                           •   The multipliers use 1-bit/1-trit multipliers and 1-bit/1-trit   x8/5 the 1-bit adder. The result is the same for any M-trit
+                                               full adders and half adders                                     adder compared to a N-bit adder for which M ≈ N/1.585.
+                                           The rest of the paper is organized as follow:                       Obviously, there are different other techniques to implement
+                                                                       a block of 5-trit, with Gi and Pi (0 <i <5) and 5 equations
+                                                                       computing C1 to C5. Comparing the two approaches means
+                                                                         • Comparing eight 1-bit full adders with five 1-trit full
+                                                                            adders
+                                                                         • Comparing two blocks of 4-bit look-ahead computation
+                                                                            with one block of 5-trit look-ahead computation
+                                                                       The comparison is exactly the same for 16-bit, 32-bit or 64-bit
+                                                                       adders and the corresponding ternary adders.
+                    Fig. 1. Carry Propagate Adder
+                                                                       C. Carry Skip Adders (CSA).
+                                                                          Figure 3 presents a 4-bit binary skip adder. As the CPA,
+fast adders. Considering all the possible versions is out of the       it has four 1-bit full adders. The carry “skip" scheme uses
+scope of this paper. We just consider two other schemes which          the Pi propagate function of the CLA, a And gate to compute
+purpose is to speed-up the carry propagation.                          P0.P1.P2.P3 and a two-input multiplexer. For the “skip" part,
+B. Carry Look-ahead Adders (CLAs)                                      the only difference between the binary and the ternary version
+                                                                       is the computation of the propagate functions, which have been
+   Figure 2 presents a 4-bit carry look-ahead adder. This adder
+                                                                       defined for the CLA.
+has the same number of full adders than the CPA. The binary
+equations of the carry computation part are well-known:
+Gi = Ai.Bi
+P i = Ai xor Bi or P i = Ai + Bi
+C1 = G0 + P 0.C0
+C2 = G1 + G0.P 1 + P 0.P 1.C0
+C3 = G2 + G1.P 2 + G0.P 1.P 2 + P 0.P 1.P 2.C0
+C4 = G3 + G2.P 3 + G1.P 2.P 3 + G0.P 1.P 2.P 3 +
+P 0.P 1.P 2.P 3.C0
+
+
+                                                                                     Fig. 3. : A 4-bit binary carry skip adder
+
+
+                                                                         Just as CPAs, an 8-bit CSA uses eight 1-bit full adders
+                                                                       while a 5-trit CSA uses five 1-trit full adders. As for the CLA
+                                                                       approach, the 8-bit “skip" part is decomposed into two blocks
+                                                                       of 4-bit “skip" parts while the 5-trit CSA has only one block
+                                                                       of 5-trit “skip" part. Comparing the two approaches means
+                                                                         • Comparing eight 1-bit full adders with five 1-trit full
+                                                                            adders
+                                                                         • Comparing two blocks of 4-bit “skip" computation with
+                                                                            one block of 5-trit “skip" computation. A binary block
+                                                                            computation uses four Pi functions, one 4-input And gate
+            Fig. 2. : A 4-bit binary carry look-ahead adder                 and one multiplexer. A ternary block computation uses
+                                                                            five Pi functions (binary functions of ternary inputs), one
+   For the ternary implementation, Gi and Pi are binary func-               binary And gate and one binary multiplexer.
+tions of ternary inputs. The computation of C1, C2, C3 and
+C4 uses binary circuits.                                               D. Adder comparisons
+   • For stage i, a carry is generated when (Ai = 2 and Bi =             CPAs, CLAs and CSA have the same N/M ratio of 1-bit
+     1) or (Ai = 1 and Bi = 2).                                        adders and 1-trit adders. This ratio is close to IR = 1.585. For
+   • For stage i, a carry is propagated when (Ai = 0 and Bi =          CLAs and CSAs, the circuits to speed-up computation slightly
+     2) or (Ai = 1 and Bi = 1) or (Ai = 2 and Bi = 0).                 modifies the overall comparison. More details will be given in
+   Just as CPAs, an 8-bit CLA uses eight 1-bit full adders while       Section 5.
+a 5-trit CLA uses five 1-trit full adders. As the binary carry                               III. M ULTIPLIERS
+look-ahead computation complexity increases with the carry
+index, an 8-bit CLA is generally implemented as a cascade of           A. Comparing a 8*8 binary multiplier with a 5*5 ternary one
+two 4-bit CLAs. The carry computation part is thus two times             1) 8*8 binary multiplier: Typical binary multipliers can be
+the carry computation of a 4-bit CLA. The computation of the           decomposed in two parts: the first one generates the partial
+carry look-ahead part of a 5-trit CLA can be implemented as            products and the second part reduces the partial products into
+
+
+
+                                                                   2
+two sums to be added by a final fast adder. Figure 4 shows
+the process for an 8*8 bit multiplier.
+   • The first part generates 8 partial products of 8 bits, i.e. 64
+     bits that are the products of Ai × Bj for 0 ≤ i < 8 and
+     0 ≤ j < 8. The binary product Ai × Bj is implemented
+     by a And gate.
+  • The reduction of the partials products can use different
+     schemes. The typical one is the Wallace tree, for which 3
+     lines of partial products are reduced to two lines by using
+     3-input 2-output full adders (and half adders). For 8*8 bit
+     multipliers, there are several steps of parallel additions
+     of lines of partial products: 8 to 6, 6 to 4, 4 to 3, and
+     finally 3 to 2. A that point, a fast adder is used to add
+     the two final lines. Dadda reduction tree is another one
+     [2]. Other reduction operators can be used, such as 4-2
+     compressors, 7-3 compressors, etc. With the 3-2 reduction
+     scheme, there are 35 FAs and 18 HAs. Considering the
+     final addition, the total is 44 FAs and 19 HAs.
+                                                                                     Fig. 5. 5*5 trit multiplication with a Wallace tree
+
+
+                                                                                                      TABLE II
+                                                                                         T RUTH TABLE OF A 1- TRIT MULTIPLIER
+
+                                                                                                    Ai    Bi    Pi    Ci
+                                                                                                    0     0     0     0
+                                                                                                    0     1     0     0
+                                                                                                    0     2     0     0
+                                                                                                    1     0     0     0
+                                                                                                    1     1     1     0
+                                                                                                    1     2     2     0
+                                                                                                    2     0     0     0
+                                                                                                    2     1     2     0
+                                                                                                    2     2     1     1
+
+
+
+                                                                               fast ternary adder. As shown in Figure 5, the reduction
+                                                                               process alternates between a set of 2 ternary lines and 1
+                                                                               binary lines (quoted as 2 and 1) and a set of 1 ternary line
+                                                                               and 2 binary lines. The reduction tree is thus based on
+                                                                               usual ternary full adders (quoted as T-FA) and ternary half
+                                                                               adders (quoted as T-HA). There is one specific case when
+           Fig. 4. 8*8 bit multiplication with a Wallace tree                  two successive lines are binary lines. In that case, T-HAs
+                                                                               can be used for a 2 to 1 reduction that only provides one
+   2) 5*5 ternary multipliers: Ternary multipliers use 3 differ-               ternary line. The different steps are thus 10 to 7, 7 to 5,
+ent values (0, 1 and 2). A ternary wire carries more information               5 to 3 and 3 to 2 for a total of 29 T-FAs and 12 T-HAs.
+than a binary one. The information ratio is IR = log(3)/log (2)                Considering the final addition, the total is 34 T-FAs and
+= 1.585. AnM × M ternary multiplier would be equivalent                        12 T-HAs.
+to a N × N binary multiplier with M = N/1.858. For N = 8,                    3) Comparing N*N bit multipliers with M*M trit multipliers
+M = 5.04. A 5x5 trit multiplier has slightly less computing               for N =8, 12, 16: The comparison includes
+capability than an 8*8 bit multiplier. Figure 5 shows the                    • The number of 1-bit multipliers and 1-trit multipliers
+process for a 5*5 trit multiplier.                                           • The number of binary full and half adders (B-FA and B-
+   • The ternary product Ai × Bj generates one trit (product)                  HA) and ternary full and half adders (T-FA and T-HA)
+     and one binary carry according to Table II. The first                     for the reduction trees
+     part generates 5 partial products of 5 trits and 5 partial              • The final fast adder can use techniques such as carry-look
+     products of 5 bits for Ai × Bj for 0 ≤ i < 5 and                          adder adders, carry skip adders, etc. To keep the compar-
+     0 ≤ j < 5. 10 lines of partial products should be reduced.                ison simple, we consider using the carry propagate adder
+   • A Wallace tree can be used to reduce the 10 partial                       (CPA) which simply cascades B-FAs or T-FAs. While
+     products down to two final lines to be summed by a                        more sophisticated techniques speed-up the propagation
+
+
+
+                                                                      3
+                           TABLE III                                        of trits (N/IR), but two times more partial product lines
+        C OMPARISON FOR 8*8 BIT AND 5*5 TRIT MULTIPLIERS                    because the 1-trit multiplier generate a product term
+                             Binary   Ternary   Binary/Ternary              and a carry. It results than there are only slightly more
+              Ai*Bi            64       25           2.56                   equivalent 1-bit adders than 1-trit adders. The ratio ranges
+          Reduction FA         35       29                                  from 1.13 to 1.36 for the cases that we considered. The
+         Reduction HA          18       12
+          Final Add FA         9         5                                  complexity of the ternary full adder versus the binary full
+         Final Add HA          1         0                                  adder should not be more than a value that is less than
+             Total FA          44       34                                  IR.
+            Total HA           19       12
+       Total equivalant FA    53.5      40          1.34                             IV. C OMPLEXITY COMPARISONS
+                                                                          Comparing ternary and binary circuits is not easy. The
+                           TABLE IV
+       C OMPARISON FOR 12*12 BIT AND 8*8 TRIT MULTIPLIERS              main reason is that there have been a huge number of binary
+                                                                       circuits designed, fabricated and used since the first days
+                             Binary   Ternary   Binary/Ternary         of integrated circuits, while very few ternary circuits have
+              Ai*Bi           144        64          2.25
+          Reduction FA        102       102                            been fabricated and used. In the last period, while FinFET
+         Reduction HA          34        18                            technologies have been implemented with 14 nm, 10 nm and
+          Final Add FA         18        10                            even 7 nm technological nodes, only proposals of ternary
+         Final Add HA          0         0
+             Total FA         120       112                            or multivalued circuits can be found, generally based on
+            Total HA           34        18                            simulations. To be able to make significant comparisons, we
+       Total equivalant FA    137       121         1.13               must define a common technology for both types of circuits
+                                                                       and define some complexity measures.
+     delay, they are still based on B-FAs or T-FAs without             A. A technology: CNTFET
+     changing the number of B-FAs or T-FAs to be used.                    A carbon nanotube field-effect transistor (CNTFET) refers
+  • Finally, the FA complexity is equal or close to two times          to a field-effect transistor that uses a single carbon nanotube or
+     the HA complexity. An equivalent number of FAs can be             an array of carbon nanotubes as the channel material instead
+     derived assuming that 1 HA = 0.5 FA.                              of bulk silicon in the traditional MOSFET. The MOSFET-like
+  Table III summarizes the comparison for the 8 × 8 bit                CNTFETs having p and n types look the most promising ones.
+multipliers.                                                           This technology has advantages and drawbacks:
+  Using the same methodology, Table IV compares a 12 ×                    • CNTFET have variable threshold voltages (according to
+12 bit multiplier and a 8 × 8 trit one. Table V compares a                   the inverse function of the diameter). Among advantages,
+16 × 16 bit multiplier and a 10 × 10 trit one. As 12/1.585                   high electron mobility, high current density, high trans-
+= 7.57, the ternary multiplier has more computing capability.                ductance can be quoted.
+As 16/1.585 = 10.1, the ternary multiplier has slightly less              • Lifetime issues, reliability issues, difficulties in mass pro-
+computing capability.                                                        duction and production costs are quoted as disadvantages.
+  The comparison includes two parts:                                   We use this technology for several reasons:
+  • The number of 1-bit and 1-trit multipliers, which are                 • It is one of the few proposed ones to overcome the
+     N 2 for N*N bit multipliers and M 2 for M*M ternary                     limitations of the FinFET technologies after the end of
+     multipliers. Obviously, N 2 /M 2 ≈ IR2 = 2.51. Rounding                 Moore’s law.
+     N or M to get integer values for N and M explain the                 • Its variable threshold voltages make easier the imple-
+     values 2.56 (Table 3 and Table 5) or 2.25 (Table 4).                    mentation of the different thresholds that are needed for
+     The complexity of 1-trit multiplier versus 1-bit multiplier             ternary and multi-valued circuits.
+     should not be more that IR2 to get advantage of the                  • The MOSFET-like CNTFETs have the same circuit styles
+     ternary approach.                                                       than the CMOS technologies, which means that the
+  • The ternary Wallace tree operates on a smaller number                    comparison results are not limited to that technology.
+                                                                          • A large number of CNTFET ternary or m-valued cir-
+                                                                             cuits have been proposed in the recent last years. They
+                          TABLE V
+     C OMPARISON FOR 16*16 BIT AND 10*10 TRIT MULTIPLIERS                    facilitate the comparison with the corresponding binary
+                                                                             circuits. We will use these proposals for the comparisons.
+                             Binary   Ternary   Binary/Ternary
+              Ai*Bi           256       100          2.56              B. Complexity figures
+          Reduction FA        200       153
+         Reduction HA          54        38                               Hardware complexity is difficult to define as many param-
+          Final Add FA         24        13                            eters can be considered:
+         Final Add HA          1         1
+             Total FA         224       166                               • Number of transistors
+            Total HA           55        39                               • Number of interconnections
+       Total equivalant FA   251.5     185.5        1.36                  • Chip area
+
+
+
+
+                                                                   4
+  •   Power dissipation
+  •   Propagation delays
+   • Etc.
+Obviously, the most significant information is speed, chip area
+and power dissipation of fabricated chips in a given technol-
+ogy. However, comparing ternary and binary circuits according
+to chip area and power dissipation is quite impossible as
+there are very few or no integrated ternary circuits available
+for comparisons. Comparisons must be done with a simple
+criterion that is available from the circuit electrical scheme. We
+use the number of transistors. Although the transistor count is                        Fig. 7. Decoder and encoder circuits [4].
+only an estimation, it gives significant insights. In fact, when
+using the same technology to implement the same operator, it
+is very doubtful that:
+   • More transistors lead to less interconnects as these tran-
+      sistors are interconnected
+   • More transistors lead to less chip area.
+   • More transistors lead to less power dissipation
+Finding counter-examples look very challenging! When the
+difference in transistor counts is limited to a few %, no
+conclusion can be derived. However, if the transistor count
+for ternary circuits is x2, x3 or more than for the equivalent
+binary circuits when the information ratio IR = log(3)/log(2)
+= 1.585, it only means that the ternary circuits have more
+interconnects, more chip area, more power dissipation than
+the corresponding binary ones.
+      V. C OMPLEXITY OF TERNARY AND BINARY ADDERS                                             Fig. 8. Sum binary parts.
+
+A. Complexity of 1-bit and 1-trit adders
+   For 1-bit, various designs have been proposed using bi-                  While the half adder compute Sum10, Sum20 and Cm0 with
+nary CMOS circuitry, which can be considered to implement                an implicit input carry equal to 0, similar circuitry can be used
+CNTFET binary 1-bit adders [3]. The transistor counts range              to compute Sum11, Sum21 and Cm1 when the input carry is
+from 28T for the conventional CMOS design down to 8T                     1. Two multiplexers controlled by the input carry are used
+for a scheme using 3T Xor gates. Typical implementations                 to compute the final Sum1, Sum2 and Cm to drive the final
+with transmission gates use 14T or 16T. All circuits are not             encoder and carry circuit. We do not show all the details of
+equivalent: while conventional CMOS design has maximal                   computation. The final count for the full adder is 124 T. Table
+noise margins, circuits using transmission gates, or directly            6 summarizes the number of transistors for the ternary adder
+connecting inputs either to drain or source of transistors can           and different binary adders. There are from x4.4 to x15.5 more
+have reduced noise margins. There is not a similar comparison
+of the different ternary 1-trit adders. Our reference is the
+CNTFET ternary half-adder proposed in 2017 [4] that will
+be completed to implement a ternary full adder. As any
+multivalued circuits, the ternary half adder uses the general
+scheme presented in Figure 6. The decoder (a, b) and encoder
+(c) circuits are presented in Figure 7. The sum binary part and
+the carry generation part are respectively presented in Figure
+8 and Figure 9. The transistor count for the ternary half adder
+is 66 T.
+
+
+
+
+             Fig. 6. General scheme of m-valued circuits.
+                                                                                              Fig. 9. Carry generation.
+
+
+
+
+                                                                     5
+                           TABLE VI
+       T RANSISTOR COUNT FOR TERNARY AND BINARY ADDERS
+
+                        3-FA    Nand-2 FA     Xor-2 FA     8T-FA
+     Transistor count    124       28         14 to 16       8
+        Ratio 3/2                  4.4        7.7 to 8.8    15.5
+
+
+transistors for the ternary adder versus the different binary
+adders.
+   Two papers should also be mentioned, which allow a com-
+parison between the binary and the ternary implementations
+of a carbone nanotube full adder [5] [6]. They both use
+the threshold logic approach with a linear combination of
+capacitive inputs. The advantage is the reduction of the number
+of devices needed to combine the inputs. The drawback is a
+drastic reduction of the noise margins when coherent noises
+are simulaneously present on the different inputs. If NM is the
+noise margin for one input, the noise margin for N-input is
+NM/N. The binary FA is presented in Figure 10. Considering
+that the capacitors are implemented with transistors as in
+Figure 11, it has 11 T. The ternary FA is presented in Figure                      Fig. 11. Ternary Full Adder with capacitive inputs
+11: it has 27T. The ratio is 27/11 = 2.45, which is greater
+than the information ratio IR = 1.585.
+                                                                        the cost of computing Gi and Pi ternary functions versus the
+                                                                        binary ones.
+                                                                           3) Carry-Skip Adders: For an 8-bit CSA, the binary carry
+                                                                        computation is composed of two 4-bit skip computations. For
+                                                                        4-bit, it means P0 to P3 functions, a 4-input And gate and a
+                                                                        multiplexer. For a 5-trit CSA, the carry computation uses P0
+                                                                        to P4 functions, a 5-input And gate and a multiplexer. The
+                                                                        transistor counts are given in Table IX. Again, the ternary
+                                                                        approach is more costly due to the Pi computation costs.
+                                                                           4) Conclusion for adders: The transistor count for 1-trit
+                                                                        adders is greater than for 1-bit adder and cannot compensate
+                                                                        the reduced number of adders. Similarly, the carry computa-
+           Fig. 10. Binary Full Adder with capacitive inputs            tions are more costly for CLAs and CSAs. For CPAs, CSAs
+                                                                        and CSAs, the M-trit adders cannot compete with the N-bit
+B. Complexity of carry circuitry                                        adders with M = N/1.585.
+   1) Ripple carry adders: As previously mentioned, a M-
+trit multiplier will be more efficient than a N-bit multiplier
+                                                                                                  TABLE VII
+with M ≈ N/1.585 iff the 1-trit adder complexity is no                   T RANSISTOR COUNT FOR THE CARRY COMPUTATIONS OF A 8- BIT CLA
+more than x1.585 the complexity of the 1-bit adder. As shown
+                                                                            Function         Gi    Pi   C1    C2    C3    C4    4-bit     8-bit
+in Table 6, this is never the case when comparing the best
+                                                                         Transistor count    24    24   10    18    28    40    144       288
+implementations for binary and ternary adders.
+   2) Carry-Look Ahead Adders: We now compare the carry
+circuitry for 5-trit and 8-bit CLAs. The equations have been                                     TABLE VIII
+                                                                        T RANSISTOR COUNT FOR THE CARRY COMPUTATIONS OF A 5- TRIT CLA
+given in 2.2. Binary Gi and Pi functions are implemented
+respectively by Nand + Inverter and Nor + inverter. Both func-              Function         Gi    Pi   C1    C2    C3    C4    C5      5-trit
+tion uses 6T. Binary C1 is implemented as C1 = G0.P 0.C0,                Transistor count    80    90   10    18    28    40    54      310
+i.e. one inverter and two 2-input Nand gates for a total of 10T.
+C2, C3, C4 are implemented by two levels of Nand gates. The                                       TABLE IX
+transistor count for a 4-bit carry computation is given in Table          T RANSISTOR COUNT FOR THE CARRY COMPUTATIONS OF 8- BIT AND
+VII. The transistor count for a 5-trit carry computation is given                                5- TRIT CSA S
+in Table VIII.                                                                      Pi      Nand+inverter    Mux   4-bit CS    8-bit 5-trit CS
+   It turns out that the carry computations are more costly for a        Binary     24i         10           14       48             96
+5-trit CLA than for an 8-bit CLA. The difference comes from              Ternary    90          12           14                      116
+
+
+
+
+                                                                    6
+VI. C OMPLEXITY OF BINARY AND TERNARY MULTIPLIERS                        less input and output connections than the corresponding N-bit
+  Ternary and binary multipliers are decomposed in two parts:            adders or multipliers, the larger number of transistors means
+                                                                         that the ternary arithmetic operators have more connections
+  • 1-trit and 1-bit multipliers
+                                                                         when considering the internal ones. More transistors mean
+  • 1-trit and 1-bit full adders and half-adders that are used
+                                                                         more connections, more chip area, more propagation delays
+    in the reduction tree.
+                                                                         and more power dissipation for the ternary operators versus
+A. Complexity of 1-bit and 1-trit multipliers                            the binary ones when using the same technology.
+  1-bit multiplier is implemented with a And gate, which                                              R EFERENCES
+means 6T (Nand + Inverter). 1-trit multiplier is far more
+                                                                         [1] D. Etiemble, M. Israel, “Comparison of Binary and Multivalued ICs
+complicated as it generates a product and a carry according to               according to VLSI Criteria“, in Computer, Vol. 21, Issue 4, April 1988,
+Table II.                                                                    pp 28-42.
+  Using the same approach as for the ternary adder, the                  [2] W. J. Townsend, E. E. Swartzlander Jr. and J. A. Abraham, “A comparison
+                                                                             of Dadda and Wallace multiplier delays", Proc. SPIE 5205, Advanced
+equations are:                                                               Signal Processing Algorithms, Architectures, and Implementations XIII,
+                                                                             (24 December 2003); https://doi.org/10.1117/12.507012
+                S2 = A1.B1.B0 + B1.A1.A0                      (1)        [3] R. Anitha, “Comparative study on transistor based full adder designs“,
+                                                                             World Scientific News, WSN 53(3) (2016) 404-416, EISSN 2392-2192
+                S1 = A1.B1 + B1.B0.A1.A0                      (2)        [4] S.K. Sahoo, G.Akhilesh, R. Sahoo and M. Mugkilar, “High Performance
+                                                                             Ternary Adder using CNTFET“, IEEE Transactions on Nanotechnology,
+                         Cm = A1.B1                           (3)            Vol 16, No 3, January 2017
+                                                                         [5] K. Navi, A. Momeni, F. Sharifi and P. Keshavarzian, “Two novel high
+The number of transistors for the 1-trit multiplier is 4 (decoder)           speed carbon nanotube Full-Adder cells", in IEICE Electronics Express,
++ 12 (Sum2) + 12 (Sum1) + 6 (Product encoder) + 4 (cout                      Vol. 6, No 19, 1395-1401, 2009
+                                                                         [6] R. Faghih Mirzaee and K. Navi, “Optimized Adder Cells for Ternary
+encoder) = 38 T, i.e. 38/6 = 6.3. While a 5-trit multiplier uses             Ripple-Carry Addition" in IEICE Trans. INF SYST, Vol.E97-D, No 9,
+25 1-trit multiplier (950 T), a 8-bit multiplier uses 64 And                 September 2014.
+gates for a total of 384 T. The ternary/binary ration is x2.47.
+There are less 1-trit multipliers than 1-bit ones. However, it
+cannot compensate their larger complexity compared to the
+binary ones.
+B. Complexity of the reduction tree
+  We consider the reduction trees for 5-trit multipliers and
+8-bit multipliers. The ternary Wallace tree (Figure 5) has 34
+T-FAs and 14 T-HAs and the binary Wallace tree (Figure 4)
+has 35 B-FAs and 18 B-HAs. For a quick comparison, we can
+assume that a HA transistor count is half the FA transistor
+count. Then there are approximately 41 T-FAs and 44 B-FAs.
+Obviously, this small difference is not able to compensate the
+advantage of binary FAs compared to ternary FAs that were
+shown in 2.4. The issue for ternary multipliers is the carry
+generated by the 1-trit multiplier, which doubles the number
+of partial products to reduce by the Wallace tree.
+C. Overall complexity
+  Both the set of elementary multipliers and the Wallace tree
+needs more transistors for the ternary approach versus the
+binary ones. M-trit multipliers cannot compete with N-bit ones
+with M = N/1.585.
+                VII. C ONCLUDING REMARKS
+   We have compared ternary and binary adders and multipliers
+processing the same amount of information. First, we com-
+pared the number of elementary cells such as 1-bit/1-trit full
+adders, 1-bit/1trit multipliers. This comparison remains valid
+for any implementation of these cells. Then we consider the
+hardware complexity using the transistor count for the typical
+implementation of these cells with CNTFET technology. It
+turns out that both ternary adders and multipliers cannot com-
+pete with the binary ones. If M-trit adders or multipliers have
+
+
+
+                                                                     7
+

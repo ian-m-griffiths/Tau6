@@ -1,0 +1,274 @@
+* =====================================================================
+* prebias_probe.cir  --  "pre partial activation" hypothesis test
+* Does pre-biasing a push-pull junction just below its switching
+* threshold give fast, cheap switching (small dV => C*dV^2 saving), or
+* does it leak (permanent crowbar current)?
+*
+* THE HYPOTHESIS UNDER TEST (principal): hold the junction just below
+*   threshold so a switch is a tiny dV across the threshold (fast + low
+*   dynamic energy) instead of a full rail-to-rail swing.  The principal
+*   himself flagged the risk: "this may take more energy not less"
+*   (static leakage) -- sitting near threshold puts BOTH devices in
+*   partial conduction (the crowbar region), held PERMANENTLY.
+*
+* THE JUNCTION: a CMOS push-pull stage (PMOS pull-up + NMOS pull-down),
+*   the canonical element whose "threshold" is the trip point V_M where
+*   the output flips.  Below V_M output = VDD, above V_M output = 0.
+*   Holding the input near V_M is exactly "both devices partially
+*   conduct".  V_M = 0.5 V here (symmetric inverter, measured).
+*
+* MEASURED, THREE WAYS:
+*   (a) STATIC:  .dc sweep of V_in -> supply current I_q(V_in) = the
+*       quiescent crowbar current, P_leak = VDD * I_q.  Measured with
+*       BOTH the project-standard LEVEL=1 model (hard cutoff below VTO,
+*       no subthreshold) AND a LEVEL=3 + NFS model (subthreshold slope
+*       ~60 mV/dec) so the "zero leakage far below threshold" reading is
+*       not silently over-claimed.
+*   (b) DYNAMIC: .tran switch from each pre-bias point.  Supply energy
+*       (output flip + crowbar transient) AND input-driver energy (the
+*       C*dV^2 term) integrated over the switch, plus switch delay/fall.
+*   (c) CROSSOVER: idle time T_x = (dynamic saving vs full-rail) / P_leak
+*       -- how long the junction may sit idle before the standing
+*       leakage burns the per-switch saving.
+*
+* PRE-BIAS POINTS (X% of the way from 0 V toward threshold V_M = 0.5 V):
+*   ref  0%  full rail-to-rail 0 -> VDD   (the alternative being tested)
+*   p0   0%  0     -> 0.55 V
+*   p25 25%  0.125 -> 0.55 V
+*   p50 50%  0.250 -> 0.55 V
+*   p75 75%  0.375 -> 0.55 V
+*   p90 90%  0.450 -> 0.55 V
+*   p95 95%  0.475 -> 0.55 V
+*   p98 98%  0.490 -> 0.55 V   ("just below threshold": dV = 0.06 V)
+*   All pre-biased cases assert to the SAME 0.55 V (V_M + 0.05), so the
+*   switch dV shrinks with pre-bias depth; every case crosses V_M=0.5 V
+*   and flips the output full rail.
+*
+* HONESTY / IDEALIZATIONS (same as the rest of this directory):
+*   LEVEL=1 has a hard cutoff below VTO => zero subthreshold; the 0..75%
+*   points read ZERO leakage under LEVEL=1, which flatters the pre-bias
+*   scheme.  The LEVEL=3+NFS sweep is the correction.  No body diodes,
+*   no device mismatch, ideal voltage drivers (the input driver is a
+*   source behind RDRV=500 ohm, a real driver impedance).  Absolute
+*   energies scale with CL and device W; the RATIO leakage/dynamic is
+*   what decides the verdict and it is robust.
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param VDD  = 1.0
+.param VM   = 0.5          ; trip point (measured V(out)=V(in) at 0.5 V)
+.param CL   = 50f          ; output node load (a few fanouts / short wire)
+.param RDRV = 500          ; input driver output impedance
+
+* ---------------- LEVEL=1 models (project standard; NO subthreshold) ---
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+* ---------------- LEVEL=3 + NFS models (subthreshold honesty check) ----
+* LEVEL=3 has no LAMBDA param; NFS>0 enables a ~60 mV/dec subthreshold
+* region (the IDEAL slope -- real devices are leakier, n ~ 1.2-1.5).
+.model NMOS3 NMOS(LEVEL=3 VTO=0.4  KP=200u TOX=2n NFS=1e11)
+.model PMOS3 PMOS(LEVEL=3 VTO=-0.4 KP=100u TOX=2n NFS=1e11)
+
+* ---------------- the push-pull junction (CMOS inverter) --------------
+.subckt inv1 in out vdd
+Mp out in vdd vdd PMOS1 W=4u L=0.18u
+Mn out in 0   0   NMOS1 W=2u L=0.18u
+.ends
+
+.subckt inv3 in out vdd
+Mp out in vdd vdd PMOS3 W=4u L=0.18u
+Mn out in 0   0   NMOS3 W=2u L=0.18u
+.ends
+
+* =====================================================================
+* (a) STATIC -- .dc sweep, quiescent supply current vs pre-bias
+*     LEVEL=1 (inv1) and LEVEL=3 subthreshold (inv3), same V_in.
+* =====================================================================
+VDD1 vdd1 0 DC {VDD}
+VDD3 vdd3 0 DC {VDD}
+Vsweep indc 0 DC 0
+Xdc1 indc outdc1 vdd1 inv1
+Xdc3 indc outdc3 vdd3 inv3
+CLdc1 outdc1 0 {CL}
+CLdc3 outdc3 0 {CL}
+.dc Vsweep 0 {VDD} 0.005
+.print dc v(indc) v(outdc1) i(VDD1) v(outdc3) i(VDD3)
+
+* =====================================================================
+* (b) DYNAMIC -- one .tran switch from each pre-bias point
+*     Every pulse asserts to 0.55 V; only the starting (pre-bias) level
+*     and thus the switch dV differ.  ref = full rail-to-rail control.
+* =====================================================================
+
+* ---- ref: full rail 0 -> VDD (the "no pre-bias" alternative) --------
+Vref inref 0 PULSE(0 {VDD} 50n 0.2n 0.2n 40n 200n)
+Rdrv_ref inref gref {RDRV}
+VDDref vddref 0 DC {VDD}
+Xref gref outref vddref inv1
+CLref outref 0 {CL}
+Bpw_ref pwref 0 V = -V(vddref)*I(VDDref)
+Bpi_ref piref 0 V = -V(inref)*I(Vref)
+
+* ---- p0: 0% pre-bias, 0 -> 0.55 V -----------------------------------
+Vp0 inp0 0 PULSE(0 0.55 50n 0.2n 0.2n 40n 200n)
+Rdrv_p0 inp0 gp0 {RDRV}
+VDDp0 vddp0 0 DC {VDD}
+Xp0 gp0 outp0 vddp0 inv1
+CLp0 outp0 0 {CL}
+Bpw_p0 pwp0 0 V = -V(vddp0)*I(VDDp0)
+Bpi_p0 pip0 0 V = -V(inp0)*I(Vp0)
+
+* ---- p25: 25% pre-bias, 0.125 -> 0.55 V ------------------------------
+Vp25 inp25 0 PULSE(0.125 0.55 50n 0.2n 0.2n 40n 200n)
+Rdrv_p25 inp25 gp25 {RDRV}
+VDDp25 vddp25 0 DC {VDD}
+Xp25 gp25 outp25 vddp25 inv1
+CLp25 outp25 0 {CL}
+Bpw_p25 pwp25 0 V = -V(vddp25)*I(VDDp25)
+Bpi_p25 pip25 0 V = -V(inp25)*I(Vp25)
+
+* ---- p50: 50% pre-bias, 0.25 -> 0.55 V -------------------------------
+Vp50 inp50 0 PULSE(0.25 0.55 50n 0.2n 0.2n 40n 200n)
+Rdrv_p50 inp50 gp50 {RDRV}
+VDDp50 vddp50 0 DC {VDD}
+Xp50 gp50 outp50 vddp50 inv1
+CLp50 outp50 0 {CL}
+Bpw_p50 pwp50 0 V = -V(vddp50)*I(VDDp50)
+Bpi_p50 pip50 0 V = -V(inp50)*I(Vp50)
+
+* ---- p75: 75% pre-bias, 0.375 -> 0.55 V ------------------------------
+Vp75 inp75 0 PULSE(0.375 0.55 50n 0.2n 0.2n 40n 200n)
+Rdrv_p75 inp75 gp75 {RDRV}
+VDDp75 vddp75 0 DC {VDD}
+Xp75 gp75 outp75 vddp75 inv1
+CLp75 outp75 0 {CL}
+Bpw_p75 pwp75 0 V = -V(vddp75)*I(VDDp75)
+Bpi_p75 pip75 0 V = -V(inp75)*I(Vp75)
+
+* ---- p90: 90% pre-bias, 0.45 -> 0.55 V -------------------------------
+Vp90 inp90 0 PULSE(0.45 0.55 50n 0.2n 0.2n 40n 200n)
+Rdrv_p90 inp90 gp90 {RDRV}
+VDDp90 vddp90 0 DC {VDD}
+Xp90 gp90 outp90 vddp90 inv1
+CLp90 outp90 0 {CL}
+Bpw_p90 pwp90 0 V = -V(vddp90)*I(VDDp90)
+Bpi_p90 pip90 0 V = -V(inp90)*I(Vp90)
+
+* ---- p95: 95% pre-bias, 0.475 -> 0.55 V ------------------------------
+Vp95 inp95 0 PULSE(0.475 0.55 50n 0.2n 0.2n 40n 200n)
+Rdrv_p95 inp95 gp95 {RDRV}
+VDDp95 vddp95 0 DC {VDD}
+Xp95 gp95 outp95 vddp95 inv1
+CLp95 outp95 0 {CL}
+Bpw_p95 pwp95 0 V = -V(vddp95)*I(VDDp95)
+Bpi_p95 pip95 0 V = -V(inp95)*I(Vp95)
+
+* ---- p98: 98% pre-bias, 0.49 -> 0.55 V (just below threshold) --------
+Vp98 inp98 0 PULSE(0.49 0.55 50n 0.2n 0.2n 40n 200n)
+Rdrv_p98 inp98 gp98 {RDRV}
+VDDp98 vddp98 0 DC {VDD}
+Xp98 gp98 outp98 vddp98 inv1
+CLp98 outp98 0 {CL}
+Bpw_p98 pwp98 0 V = -V(vddp98)*I(VDDp98)
+Bpi_p98 pip98 0 V = -V(inp98)*I(Vp98)
+
+* =====================================================================
+* SIMULATION
+* =====================================================================
+.tran 5p 100n
+
+* =====================================================================
+* (b) DYNAMIC MEASUREMENTS  (switch window 48..65 ns; every case switches
+*     at 50 ns and has settled by ~52 ns)
+*     e_supply = rail energy (output flip + crowbar transient)
+*     e_input  = input-driver energy (the C*dV^2 term)
+*     e_total  = e_supply + e_input
+*     tpd      = delay gate-cross-V_M -> output-cross-V_M (speed)
+*     tf       = output 90%->10% fall time (speed)
+* =====================================================================
+.meas tran es_ref  INTEG V(pwref) FROM=49n TO=53n
+.meas tran ein_ref INTEG V(piref) FROM=49n TO=53n
+.meas tran tpd_ref TRIG V(gref) VAL=0.5 RISE=1 TARG V(outref) VAL=0.5 FALL=1
+.meas tran tf_ref  TRIG V(outref) VAL=0.9 FALL=1 TARG V(outref) VAL=0.1 FALL=1
+
+.meas tran es_p0  INTEG V(pwp0) FROM=49n TO=53n
+.meas tran ein_p0 INTEG V(pip0) FROM=49n TO=53n
+.meas tran tpd_p0 TRIG V(gp0) VAL=0.5 RISE=1 TARG V(outp0) VAL=0.5 FALL=1
+.meas tran tf_p0  TRIG V(outp0) VAL=0.9 FALL=1 TARG V(outp0) VAL=0.1 FALL=1
+
+.meas tran es_p25  INTEG V(pwp25) FROM=49n TO=53n
+.meas tran ein_p25 INTEG V(pip25) FROM=49n TO=53n
+.meas tran tpd_p25 TRIG V(gp25) VAL=0.5 RISE=1 TARG V(outp25) VAL=0.5 FALL=1
+.meas tran tf_p25  TRIG V(outp25) VAL=0.9 FALL=1 TARG V(outp25) VAL=0.1 FALL=1
+
+.meas tran es_p50  INTEG V(pwp50) FROM=49n TO=53n
+.meas tran ein_p50 INTEG V(pip50) FROM=49n TO=53n
+.meas tran tpd_p50 TRIG V(gp50) VAL=0.5 RISE=1 TARG V(outp50) VAL=0.5 FALL=1
+.meas tran tf_p50  TRIG V(outp50) VAL=0.9 FALL=1 TARG V(outp50) VAL=0.1 FALL=1
+
+.meas tran es_p75  INTEG V(pwp75) FROM=49n TO=53n
+.meas tran ein_p75 INTEG V(pip75) FROM=49n TO=53n
+.meas tran tpd_p75 TRIG V(gp75) VAL=0.5 RISE=1 TARG V(outp75) VAL=0.5 FALL=1
+.meas tran tf_p75  TRIG V(outp75) VAL=0.9 FALL=1 TARG V(outp75) VAL=0.1 FALL=1
+
+.meas tran es_p90  INTEG V(pwp90) FROM=49n TO=53n
+.meas tran ein_p90 INTEG V(pip90) FROM=49n TO=53n
+.meas tran tpd_p90 TRIG V(gp90) VAL=0.5 RISE=1 TARG V(outp90) VAL=0.5 FALL=1
+.meas tran tf_p90  TRIG V(outp90) VAL=0.9 FALL=1 TARG V(outp90) VAL=0.1 FALL=1
+
+.meas tran es_p95  INTEG V(pwp95) FROM=49n TO=53n
+.meas tran ein_p95 INTEG V(pip95) FROM=49n TO=53n
+.meas tran tpd_p95 TRIG V(gp95) VAL=0.5 RISE=1 TARG V(outp95) VAL=0.5 FALL=1
+.meas tran tf_p95  TRIG V(outp95) VAL=0.9 FALL=1 TARG V(outp95) VAL=0.1 FALL=1
+
+.meas tran es_p98  INTEG V(pwp98) FROM=49n TO=53n
+.meas tran ein_p98 INTEG V(pip98) FROM=49n TO=53n
+.meas tran tpd_p98 TRIG V(gp98) VAL=0.5 RISE=1 TARG V(outp98) VAL=0.5 FALL=1
+.meas tran tf_p98  TRIG V(outp98) VAL=0.9 FALL=1 TARG V(outp98) VAL=0.1 FALL=1
+
+* ---- total dynamic energy per switch (supply + input drive) ----------
+.meas tran et_ref PARAM = 'es_ref + ein_ref'
+.meas tran et_p0  PARAM = 'es_p0  + ein_p0'
+.meas tran et_p25 PARAM = 'es_p25 + ein_p25'
+.meas tran et_p50 PARAM = 'es_p50 + ein_p50'
+.meas tran et_p75 PARAM = 'es_p75 + ein_p75'
+.meas tran et_p90 PARAM = 'es_p90 + ein_p90'
+.meas tran et_p95 PARAM = 'es_p95 + ein_p95'
+.meas tran et_p98 PARAM = 'es_p98 + ein_p98'
+
+* ---- dynamic saving vs full rail (may go negative => pre-bias costs
+*      MORE dynamically, on top of the static leakage) ----------------
+.meas tran dsav_p0  PARAM = 'et_ref - et_p0'
+.meas tran dsav_p25 PARAM = 'et_ref - et_p25'
+.meas tran dsav_p50 PARAM = 'et_ref - et_p50'
+.meas tran dsav_p75 PARAM = 'et_ref - et_p75'
+.meas tran dsav_p90 PARAM = 'et_ref - et_p90'
+.meas tran dsav_p95 PARAM = 'et_ref - et_p95'
+.meas tran dsav_p98 PARAM = 'et_ref - et_p98'
+
+* ---- STATIC LEAKAGE CROSS-CHECK in .tran: supply energy over the quiet
+*      hold window [5..48 ns] (input held at the pre-bias level, no switch).
+*      P_leak = eq_* / 43ns.  Cross-checks the .dc sweep. ---------------
+.meas tran eq_ref INTEG V(pwref) FROM=5n TO=48n
+.meas tran eq_p0  INTEG V(pwp0)  FROM=5n TO=48n
+.meas tran eq_p25 INTEG V(pwp25) FROM=5n TO=48n
+.meas tran eq_p50 INTEG V(pwp50) FROM=5n TO=48n
+.meas tran eq_p75 INTEG V(pwp75) FROM=5n TO=48n
+.meas tran eq_p90 INTEG V(pwp90) FROM=5n TO=48n
+.meas tran eq_p95 INTEG V(pwp95) FROM=5n TO=48n
+.meas tran eq_p98 INTEG V(pwp98) FROM=5n TO=48n
+
+* ---- INPUT-DRIVE (gate-charge, C*dV^2) dynamic saving -----------------
+*      vs full rail (ref) and vs minimal-swing no-pre-bias control (p0) --
+*      the only term pre-bias can save; output flip + crowbar transient
+*      are paid identically (or worse) in every scheme. ------------------
+.meas tran esav_ref_p0  PARAM = 'ein_ref - ein_p0'
+.meas tran esav_ref_p25 PARAM = 'ein_ref - ein_p25'
+.meas tran esav_ref_p50 PARAM = 'ein_ref - ein_p50'
+.meas tran esav_ref_p75 PARAM = 'ein_ref - ein_p75'
+.meas tran esav_ref_p90 PARAM = 'ein_ref - ein_p90'
+.meas tran esav_ref_p95 PARAM = 'ein_ref - ein_p95'
+.meas tran esav_ref_p98 PARAM = 'ein_ref - ein_p98'
+
+.end

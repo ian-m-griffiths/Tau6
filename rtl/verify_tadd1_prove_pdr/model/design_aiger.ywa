@@ -1,0 +1,23 @@
+{
+  "version": "Yosys Witness Aiger map",
+  "gennerator": "Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)",
+  "latch_count": 0,
+  "input_count": 6,
+  "clocks": [],
+  "inputs": [
+    {"input": 0, "offset": 0, "path": ["\\a"]},
+    {"input": 1, "offset": 1, "path": ["\\a"]},
+    {"input": 2, "offset": 0, "path": ["\\b"]},
+    {"input": 3, "offset": 1, "path": ["\\b"]},
+    {"input": 4, "offset": 0, "path": ["\\cin"]},
+    {"input": 5, "offset": 1, "path": ["\\cin"]}
+  ],
+  "seqs": [],
+  "inits": [],
+  "asserts": [
+    ["\\_witness_", "\\check_assert_verify_tadd1_sv_82_181"],
+    ["\\_witness_", "\\check_assert_verify_tadd1_sv_85_185"],
+    ["\\_witness_", "\\check_assert_verify_tadd1_sv_86_191"]
+  ],
+  "assumes": []
+}

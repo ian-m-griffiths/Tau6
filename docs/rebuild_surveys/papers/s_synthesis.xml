@@ -1,0 +1,197 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/4CZhEPPf3m9oSaVJMCWJWYCbz+I</id>
+  <title>arXiv Query: search_query=all:ternary OR all:gate OR all:synthesis&amp;id_list=&amp;start=0&amp;max_results=8</title>
+  <updated>2026-08-29T07:27:55Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=all:ternary+OR+(all:gate+OR+all:synthesis)&amp;start=0&amp;max_results=8&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>8</opensearch:itemsPerPage>
+  <opensearch:totalResults>77662</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1004.4609v1</id>
+    <title>Synthesis of Reversible Functions Beyond Gate Count and Quantum Cost</title>
+    <updated>2010-04-26T19:15:13Z</updated>
+    <link href="https://arxiv.org/abs/1004.4609v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1004.4609v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Many synthesis approaches for reversible and quantum logic have been proposed so far. However, most of them generate circuits with respect to simple metrics, i.e. gate count or quantum cost. On the other hand, to physically realize reversible and quantum hardware, additional constraints exist. In this paper, we describe cost metrics beyond gate count and quantum cost that should be considered while synthesizing reversible and quantum logic for the respective target technologies. We show that the evaluation of a synthesis approach may differ if additional costs are applied. In addition, a new cost metric, namely Nearest Neighbor Cost (NNC) which is imposed by realistic physical quantum architectures, is considered in detail. We discuss how existing synthesis flows can be extended to generate optimal circuits with respect to NNC while still keeping the quantum cost small.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2010-04-26T19:15:13Z</published>
+    <arxiv:comment>16 pages, 6 figures, 4 tables, International Workshop on Logic and Synthesis</arxiv:comment>
+    <arxiv:primary_category term="quant-ph"/>
+    <arxiv:journal_ref>International Workshop on Logic Synthesis (IWLS), USA, 2009</arxiv:journal_ref>
+    <author>
+      <name>Robert Wille</name>
+    </author>
+    <author>
+      <name>Mehdi Saeedi</name>
+    </author>
+    <author>
+      <name>Rolf Drechsler</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1606.01906v2</id>
+    <title>Unifying gate-synthesis and magic state distillation</title>
+    <updated>2017-01-04T20:22:40Z</updated>
+    <link href="https://arxiv.org/abs/1606.01906v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1606.01906v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The leading paradigm for performing computation on quantum memories can be encapsulated as distill-then-synthesize. Initially, one performs several rounds of distillation to create high-fidelity magic states that provide one good T gate, an essential quantum logic gate. Subsequently, gate synthesis intersperses many T gates with Clifford gates to realise a desired circuit. We introduce a unified framework that implements one round of distillation and multi-qubit gate synthesis in a single step. Typically, our method uses the same number of T gates as conventional synthesis, but with the added benefit of quadratic error suppression. Because of this, one less round of magic state distillation needs to be performed, leading to significant resource savings.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2016-06-06T20:00:17Z</published>
+    <arxiv:comment>Authors' final copy (Accepted to Phys. Rev. Lett). 5 pages. This is one of a pair of companion papers. The more detailed page paper is entitled "A unified framework for magic state distillation and multi-qubit gate-synthesis with reduced resource cost"</arxiv:comment>
+    <arxiv:primary_category term="quant-ph"/>
+    <arxiv:journal_ref>Phys. Rev. Lett. 118, 060501 (2017)</arxiv:journal_ref>
+    <author>
+      <name>Earl T. Campbell</name>
+    </author>
+    <author>
+      <name>Mark Howard</name>
+    </author>
+    <arxiv:doi>10.1103/PhysRevLett.118.060501</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1103/PhysRevLett.118.060501" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1804.07701v1</id>
+    <title>Practical Issues in the Synthesis of Ternary Sequences</title>
+    <updated>2018-04-20T16:10:01Z</updated>
+    <link href="https://arxiv.org/abs/1804.07701v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1804.07701v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Several issues related to the practical synthesis of ternary sequences with specified spectra are addressed in this paper. Specifically, sequences with harmonic multiples of two and three suppressed are studied, given their relevance when testing and characterizing nonlinear systems. In particular, the effect of non-uniform Digital to Analog Converter (DAC) levels on the spectral properties of the generated signal is analyzed. It is analytically shown that the DAC non-uniform levels result in degraded harmonic suppression performance. Moreover, a new approach is proposed for designing ternary sequences, which is flexible and can be adapted to suit different requirements. The resulting sequences, denoted as randomized constrained sequences, are characterized theoretically by deriving an analytical expression of the power spectral density. Furthermore, they are extensively compared with three synthesis approaches proposed in the literature. The approach is validated by numerical simulations and experimental results, showing the potential to achieve harmonic suppression performance of approximately 100 dB.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.NA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-04-20T16:10:01Z</published>
+    <arxiv:primary_category term="eess.SP"/>
+    <arxiv:journal_ref>A. De Angelis, J. Schoukens, K. R. Godfrey and P. Carbone, "Practical Issues in the Synthesis of Ternary Sequences," in IEEE Transactions on Instrumentation and Measurement, vol. 66, no. 2, pp. 212-222, Feb. 2017</arxiv:journal_ref>
+    <author>
+      <name>Alessio De Angelis</name>
+    </author>
+    <author>
+      <name>Johan Schoukens</name>
+    </author>
+    <author>
+      <name>Keith R. Godfrey</name>
+    </author>
+    <author>
+      <name>Paolo Carbone</name>
+    </author>
+    <arxiv:doi>10.1109/TIM.2016.2622778</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/TIM.2016.2622778" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1510.07955v1</id>
+    <title>The ternary operations of groupoids</title>
+    <updated>2015-10-12T15:22:45Z</updated>
+    <link href="https://arxiv.org/abs/1510.07955v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1510.07955v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We investigate ternary products of groupoids and prove that there is a one-to-one correspondence between the collection of right modular groupoids with a left identity element l and laterally commutative, l-bi-unital semiheaps. This result is applied to prove that the natural ternary product induced by a right modular groupoid S with left identity is isomorphic to the natural ternary product of a groupoid T if and only if S and T are isomorphic groupoids. Ternary products of other classes of groupoids are also characterised, including the natural and standard ternary products of inverse semigroups. These two classes of ternary products are proved to be varieties of type (3,1,1).</summary>
+    <category term="math.GM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2015-10-12T15:22:45Z</published>
+    <arxiv:comment>The paper is 28 pages, with one table listing the characterisations of various ternary products</arxiv:comment>
+    <arxiv:primary_category term="math.GM"/>
+    <author>
+      <name>R. A. R. Monzo</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1606.01904v5</id>
+    <title>A unified framework for magic state distillation and multi-qubit gate-synthesis with reduced resource cost</title>
+    <updated>2026-04-30T15:24:37Z</updated>
+    <link href="https://arxiv.org/abs/1606.01904v5" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1606.01904v5" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The standard approach to fault-tolerant quantum computation is to store information in a quantum error correction code, such as the surface code, and process information using a strategy that can be summarized as distill-then-synthesize. In the distill step, one performs several rounds of distillation to create high-fidelity logical qubits in a magic state. Each such magic state provides one good T gate. In the synthesize step, one seeks the optimal decomposition of an algorithm into a sequence of many T gates interleaved with Clifford gates. This gate-synthesis problem is well understood for multiqubit gates that do not use any Hadamards. We present an in-depth analysis of a unified framework that realises one round of distillation and multiqubit gate synthesis in a single step. We call these synthillation protocols, and show they lead to a large reduction in resource overheads. This is because synthillation can implement a general class of circuits using the same number of T-states as gate synthesis, yet with the benefit of quadratic error suppression. This general class includes all circuits primarily dominated by control-control-Z gates, such as adders and modular exponentiation routines used in Shor's algorithm. Therefore, synthillation removes the need for a costly round of magic state distillation. We also present several additional results on the multiqubit gate-synthesis problem. We provide an efficient algorithm for synthesizing unitaries with the same worst-case resource scaling as optimal solutions. For the special case of synthesizing controlled-unitaries, our techniques are not just efficient but exactly optimal. We observe that the gate-synthesis cost, measured by T-count, is often strictly subadditive. Numerous explicit applications of our techniques are also presented.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2016-06-06T20:00:10Z</published>
+    <arxiv:comment>Authors' final copy (Accepted to Phys Rev A). 23 pages. This is one of a pair of companion papers. The more concise 5 page paper is entitled "Unifying gate-synthesis and magic state distillation". Fixed typo in discussion of Lemma 3. Thanks to Anqi Gong for spotting some (postpublication) errors in case 6 of Table I and Example IV.3, both of which are fixed in this version</arxiv:comment>
+    <arxiv:primary_category term="quant-ph"/>
+    <arxiv:journal_ref>Phys. Rev. A 95, 022316 (2017)</arxiv:journal_ref>
+    <author>
+      <name>Earl T. Campbell</name>
+    </author>
+    <author>
+      <name>Mark Howard</name>
+    </author>
+    <arxiv:doi>10.1103/PhysRevA.95.022316</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1103/PhysRevA.95.022316" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2107.14449v3</id>
+    <title>Synth-by-Reg (SbR): Contrastive learning for synthesis-based registration of paired images</title>
+    <updated>2023-01-27T08:26:30Z</updated>
+    <link href="https://arxiv.org/abs/2107.14449v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2107.14449v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Nonlinear inter-modality registration is often challenging due to the lack of objective functions that are good proxies for alignment. Here we propose a synthesis-by-registration method to convert this problem into an easier intra-modality task. We introduce a registration loss for weakly supervised image translation between domains that does not require perfectly aligned training data. This loss capitalises on a registration U-Net with frozen weights, to drive a synthesis CNN towards the desired translation. We complement this loss with a structure preserving constraint based on contrastive learning, which prevents blurring and content shifts due to overfitting. We apply this method to the registration of histological sections to MRI slices, a key step in 3D histology reconstruction. Results on two different public datasets show improvements over registration based on mutual information (13% reduction in landmark error) and synthesis-based algorithms such as CycleGAN (11% reduction), and are comparable to a registration CNN with label supervision. Code and data are publicly available at \url{https://github.com/acasamitjana/SynthByReg}</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.IV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-07-30T06:40:58Z</published>
+    <arxiv:comment>Best paper award in Simulation and Synthesis in Medical Imaging (SASHIMI) workshop</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <arxiv:journal_ref>Simulation and Synthesis in Medical Imaging. SASHIMI 2021. Lecture Notes in Computer Science</arxiv:journal_ref>
+    <author>
+      <name>Adrià Casamitjana</name>
+    </author>
+    <author>
+      <name>Matteo Mancini</name>
+    </author>
+    <author>
+      <name>Juan Eugenio Iglesias</name>
+    </author>
+    <arxiv:doi>10.1007/978-3-030-87592-3_5</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/978-3-030-87592-3_5" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1407.7911v2</id>
+    <title>Synthesis and transport properties of ternary type-I Si clathrate K8Al7Si39</title>
+    <updated>2015-07-29T09:12:48Z</updated>
+    <link href="https://arxiv.org/abs/1407.7911v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1407.7911v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A ternary type-I Si clathrate, K8AlxSi46-x, which is a candidate functional material composed of abundant non-toxic elements, was synthesized and its transport properties were investigated at temperatures ranging from 10 to 320 K. The synthesized compound is confirmed to be the ternary type-I Si clathrate K8Al7Si39 with a lattice parameter of a = 10.442 A using neutron powder diffractometry and inductively coupled plasma optical emission spectrometry. Electrical resistivity and Hall coefficient measurements revealed that K8Al7Si39 is a metal with electrons as the dominant carriers at a density of approximately 1x10^27 /m3. The value of Seebeck coefficient for K8Al7Si39 is negative and its absolute value increases with the temperature. The temperature dependence of the thermal conductivity is similar to that for a crystalline solid. The dimensionless figure of merit is approximately 0.01 at 300 K, which is comparable to that for other ternary Si clathrates.</summary>
+    <category term="cond-mat.mtrl-sci" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2014-07-30T00:39:52Z</published>
+    <arxiv:comment>Ternary type-I Clathrate, Accepted in Japanese Journal of Applied Physics 2015</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.mtrl-sci"/>
+    <arxiv:journal_ref>Japanese Journal of Applied Physics, 54, 091801 (2015)</arxiv:journal_ref>
+    <author>
+      <name>Shiva Kumar Singh</name>
+    </author>
+    <author>
+      <name>Takashi Mochiku</name>
+    </author>
+    <author>
+      <name>Soshi Ibuka</name>
+    </author>
+    <author>
+      <name>Yukihiro Isoda</name>
+    </author>
+    <author>
+      <name>Akinori Hoshikawa</name>
+    </author>
+    <author>
+      <name>Toru Ishigaki</name>
+    </author>
+    <author>
+      <name>Motoharu Imai</name>
+    </author>
+    <arxiv:doi>10.7567/JJAP.54.091801</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.7567/JJAP.54.091801" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1105.5485v3</id>
+    <title>Elementary gates for ternary quantum logic circuit</title>
+    <updated>2012-04-25T13:11:51Z</updated>
+    <link href="https://arxiv.org/abs/1105.5485v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1105.5485v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this article the elementary gates for ternary quantum logic circuit are studied. We propose the ternary controlled X (TCX) gate or ternary controlled Z (TCZ) gate as two-qutrit elementary gate, which is universal when assisted by arbitrary one-qutrit gates. It is primitive, efficient and easy to implement. Based on Cartan decomposition, we also give the one-qutrit elementary gates. Then the synthesis of some important ternary gates is investigated and the scheme of physical implementation for these ternary gates is discussed. Finally we extend these elementary gates to more general qudit case, so it provides a unified description for the synthesis of the binary and multi-valued quantum circuits.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2011-05-27T07:17:38Z</published>
+    <arxiv:comment>8 pages, 13 figures, small modification to Fig.11</arxiv:comment>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Yao-Min Di</name>
+    </author>
+    <author>
+      <name>Hai-Rui Wei</name>
+    </author>
+  </entry>
+</feed>

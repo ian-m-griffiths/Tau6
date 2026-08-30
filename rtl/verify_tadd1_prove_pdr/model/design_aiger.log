@@ -1,0 +1,304 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2025  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+
+-- Executing script file `design_aiger.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: design_prep.il
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `tadd1_verify'. Setting top module to tadd1_verify.
+
+2.1. Analyzing design hierarchy..
+Top module:  \tadd1_verify
+Used module:     \tadd1_wrapper
+
+2.2. Analyzing design hierarchy..
+Top module:  \tadd1_verify
+Used module:     \tadd1_wrapper
+Removed 0 unused modules.
+Module tadd1_verify directly or indirectly contains formal properties -> setting "keep" attribute.
+
+3. Executing FORMALFF pass.
+
+4. Executing FLATTEN pass (flatten design).
+Deleting now unused module tadd1_wrapper.
+<suppressed ~1 debug messages>
+
+5. Executing SETUNDEF pass (replace undef values with defined constants).
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tadd1_verify.
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tadd1_verify'.
+Removed a total of 0 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tadd1_verify..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~5 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tadd1_verify.
+    Consolidated identical input bits for $mux cell $ternary$verify_tadd1.sv:81$179:
+      Old ports: A=0, B=32'11111111111111111111111111111111, Y=$ternary$verify_tadd1.sv:81$179_Y
+      New ports: A=1'0, B=1'1, Y=$ternary$verify_tadd1.sv:81$179_Y [0]
+      New connections: $ternary$verify_tadd1.sv:81$179_Y [31:1] = { $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] }
+    Consolidated identical input bits for $mux cell $ternary$verify_tadd1.sv:80$177:
+      Old ports: A=0, B=32'11111111111111111111111111111111, Y=$ternary$verify_tadd1.sv:80$177_Y
+      New ports: A=1'0, B=1'1, Y=$ternary$verify_tadd1.sv:80$177_Y [0]
+      New connections: $ternary$verify_tadd1.sv:80$177_Y [31:1] = { $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] }
+    Consolidated identical input bits for $mux cell $ternary$verify_tadd1.sv:63$163:
+      Old ports: A=0, B=32'11111111111111111111111111111111, Y=$ternary$verify_tadd1.sv:63$163_Y
+      New ports: A=1'0, B=1'1, Y=$ternary$verify_tadd1.sv:63$163_Y [0]
+      New connections: $ternary$verify_tadd1.sv:63$163_Y [31:1] = { $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] }
+    Consolidated identical input bits for $mux cell $ternary$verify_tadd1.sv:62$161:
+      Old ports: A=0, B=32'11111111111111111111111111111111, Y=$ternary$verify_tadd1.sv:62$161_Y
+      New ports: A=1'0, B=1'1, Y=$ternary$verify_tadd1.sv:62$161_Y [0]
+      New connections: $ternary$verify_tadd1.sv:62$161_Y [31:1] = { $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] }
+    Consolidated identical input bits for $mux cell $ternary$verify_tadd1.sv:61$159:
+      Old ports: A=0, B=32'11111111111111111111111111111111, Y=$ternary$verify_tadd1.sv:61$159_Y
+      New ports: A=1'0, B=1'1, Y=$ternary$verify_tadd1.sv:61$159_Y [0]
+      New connections: $ternary$verify_tadd1.sv:61$159_Y [31:1] = { $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] }
+  Optimizing cells in module \tadd1_verify.
+    Consolidated identical input bits for $mux cell $ternary$verify_tadd1.sv:81$180:
+      Old ports: A=$ternary$verify_tadd1.sv:81$179_Y, B=1, Y=\sum_val
+      New ports: A={ $ternary$verify_tadd1.sv:81$179_Y [0] $ternary$verify_tadd1.sv:81$179_Y [0] }, B=2'01, Y=\sum_val [1:0]
+      New connections: \sum_val [31:2] = { \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] \sum_val [1] }
+    Consolidated identical input bits for $mux cell $ternary$verify_tadd1.sv:80$178:
+      Old ports: A=$ternary$verify_tadd1.sv:80$177_Y, B=1, Y=\cout_val
+      New ports: A={ $ternary$verify_tadd1.sv:80$177_Y [0] $ternary$verify_tadd1.sv:80$177_Y [0] }, B=2'01, Y=\cout_val [1:0]
+      New connections: \cout_val [31:2] = { \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] \cout_val [1] }
+    Consolidated identical input bits for $mux cell $ternary$verify_tadd1.sv:63$164:
+      Old ports: A=$ternary$verify_tadd1.sv:63$163_Y, B=1, Y=\vc
+      New ports: A={ $ternary$verify_tadd1.sv:63$163_Y [0] $ternary$verify_tadd1.sv:63$163_Y [0] }, B=2'01, Y=\vc [1:0]
+      New connections: \vc [31:2] = { \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] \vc [1] }
+    Consolidated identical input bits for $mux cell $ternary$verify_tadd1.sv:62$162:
+      Old ports: A=$ternary$verify_tadd1.sv:62$161_Y, B=1, Y=\vb
+      New ports: A={ $ternary$verify_tadd1.sv:62$161_Y [0] $ternary$verify_tadd1.sv:62$161_Y [0] }, B=2'01, Y=\vb [1:0]
+      New connections: \vb [31:2] = { \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] \vb [1] }
+    Consolidated identical input bits for $mux cell $ternary$verify_tadd1.sv:61$160:
+      Old ports: A=$ternary$verify_tadd1.sv:61$159_Y, B=1, Y=\va
+      New ports: A={ $ternary$verify_tadd1.sv:61$159_Y [0] $ternary$verify_tadd1.sv:61$159_Y [0] }, B=2'01, Y=\va [1:0]
+      New connections: \va [31:2] = { \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] \va [1] }
+  Optimizing cells in module \tadd1_verify.
+Performed a total of 10 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tadd1_verify'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_SHARE pass.
+
+6.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tadd1_verify..
+
+6.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tadd1_verify.
+<suppressed ~5 debug messages>
+
+6.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tadd1_verify..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~5 debug messages>
+
+6.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tadd1_verify.
+Performed a total of 0 changes.
+
+6.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tadd1_verify'.
+Removed a total of 0 cells.
+
+6.14. Executing OPT_SHARE pass.
+
+6.15. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tadd1_verify..
+Removed 0 unused cells and 5 unused wires.
+<suppressed ~1 debug messages>
+
+6.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tadd1_verify.
+
+6.18. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.19. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tadd1_verify..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~5 debug messages>
+
+6.20. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tadd1_verify.
+Performed a total of 0 changes.
+
+6.21. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tadd1_verify'.
+Removed a total of 0 cells.
+
+6.22. Executing OPT_SHARE pass.
+
+6.23. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.24. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tadd1_verify..
+
+6.25. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tadd1_verify.
+
+6.26. Finished OPT passes. (There is nothing left to do.)
+
+7. Executing TECHMAP pass (map to technology primitives).
+
+7.1. Executing Verilog-2005 frontend: /usr/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/usr/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `\$__div_mod_u'.
+Generating RTLIL representation for module `\$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `\$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Successfully finished Verilog frontend.
+
+7.2. Continuing TECHMAP pass.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using extmapper simplemap for cells of type $eq.
+Running "alumacc" on wrapper $extern:wrap:$ge:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=3:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=3:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=3:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$le:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=2:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$le:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=2:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$le:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=2:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using extmapper simplemap for cells of type $logic_and.
+Using extmapper simplemap for cells of type $logic_not.
+Using extmapper simplemap for cells of type $logic_or.
+Running "alumacc" on wrapper $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=3:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=3:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=3:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using extmapper simplemap for cells of type $ne.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $and.
+Using template $paramod$2653f68ddb8eab7b1907b4a20767b72a824a7a36\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_and.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod$ea5b34ea10549c30d9d1db1d13e9d4acfe853035\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using template $paramod$050f15daba5036a0512adf25d3c6631f629623f7\_90_alu for cells of type $alu.
+Using extmapper maccmap for cells of type $macc_v2.
+  add { \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [31] \cout_val [0] } * 3'011 (32x3 bits, signed)
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000100000 for cells of type $lcu.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000100000 for cells of type $fa.
+Using template $paramod$fbc7873bff55778c0b3173955b7e4bce1d9d6834\_90_alu for cells of type $alu.
+No more expansions possible.
+<suppressed ~1396 debug messages>
+
+8. Executing OPT pass (performing simple optimizations).
+
+8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tadd1_verify.
+<suppressed ~1126 debug messages>
+
+8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tadd1_verify'.
+<suppressed ~1713 debug messages>
+Removed a total of 571 cells.
+
+8.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+8.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tadd1_verify..
+Removed 159 unused cells and 744 unused wires.
+<suppressed ~160 debug messages>
+
+8.5. Finished fast OPT passes.
+
+9. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+10. Executing FORMALFF pass.
+
+11. Executing SIMPLEMAP pass (map simple cells to gate primitives).
+
+12. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+13. Executing AIGMAP pass (map logic to AIG).
+Module tadd1_verify: replaced 475 cells with 2452 new cells, skipped 402 cells.
+  replaced 3 cell types:
+     291 $_OR_
+     174 $_XOR_
+      10 $_MUX_
+  not replaced 4 cell types:
+       3 $assert
+       1 $scopeinfo
+      50 $_NOT_
+     348 $_AND_
+
+14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tadd1_verify..
+Removed 0 unused cells and 362 unused wires.
+<suppressed ~1 debug messages>
+
+15. Printing statistics.
+
+=== tadd1_verify ===
+
+   Number of wires:               2508
+   Number of wire bits:           3319
+   Number of public wires:          20
+   Number of public wire bits:     221
+   Number of ports:                  3
+   Number of port bits:              6
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2854
+     $_AND_                       1191
+     $_NOT_                       1659
+     $assert                         3
+     $scopeinfo                      1
+
+16. Executing AIGER backend.
+
+End of script. Logfile hash: f409e4b13c, CPU: user 0.29s system 0.02s, MEM: 22.65 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 25% 1x techmap (0 sec), 23% 6x opt_clean (0 sec), ...

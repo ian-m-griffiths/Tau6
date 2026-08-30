@@ -1,0 +1,288 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd1                                         1
+vss1                                         0
+in1                                          0
+out1                                         1
+l1                                           1
+pg1                                   1.01e-12
+vdd2                                      0.65
+vss2                                         0
+in2                                          0
+out2                                      0.65
+l2                                        0.65
+pg2                                   4.29e-13
+vdd3                                       0.4
+vss3                                         0
+in3                                          0
+out3                                       0.2
+l3                                         0.2
+pg3                                    8.4e-14
+vdd4                                         1
+vss4                                        -1
+in4                                          0
+rai4                               -3.4617e-18
+rbi4                               3.46166e-18
+out4                              -2.42127e-22
+l4                                -2.42127e-22
+ra4                               -3.46159e-18
+rb4                                3.46183e-18
+pg4                                   2.02e-12
+vdd5                                       0.9
+vss5                                      -0.9
+in5                                          0
+rai5                               -3.4617e-18
+rbi5                               3.46166e-18
+out5                              -2.42127e-22
+l5                                -2.42127e-22
+ra5                               -3.46159e-18
+rb5                                3.46183e-18
+pg5                                  1.638e-12
+vdd6                                      0.85
+vss6                                     -0.85
+in6                                          0
+rai6                               -3.4617e-18
+rbi6                               3.46166e-18
+out6                              -2.42127e-22
+l6                                -2.42127e-22
+ra6                               -3.46159e-18
+rb6                                3.46183e-18
+pg6                                  1.462e-12
+vdd7                                      0.82
+vss7                                     -0.82
+in7                                          0
+rai7                               -3.4617e-18
+rbi7                               3.46166e-18
+out7                              -2.42127e-22
+l7                                -2.42127e-22
+ra7                               -3.46159e-18
+rb7                                3.46183e-18
+pg7                                 1.3612e-12
+vdd8                                       0.8
+vss8                                      -0.8
+in8                                          0
+rai8                               -3.4617e-18
+rbi8                               3.46166e-18
+out8                              -2.42127e-22
+l8                                -2.42127e-22
+ra8                               -3.46159e-18
+rb8                                3.46183e-18
+pg8                                  1.296e-12
+vdd9                                       0.7
+vss9                                      -0.7
+in9                                          0
+rai9                               -3.4617e-18
+rbi9                               3.46166e-18
+out9                              -2.42127e-22
+l9                                -2.42127e-22
+ra9                               -3.46159e-18
+rb9                                3.46183e-18
+pg9                                   9.94e-13
+vdd10                                     0.65
+vss10                                    -0.65
+in10                                         0
+rai10                             -3.46169e-18
+rbi10                              3.46166e-18
+out10                             -2.42127e-22
+l10                               -2.42127e-22
+ra10                              -3.46159e-18
+rb10                               3.46183e-18
+pg10                                  8.58e-13
+vdd11                                      0.5
+vss11                                     -0.5
+in11                                         0
+rai11                              -3.4617e-18
+rbi11                              3.46166e-18
+out11                             -2.42127e-22
+l11                               -2.42127e-22
+ra11                              -3.46159e-18
+rb11                               3.46183e-18
+pg11                                   5.1e-13
+vdd12                                      0.4
+vss12                                     -0.4
+in12                                         0
+rai12                              -3.4617e-18
+rbi12                              3.46166e-18
+out12                             -2.42127e-22
+l12                               -2.42127e-22
+ra12                              -3.46159e-18
+rb12                               3.46183e-18
+pg12                                  3.28e-13
+vdd13                                     0.35
+vss13                                    -0.35
+in13                                         0
+rai13                              -3.4617e-18
+rbi13                              3.46166e-18
+out13                             -2.42127e-22
+l13                               -2.42127e-22
+ra13                              -3.46159e-18
+rb13                               3.46183e-18
+pg13                                  2.52e-13
+pvdd4                                 1.01e-12
+pvss4                                 1.01e-12
+pvss10                                4.29e-13
+bvss10#branch                                0
+vssg10#branch                          6.6e-13
+bvss4#branch                                 0
+vssg4#branch                          1.01e-12
+bvdd4#branch                                 0
+vddg4#branch                         -1.01e-12
+bpg13#branch                                 0
+vddg13#branch                         -3.6e-13
+vssg13#branch                          3.6e-13
+bpg12#branch                                 0
+vddg12#branch                         -4.1e-13
+vssg12#branch                          4.1e-13
+bpg11#branch                                 0
+vddg11#branch                         -5.1e-13
+vssg11#branch                          5.1e-13
+bpg10#branch                                 0
+vddg10#branch                         -6.6e-13
+bpg9#branch                                  0
+vddg9#branch                          -7.1e-13
+vssg9#branch                           7.1e-13
+bpg8#branch                                  0
+vddg8#branch                          -8.1e-13
+vssg8#branch                           8.1e-13
+bpg7#branch                                  0
+vddg7#branch                          -8.3e-13
+vssg7#branch                           8.3e-13
+bpg6#branch                                  0
+vddg6#branch                          -8.6e-13
+vssg6#branch                           8.6e-13
+bpg5#branch                                  0
+vddg5#branch                          -9.1e-13
+vssg5#branch                           9.1e-13
+bpg4#branch                                  0
+bpg3#branch                                  0
+vddg3#branch                          -2.1e-13
+vssg3#branch                           2.1e-13
+bpg2#branch                                  0
+vddg2#branch                          -6.6e-13
+vssg2#branch                           6.6e-13
+bpg1#branch                                  0
+vddg1#branch                         -1.01e-12
+vssg1#branch                          1.01e-12
+vin13#branch                       3.57023e-28
+vin12#branch                       3.57023e-28
+vin11#branch                       3.57023e-28
+vin10#branch                       2.86041e-28
+vin9#branch                        3.57023e-28
+vin8#branch                        3.57023e-28
+vin7#branch                        3.57023e-28
+vin6#branch                        3.57023e-28
+vin5#branch                        3.57023e-28
+vin4#branch                        3.57023e-28
+vin3#branch                                  0
+vin2#branch                                  0
+vin1#branch                                  0
+
+ Reference value :  6.15456e-08 Reference value :  1.24670e-07
+No. of Data Rows : 7026
+
+  Measurements for Transient Analysis
+
+egate_1             =   1.38779e-14 from=  9.50000e-08 to=  1.35000e-07
+egate_2             =   7.13276e-15 from=  9.50000e-08 to=  1.35000e-07
+egate_3             =   -1.86778e-18 from=  9.50000e-08 to=  1.35000e-07
+egate_4             =   1.08180e-13 from=  9.50000e-08 to=  1.35000e-07
+egate_5             =   7.82833e-14 from=  9.50000e-08 to=  1.35000e-07
+egate_6             =   3.67013e-14 from=  9.50000e-08 to=  1.35000e-07
+egate_7             =   1.15021e-16 from=  9.50000e-08 to=  1.35000e-07
+egate_8             =   4.78095e-18 from=  9.50000e-08 to=  1.35000e-07
+egate_9             =   2.12983e-17 from=  9.50000e-08 to=  1.35000e-07
+egate_10            =   4.00429e-14 from=  9.50000e-08 to=  1.35000e-07
+egate_11            =   2.07300e-14 from=  9.50000e-08 to=  1.35000e-07
+egate_12            =   4.98829e-15 from=  9.50000e-08 to=  1.35000e-07
+egate_13            =   4.25041e-16 from=  9.50000e-08 to=  1.35000e-07
+ept_1               =  6.93894e-15
+ept_2               =  3.56638e-15
+ept_3               =  -9.33892e-19
+ept_4               =  5.40899e-14
+ept_5               =  3.91416e-14
+ept_6               =  1.83507e-14
+ept_7               =  5.75105e-17
+ept_8               =  2.39048e-18
+ept_9               =  1.06491e-17
+ept_10              =  2.00215e-14
+ept_11              =  1.03650e-14
+ept_12              =  2.49414e-15
+ept_13              =  2.12520e-16
+vw_1_r              =  7.575000e-10
+vw_1_f              =  1.000000e+00
+vw_2_r              =  1.188000e-09
+vw_2_f              =  6.500000e-01
+vw_3_r              =  1.999999e-01
+vw_3_f              =  1.999999e-01
+vw_4_r              =  -9.871605e-01
+vw_4_f              =  -2.487967e-02
+vw_5_r              =  -8.755830e-01
+vw_5_f              =  -1.754053e-02
+vw_6_r              =  -5.318804e-01
+vw_6_f              =  -1.238980e-02
+vw_7_r              =  -2.143945e-03
+vw_7_f              =  -8.579487e-05
+vw_8_r              =  1.752662e-37
+vw_8_f              =  1.493895e-40
+vw_9_r              =  1.777544e-37
+vw_9_f              =  1.515103e-40
+vw_10_r             =  -6.338406e-01
+vw_10_f             =  -1.564970e-02
+vw_11_r             =  -4.762107e-01
+vw_11_f             =  -1.218911e-02
+vw_12_r             =  -2.004794e-01
+vw_12_f             =  -6.640626e-03
+vw_13_r             =  -2.153798e-02
+vw_13_f             =  -8.953611e-04
+vra_in_4            =  7.559470e-01
+vra_in_5            =  6.598317e-01
+vra_in_6            =  6.119722e-01
+vra_in_7            =  5.833310e-01
+vra_in_8            =  5.642712e-01
+vra_in_9            =  4.694559e-01
+vra_in_10           =  4.224165e-01
+vra_in_11           =  2.835182e-01
+vra_in_12           =  1.939988e-01
+vra_in_13           =  1.509035e-01
+vra_nxt_4           =  -2.425989e-04
+vrb_nxt_4           =  -7.435801e-01
+vra_nxt_10          =  -2.655561e-04
+vrb_nxt_10          =  -4.072784e-01
+eq_4                =   1.51500e-19 from=  1.00000e-08 to=  8.50000e-08
+eq_10               =   6.43500e-20 from=  1.00000e-08 to=  8.50000e-08
+e4_vdd              =   4.31251e-18 from=  9.50000e-08 to=  1.35000e-07
+e4_vss              =   1.08175e-13 from=  9.50000e-08 to=  1.35000e-07
+e4_vss_a            =   1.08262e-13 from=  9.90000e-08 to=  1.10000e-07
+e4_vss_r            =   -8.30878e-17 from=  1.10000e-07 to=  1.35000e-07
+i4_vss_ss           =  1.730876e-05
+i4_vdd_ss           =  -6.113778e-08
+i10_vss_ss          =  1.041245e-05
+
+
+Total analysis time (seconds) = 0.545774
+
+Total elapsed time (seconds) = 0.552 
+
+Total DRAM available = 61921.320 MB.
+DRAM currently available = 32907.555 MB.
+Maximum ngspice program size =   26.449 MB.
+Current ngspice program size =   15.801 MB.
+
+Shared ngspice pages =   10.801 MB.
+Text (code) pages =    7.578 MB.
+Stack = 0 bytes.
+Library pages =    5.043 MB.
+

@@ -1,0 +1,58 @@
+* =====================================================================
+* _dd_probe.cir -- calibrate the DIODE-DIRECTION receiver + dead-zone NOT
+* gate before building diode_gates.cir.
+*
+* Goal: find (a) the rail voltage rA/rB the diode rectifier asserts under
+* a real push/pull input, and (b) whether an elevated-Vt push/pull driver
+* gated by those rails gives a clean 3-state output (dead-zone null).
+* =====================================================================
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param VDD = 1.0
+.param VRAIL = 0.5
+
+* diode-connected MOSFET rectifier devices (low drop, VTO=0.3)
+.model ND NMOS(LEVEL=1 VTO=0.30 KP=200u LAMBDA=0.05 GAMMA=0 PHI=0.7 TOX=2n IS=0)
+* elevated-Vt driver devices (dead-zone: |Vt| between VDD and VDD+VRAIL)
+.model N_HI NMOS(LEVEL=1 VTO=1.2  KP=200u LAMBDA=0.05 TOX=2n)
+.model P_HI PMOS(LEVEL=1 VTO=-1.2 KP=100u LAMBDA=0.05 TOX=2n)
+
+* ---------- input wire driver: ideal-ish push/pull voltage source ---------
+* (wire swings +/- VDD; a real driver is added in the full netlist)
+Vin in 0 PULSE(0 {VDD} 10n 1n 1n 4n 200n)
+
+* ---------- diode rectifier (direction detection) ---------
+* push rectifier: wire -> rA (rA goes + on push)
+* pull rectifier: rB -> wire (rB goes - on pull)
+D1 in rA DD
+D2 rB in DD
+.model DD D (IS=1e-14 RS=50 CJO=0.2p TT=2n N=1.0)
+RkA rA 0 100k
+RkB rB 0 100k
+CkA rA 0 0.2p
+CkB rB 0 0.2p
+
+* ---------- NOT gate: elevated-Vt dead-zone driver ---------
+* push output (P_HI, source=+VDD, gate=rB): on iff rB pulled low (input pull)
+* pull output (N_HI, source=-VDD, gate=rA): on iff rA pushed high (input push)
+VDDN vdd 0 DC {VDD}
+VSSN vss 0 DC {-VDD}
+MPush out rB vdd vdd P_HI W=2u L=0.18u
+MPull out rA vss vss N_HI W=2u L=0.18u
+* output wire + return terminator
+Rw out owire 100
+Cwire owire 0 10f
+Rterm owire 0 100k
+
+.tran 50p 60n
+
+.meas tran vrA_push  MAX V(rA)  FROM=11n TO=15n
+.meas tran vrB_push  MIN V(rB)  FROM=11n TO=15n
+.meas tran vrA_null  MAX V(rA)  FROM=20n TO=26n
+.meas tran vrB_null  MIN V(rB)  FROM=20n TO=26n
+.meas tran vout_push FIND V(owire) AT=14n
+.meas tran vout_null FIND V(owire) AT=24n
+
+.print tran v(in) v(rA) v(rB) v(owire)
+
+.end

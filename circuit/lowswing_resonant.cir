@@ -1,0 +1,633 @@
+* =====================================================================
+* lowswing_resonant.cir  --  THE CUBOID CORNER:
+* LOW-SWING (partial-powering) x LC-RESONANT charge recovery in ONE
+* ternary cell.  Does the V^2 wire saving AND the tank charge recovery
+* COMPOSE, or does one lever's overhead dominate the other?
+*
+* Setup (fair-fight honesty rules, verbatim from ternary_adiabatic_fairfight.cir):
+*   - Cell:      ternary_cell UNCHANGED (rwire=500, cline=1p, DIDEAL diode
+*                receiver pair, rload=1Meg high-Z rails, cload=0.2p,
+*                rterm=1Meg).
+*   - Driver:    REAL half-bridge LC switches -- MPP (PMOS to +VLC rail),
+*                MN0 (NMOS to 0 V, body at -VLC), MNN (NMOS to -VLC rail,
+*                body at -VLC), each closed for T/2 = pi*sqrt(L*C) and
+*                opened at the ring current zero-crossing.  Rbig+CAC
+*                stabilize the near-zero-cap LC node (fairfight verbatim).
+*   - Receiver:  REAL PMOS-input clocked sense amps (VDDSA=1.0 V LOCAL --
+*                "power the receiver locally", same as lowswing_sweep.cir).
+*   - Power-clock: the LC rails VLCP/VLCN are ideal DC supplies that
+*                ACCEPT the return current (recovery is measured as a
+*                NEGATIVE supply integral, fairfight convention).
+*
+* THE LOW-SWING LEVER: VLC dropped from +-0.6 V (line rings to +-1.04 V)
+* to +-0.36 V (line ~ +-0.65 V) and +-0.28 V (line ~ +-0.5 V).
+*   VLC=0.36 -> line ~ 0.66 V measured ("0.65 V swing" case)
+*   VLC=0.28 -> line ~ 0.51 V measured ("0.5 V swing" case)
+*
+* THE VT WALL (honest): with the STOCK push drive (gate VLC<->0) the push
+* PMOS has |Vgs| = VLC, so it is below threshold (|Vt|=0.4) below
+* VLC~0.4 V -- the SAME device wall lowswing_sweep.cir found (FAIR driver
+* dead below VDDR~0.5 V).  Case C0 demonstrates this death (line never
+* swings, dA_push only ~42 mV, the cycle degenerates into one uncontrolled
+* ring through the reset switch).  The reduced cases therefore use
+* NEGATIVE GATE DRIVE on the push switch (gate VLCP<->VLCN, Vgs = -2*VLC),
+* the same class of real-process fix the fairfight already applies to the
+* pull switch (its off level is -0.6 V).
+*
+* Energy accounting (all measured, one window each):
+*   E_drv   = INTEG V(pwpLC_k)  = -(V(vlcp_k)*I(VLCP_k)+V(vlcn_k)*I(VLCN_k))
+*             over the phase window.  POSITIVE = delivered; NEGATIVE =
+*             recovered to the power-clock (the reset phase).
+*   E_cell  = INTEG V(inC_k)*I(VsC_k)  = energy into the cell at the
+*             driver side (apples-to-apples with the old cell-only meas).
+*   E_rec   = INTEG V(pwpSA) over the eval window (sense-amp supply,
+*             both SAs; each eval sits in a GAP between phases so it does
+*             not overlap a ring -- the rails hold their assert, tau=200ns).
+*   E_trit_drv  = (E_push+E_pull+E_reset)/3      (fairfight convention)
+*   E_trit_full = E_trit_drv + E_rec_avg         (lowswing convention,
+*                 apples-to-apples with 0.092 pJ/bit which includes iface)
+*   pJ/bit  = E_trit_full / log2(3) = /1.585
+*   RESOLUTION: rail asserts rA_pk / rB_min + latch differentials
+*             dA/dB at the demux time (mid-eval); null baseline ~+-4 mV
+*             (lowswing measured); <10 mV or wrong sign = FAIL.
+*   PEAK I  = supply current peak during push (I(VLCP)) and reset
+*             (I(VLCN)); di/dt via ddt() probes.
+*
+* Cases (one full push+pull+reset cycle each, time-multiplexed):
+*   REF : VLC=0.60 L=40u  -- full-swing reference (validate vs fairfight)
+*   C0  : VLC=0.36 L=40u  -- STOCK push drive: driver-dead demonstration
+*   A1-3: VLC=0.36 L=40/20/9.4u -- swing ~0.65 V, neg gate drive
+*   B1-3: VLC=0.28 L=40/20/9.4u -- swing ~0.5 V, neg gate drive
+*
+* MEASURED (ngspice 44.2, E in pJ; per-trit = cycle/3; pJ/bit = /1.585):
+*   REF:  push 0.862, pull ~0, reset -0.082 (RECOVERY) -> cycle 0.700
+*   C0 :  push 0.000 (DEAD: |Vgs|=0.36 < |Vt|=0.4, line never swings)
+*   A1 :  push 0.318, pull ~0, reset -0.093 (RECOVERY) -> cycle 0.221
+*   A2 :  push 0.306, pull ~0, reset -0.011 (marginal) -> cycle 0.286
+*   A3 :  push 0.276, pull ~0, reset +0.041 (DEAD, L too small) -> cycle 0.316
+*   B1 :  push 0.192, pull ~0, reset -0.069 (RECOVERY) -> cycle 0.124
+*   B2 :  push 0.187, pull ~0, reset -0.004 (marginal) -> cycle 0.184
+*   B3 :  push 0.178, pull ~0, reset +0.010 (DEAD, L too small) -> cycle 0.191
+*   DRIVER-ONLY per-trit (pJ/bit): REF 0.233 (0.147) | A1 0.074 (0.046)
+*     A2 0.095 (0.060) | A3 0.105 (0.066) | B1 0.041 (0.026) | B2 0.061
+*     (0.039) | B3 0.064 (0.040).  WITH receiver (2 SAs, ~0.05-0.10 pJ/trit):
+*     A1 0.157 (0.099) | B1 0.128 (0.081)  [vs lowswing 0.145 (0.092);
+*     vs full-swing LC 0.210-0.266 (0.133-0.168)]
+*   RESOLUTION (mid-eval latch diff dA_push): REF +0.99 | A1 +0.86 | A2
+*     +0.84 | A3 +0.83 | B1 +0.80 | B2 +0.80 | B3 +0.80  (OK >= 0.80,
+*     vs ~+/-4 mV null baseline; C0 +0.03 = FAIL).  Rail asserts: REF 0.596
+*     -> A1 0.336 -> B1 0.255 V (receiver resolves at all reduced swings).
+*   NULL caveat (all swings, not low-swing-specific): the 1 M-ohm rails
+*     hold their asserts for tau=200 ns, so the reset/null eval reads the
+*     previous pull state unless rail equalization is added (fairfight
+*     caveat (b), ~0.05 pJ).
+*   CURRENT: peak push supply I: REF 95.5 -> A1 57.8 -> B1 44.4 uA (falls
+*     ~proportional to swing); di/dt 0.17-0.30 A/us at every swing (vs
+*     37-56 A/us fast lowswing driver, 376-1128 VTENG) -- low swing tames
+*     the resonant current, does not worsen di/dt.
+*   VERDICT: the V^2 lever and the charge-recovery lever COMPOSE on the
+*     wire/tank (cycle 0.700 -> 0.124 pJ, better than V^2 scaling; reset
+*     recovery is solid at L=40uH [-0.093/-0.069], marginal at 20uH
+*     [-0.011/-0.004], dead at 9.4uH [+0.041/+0.010] -- the same L-wall
+*     the full-swing fairfight hit, not a low-swing regression).  With
+*     the receiver, the best cuboid corner is B1: 0.081 pJ/bit, 12%
+*     below the lowswing-only 0.092 and 39% below the LC-only 0.133 --
+*     but the fixed local receiver (0.08-0.10 pJ/trit) is now the
+*     dominant term, capping the composition.
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+* ---------- models (verbatim fairfight / binary_baseline) ----------
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4 KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+.model DIDEAL D (IS=1e-14 RS=50 CJO=0.2p TT=2n N=1.0)
+
+* ---------- cell (verbatim fairfight) ----------
+.subckt ternary_cell in rA rB rwire=500 cline=1p rload=1meg cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+D1 x rA DIDEAL
+D2 rB x DIDEAL
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+* ---------- real receiver (verbatim fairfight sensamp) ----------
+* out = high when inP < inM (PMOS conducts more on the lower input).
+.subckt sensamp inP inM clk vddsa out outb
+M1 out  inP cs cs PMOS1 W=1u  L=0.18u
+M2 outb inM cs cs PMOS1 W=1u  L=0.18u
+M5 cs   clk vddsa vddsa PMOS1 W=0.3u L=0.18u
+M3 out  outb 0 0 NMOS1 W=0.5u L=0.18u
+M4 outb out  0 0 NMOS1 W=0.5u L=0.18u
+M6 out  clk  0 0 NMOS1 W=0.5u L=0.18u
+M7 outb clk  0 0 NMOS1 W=0.5u L=0.18u
+CLo  out  0 5f
+CLob outb 0 5f
+.ends
+
+* ---------- shared receiver supply + probe ----------
+VDDSA vddsa 0 DC 1.0
+BpSA  pwpSA  0 V = -(V(vddsa)*I(VDDSA))
+
+* ================= CASE REF: VLC=+-0.60 V, L=40.0u, T/2=20.71n (full-swing reference (fairfight case C clone)) =================
+VLCP_ref vlcp_ref 0 DC 0.60
+VLCN_ref vlcn_ref 0 DC -0.60
+BpLC_ref pwpLC_ref 0 V = -(V(vlcp_ref)*I(VLCP_ref) + V(vlcn_ref)*I(VLCN_ref))
+BdidtP_ref didtP_ref 0 V = -ddt(I(VLCP_ref))
+BdidtN_ref didtN_ref 0 V =  ddt(I(VLCN_ref))
+MPP_ref a_ref gPP_ref vlcp_ref vlcp_ref PMOS1 W=60u L=0.18u
+VgPP_ref gPP_ref 0 PWL(0 0.60 100.00n 0.60 103.00n 0.00 123.71n 0.00 126.71n 0.60)
+MN0_ref a_ref gN0_ref 0 vlcn_ref NMOS1 W=10u L=0.18u
+VgN0_ref gN0_ref 0 PWL(0 -0.60 132.71n -0.60 135.71n 1.0 156.41n 1.0 159.41n -0.60)
+MNN_ref a_ref gNN_ref vlcn_ref vlcn_ref NMOS1 W=10u L=0.18u
+VgNN_ref gNN_ref 0 PWL(0 -0.60 165.41n -0.60 168.41n 0.40 189.12n 0.40 192.12n -0.60)
+Rbig_ref a_ref 0 100meg
+CAC_ref  a_ref 0 100f
+L_ref a_ref d_ref 40.00u
+Vs_ref d_ref in_ref DC 0
+X_ref in_ref rA_ref rB_ref ternary_cell
+BpC_ref pwC_ref 0 V = V(in_ref)*I(Vs_ref)
+BpG_ref pwG_ref 0 V = V(gPP_ref)*I(VgPP_ref) + V(gN0_ref)*I(VgN0_ref) + V(gNN_ref)*I(VgNN_ref)
+Vclk_ref clk_ref 0 PWL(0 1 128.21n 1 128.71n 0 130.71n 0 131.21n 1 160.91n 1 161.41n 0 163.41n 0 163.91n 1 193.62n 1 194.12n 0 196.12n 0 196.62n 1)
+XsaA_ref 0 rA_ref clk_ref vddsa outA_ref outAb_ref sensamp
+XsaB_ref rB_ref 0 clk_ref vddsa outB_ref outBb_ref sensamp
+BdA_ref vdA_ref 0 V = V(outA_ref)-V(outAb_ref)
+BdB_ref vdB_ref 0 V = V(outB_ref)-V(outBb_ref)
+
+* --- measurements REF ---
+.meas tran epush_ref_drv  INTEG V(pwpLC_ref) FROM=100.00n TO=126.71n
+.meas tran epush_ref_cell INTEG V(pwC_ref)   FROM=100.00n TO=126.71n
+.meas tran epush_ref_gate INTEG V(pwG_ref)   FROM=100.00n TO=126.71n
+.meas tran epush_ref_rec  INTEG V(pwpSA) FROM=128.71n TO=133.71n
+.meas tran epull_ref_drv  INTEG V(pwpLC_ref) FROM=132.71n TO=159.41n
+.meas tran epull_ref_cell INTEG V(pwC_ref)   FROM=132.71n TO=159.41n
+.meas tran epull_ref_gate INTEG V(pwG_ref)   FROM=132.71n TO=159.41n
+.meas tran epull_ref_rec  INTEG V(pwpSA) FROM=161.41n TO=166.41n
+.meas tran ereset_ref_drv  INTEG V(pwpLC_ref) FROM=165.41n TO=192.12n
+.meas tran ereset_ref_cell INTEG V(pwC_ref)   FROM=165.41n TO=192.12n
+.meas tran ereset_ref_gate INTEG V(pwG_ref)   FROM=165.41n TO=192.12n
+.meas tran ereset_ref_rec  INTEG V(pwpSA) FROM=194.12n TO=199.12n
+.meas tran ecyc_ref      INTEG V(pwpLC_ref) FROM=100.00n TO=192.12n
+.meas tran line_ref_pk   MAX V(in_ref) FROM=100.00n TO=126.71n
+.meas tran line_ref_min  MIN V(in_ref) FROM=132.71n TO=159.41n
+.meas tran line_ref_end  FIND V(in_ref) AT=198.12n
+.meas tran railA_ref_pk  MAX V(rA_ref) FROM=103.00n TO=126.71n
+.meas tran railB_ref_min MIN V(rB_ref) FROM=135.71n TO=159.41n
+.meas tran demA_push_ref FIND V(outA_ref) AT=129.71n
+.meas tran demB_push_ref FIND V(outB_ref) AT=129.71n
+.meas tran dA_push_ref   FIND V(vdA_ref)  AT=129.71n
+.meas tran dB_push_ref   FIND V(vdB_ref)  AT=129.71n
+.meas tran demA_pull_ref FIND V(outA_ref) AT=162.41n
+.meas tran demB_pull_ref FIND V(outB_ref) AT=162.41n
+.meas tran dA_pull_ref   FIND V(vdA_ref)  AT=162.41n
+.meas tran dB_pull_ref   FIND V(vdB_ref)  AT=162.41n
+.meas tran demA_reset_ref FIND V(outA_ref) AT=195.12n
+.meas tran demB_reset_ref FIND V(outB_ref) AT=195.12n
+.meas tran dA_reset_ref  FIND V(vdA_ref)  AT=195.12n
+.meas tran dB_reset_ref  FIND V(vdB_ref)  AT=195.12n
+.meas tran ipkP_ref MIN I(VLCP_ref) FROM=103.00n TO=126.71n
+.meas tran ipkN_ref MAX I(VLCN_ref) FROM=168.41n TO=192.12n
+.meas tran didtP_ref MAX V(didtP_ref) FROM=103.00n TO=126.71n
+.meas tran didtN_ref MAX V(didtN_ref) FROM=168.41n TO=192.12n
+
+* ================= CASE C0: VLC=+-0.36 V, L=40.0u, T/2=20.71n (stock push drive 0.36<->0: |Vgs|=0.36 < |Vt|=0.4 -> push PMOS below threshold (driver-dead demo)) =================
+VLCP_c0 vlcp_c0 0 DC 0.36
+VLCN_c0 vlcn_c0 0 DC -0.36
+BpLC_c0 pwpLC_c0 0 V = -(V(vlcp_c0)*I(VLCP_c0) + V(vlcn_c0)*I(VLCN_c0))
+BdidtP_c0 didtP_c0 0 V = -ddt(I(VLCP_c0))
+BdidtN_c0 didtN_c0 0 V =  ddt(I(VLCN_c0))
+MPP_c0 a_c0 gPP_c0 vlcp_c0 vlcp_c0 PMOS1 W=60u L=0.18u
+VgPP_c0 gPP_c0 0 PWL(0 0.36 260.00n 0.36 263.00n 0.00 283.71n 0.00 286.71n 0.36)
+MN0_c0 a_c0 gN0_c0 0 vlcn_c0 NMOS1 W=10u L=0.18u
+VgN0_c0 gN0_c0 0 PWL(0 -0.36 292.71n -0.36 295.71n 1.0 316.41n 1.0 319.41n -0.36)
+MNN_c0 a_c0 gNN_c0 vlcn_c0 vlcn_c0 NMOS1 W=10u L=0.18u
+VgNN_c0 gNN_c0 0 PWL(0 -0.36 325.41n -0.36 328.41n 1.36 349.12n 1.36 352.12n -0.36)
+Rbig_c0 a_c0 0 100meg
+CAC_c0  a_c0 0 100f
+L_c0 a_c0 d_c0 40.00u
+Vs_c0 d_c0 in_c0 DC 0
+X_c0 in_c0 rA_c0 rB_c0 ternary_cell
+BpC_c0 pwC_c0 0 V = V(in_c0)*I(Vs_c0)
+BpG_c0 pwG_c0 0 V = V(gPP_c0)*I(VgPP_c0) + V(gN0_c0)*I(VgN0_c0) + V(gNN_c0)*I(VgNN_c0)
+Vclk_c0 clk_c0 0 PWL(0 1 288.21n 1 288.71n 0 290.71n 0 291.21n 1 320.91n 1 321.41n 0 323.41n 0 323.91n 1 353.62n 1 354.12n 0 356.12n 0 356.62n 1)
+XsaA_c0 0 rA_c0 clk_c0 vddsa outA_c0 outAb_c0 sensamp
+XsaB_c0 rB_c0 0 clk_c0 vddsa outB_c0 outBb_c0 sensamp
+BdA_c0 vdA_c0 0 V = V(outA_c0)-V(outAb_c0)
+BdB_c0 vdB_c0 0 V = V(outB_c0)-V(outBb_c0)
+
+* --- measurements C0 ---
+.meas tran epush_c0_drv  INTEG V(pwpLC_c0) FROM=260.00n TO=286.71n
+.meas tran epush_c0_cell INTEG V(pwC_c0)   FROM=260.00n TO=286.71n
+.meas tran epush_c0_gate INTEG V(pwG_c0)   FROM=260.00n TO=286.71n
+.meas tran epush_c0_rec  INTEG V(pwpSA) FROM=288.71n TO=293.71n
+.meas tran epull_c0_drv  INTEG V(pwpLC_c0) FROM=292.71n TO=319.41n
+.meas tran epull_c0_cell INTEG V(pwC_c0)   FROM=292.71n TO=319.41n
+.meas tran epull_c0_gate INTEG V(pwG_c0)   FROM=292.71n TO=319.41n
+.meas tran epull_c0_rec  INTEG V(pwpSA) FROM=321.41n TO=326.41n
+.meas tran ereset_c0_drv  INTEG V(pwpLC_c0) FROM=325.41n TO=352.12n
+.meas tran ereset_c0_cell INTEG V(pwC_c0)   FROM=325.41n TO=352.12n
+.meas tran ereset_c0_gate INTEG V(pwG_c0)   FROM=325.41n TO=352.12n
+.meas tran ereset_c0_rec  INTEG V(pwpSA) FROM=354.12n TO=359.12n
+.meas tran ecyc_c0      INTEG V(pwpLC_c0) FROM=260.00n TO=352.12n
+.meas tran line_c0_pk   MAX V(in_c0) FROM=260.00n TO=286.71n
+.meas tran line_c0_min  MIN V(in_c0) FROM=292.71n TO=319.41n
+.meas tran line_c0_end  FIND V(in_c0) AT=358.12n
+.meas tran railA_c0_pk  MAX V(rA_c0) FROM=263.00n TO=286.71n
+.meas tran railB_c0_min MIN V(rB_c0) FROM=295.71n TO=319.41n
+.meas tran demA_push_c0 FIND V(outA_c0) AT=289.71n
+.meas tran demB_push_c0 FIND V(outB_c0) AT=289.71n
+.meas tran dA_push_c0   FIND V(vdA_c0)  AT=289.71n
+.meas tran dB_push_c0   FIND V(vdB_c0)  AT=289.71n
+.meas tran demA_pull_c0 FIND V(outA_c0) AT=322.41n
+.meas tran demB_pull_c0 FIND V(outB_c0) AT=322.41n
+.meas tran dA_pull_c0   FIND V(vdA_c0)  AT=322.41n
+.meas tran dB_pull_c0   FIND V(vdB_c0)  AT=322.41n
+.meas tran demA_reset_c0 FIND V(outA_c0) AT=355.12n
+.meas tran demB_reset_c0 FIND V(outB_c0) AT=355.12n
+.meas tran dA_reset_c0  FIND V(vdA_c0)  AT=355.12n
+.meas tran dB_reset_c0  FIND V(vdB_c0)  AT=355.12n
+.meas tran ipkP_c0 MIN I(VLCP_c0) FROM=263.00n TO=286.71n
+.meas tran ipkN_c0 MAX I(VLCN_c0) FROM=328.41n TO=352.12n
+.meas tran didtP_c0 MAX V(didtP_c0) FROM=263.00n TO=286.71n
+.meas tran didtN_c0 MAX V(didtN_c0) FROM=328.41n TO=352.12n
+
+* ================= CASE A1: VLC=+-0.36 V, L=40.0u, T/2=20.71n (swing 0.65 V, L=40uH) =================
+VLCP_a1 vlcp_a1 0 DC 0.36
+VLCN_a1 vlcn_a1 0 DC -0.36
+BpLC_a1 pwpLC_a1 0 V = -(V(vlcp_a1)*I(VLCP_a1) + V(vlcn_a1)*I(VLCN_a1))
+BdidtP_a1 didtP_a1 0 V = -ddt(I(VLCP_a1))
+BdidtN_a1 didtN_a1 0 V =  ddt(I(VLCN_a1))
+MPP_a1 a_a1 gPP_a1 vlcp_a1 vlcp_a1 PMOS1 W=60u L=0.18u
+VgPP_a1 gPP_a1 0 PWL(0 0.36 420.00n 0.36 423.00n -0.36 443.71n -0.36 446.71n 0.36)
+MN0_a1 a_a1 gN0_a1 0 vlcn_a1 NMOS1 W=10u L=0.18u
+VgN0_a1 gN0_a1 0 PWL(0 -0.36 452.71n -0.36 455.71n 1.0 476.41n 1.0 479.41n -0.36)
+MNN_a1 a_a1 gNN_a1 vlcn_a1 vlcn_a1 NMOS1 W=10u L=0.18u
+VgNN_a1 gNN_a1 0 PWL(0 -0.36 485.41n -0.36 488.41n 1.36 509.12n 1.36 512.12n -0.36)
+Rbig_a1 a_a1 0 100meg
+CAC_a1  a_a1 0 100f
+L_a1 a_a1 d_a1 40.00u
+Vs_a1 d_a1 in_a1 DC 0
+X_a1 in_a1 rA_a1 rB_a1 ternary_cell
+BpC_a1 pwC_a1 0 V = V(in_a1)*I(Vs_a1)
+BpG_a1 pwG_a1 0 V = V(gPP_a1)*I(VgPP_a1) + V(gN0_a1)*I(VgN0_a1) + V(gNN_a1)*I(VgNN_a1)
+Vclk_a1 clk_a1 0 PWL(0 1 448.21n 1 448.71n 0 450.71n 0 451.21n 1 480.91n 1 481.41n 0 483.41n 0 483.91n 1 513.62n 1 514.12n 0 516.12n 0 516.62n 1)
+XsaA_a1 0 rA_a1 clk_a1 vddsa outA_a1 outAb_a1 sensamp
+XsaB_a1 rB_a1 0 clk_a1 vddsa outB_a1 outBb_a1 sensamp
+BdA_a1 vdA_a1 0 V = V(outA_a1)-V(outAb_a1)
+BdB_a1 vdB_a1 0 V = V(outB_a1)-V(outBb_a1)
+
+* --- measurements A1 ---
+.meas tran epush_a1_drv  INTEG V(pwpLC_a1) FROM=420.00n TO=446.71n
+.meas tran epush_a1_cell INTEG V(pwC_a1)   FROM=420.00n TO=446.71n
+.meas tran epush_a1_gate INTEG V(pwG_a1)   FROM=420.00n TO=446.71n
+.meas tran epush_a1_rec  INTEG V(pwpSA) FROM=448.71n TO=453.71n
+.meas tran epull_a1_drv  INTEG V(pwpLC_a1) FROM=452.71n TO=479.41n
+.meas tran epull_a1_cell INTEG V(pwC_a1)   FROM=452.71n TO=479.41n
+.meas tran epull_a1_gate INTEG V(pwG_a1)   FROM=452.71n TO=479.41n
+.meas tran epull_a1_rec  INTEG V(pwpSA) FROM=481.41n TO=486.41n
+.meas tran ereset_a1_drv  INTEG V(pwpLC_a1) FROM=485.41n TO=512.12n
+.meas tran ereset_a1_cell INTEG V(pwC_a1)   FROM=485.41n TO=512.12n
+.meas tran ereset_a1_gate INTEG V(pwG_a1)   FROM=485.41n TO=512.12n
+.meas tran ereset_a1_rec  INTEG V(pwpSA) FROM=514.12n TO=519.12n
+.meas tran ecyc_a1      INTEG V(pwpLC_a1) FROM=420.00n TO=512.12n
+.meas tran line_a1_pk   MAX V(in_a1) FROM=420.00n TO=446.71n
+.meas tran line_a1_min  MIN V(in_a1) FROM=452.71n TO=479.41n
+.meas tran line_a1_end  FIND V(in_a1) AT=518.12n
+.meas tran railA_a1_pk  MAX V(rA_a1) FROM=423.00n TO=446.71n
+.meas tran railB_a1_min MIN V(rB_a1) FROM=455.71n TO=479.41n
+.meas tran demA_push_a1 FIND V(outA_a1) AT=449.71n
+.meas tran demB_push_a1 FIND V(outB_a1) AT=449.71n
+.meas tran dA_push_a1   FIND V(vdA_a1)  AT=449.71n
+.meas tran dB_push_a1   FIND V(vdB_a1)  AT=449.71n
+.meas tran demA_pull_a1 FIND V(outA_a1) AT=482.41n
+.meas tran demB_pull_a1 FIND V(outB_a1) AT=482.41n
+.meas tran dA_pull_a1   FIND V(vdA_a1)  AT=482.41n
+.meas tran dB_pull_a1   FIND V(vdB_a1)  AT=482.41n
+.meas tran demA_reset_a1 FIND V(outA_a1) AT=515.12n
+.meas tran demB_reset_a1 FIND V(outB_a1) AT=515.12n
+.meas tran dA_reset_a1  FIND V(vdA_a1)  AT=515.12n
+.meas tran dB_reset_a1  FIND V(vdB_a1)  AT=515.12n
+.meas tran ipkP_a1 MIN I(VLCP_a1) FROM=423.00n TO=446.71n
+.meas tran ipkN_a1 MAX I(VLCN_a1) FROM=488.41n TO=512.12n
+.meas tran didtP_a1 MAX V(didtP_a1) FROM=423.00n TO=446.71n
+.meas tran didtN_a1 MAX V(didtN_a1) FROM=488.41n TO=512.12n
+
+* ================= CASE A2: VLC=+-0.36 V, L=20.0u, T/2=14.64n (swing 0.65 V, L=20uH) =================
+VLCP_a2 vlcp_a2 0 DC 0.36
+VLCN_a2 vlcn_a2 0 DC -0.36
+BpLC_a2 pwpLC_a2 0 V = -(V(vlcp_a2)*I(VLCP_a2) + V(vlcn_a2)*I(VLCN_a2))
+BdidtP_a2 didtP_a2 0 V = -ddt(I(VLCP_a2))
+BdidtN_a2 didtN_a2 0 V =  ddt(I(VLCN_a2))
+MPP_a2 a_a2 gPP_a2 vlcp_a2 vlcp_a2 PMOS1 W=60u L=0.18u
+VgPP_a2 gPP_a2 0 PWL(0 0.36 580.00n 0.36 583.00n -0.36 597.64n -0.36 600.64n 0.36)
+MN0_a2 a_a2 gN0_a2 0 vlcn_a2 NMOS1 W=10u L=0.18u
+VgN0_a2 gN0_a2 0 PWL(0 -0.36 606.64n -0.36 609.64n 1.0 624.28n 1.0 627.28n -0.36)
+MNN_a2 a_a2 gNN_a2 vlcn_a2 vlcn_a2 NMOS1 W=10u L=0.18u
+VgNN_a2 gNN_a2 0 PWL(0 -0.36 633.28n -0.36 636.28n 1.36 650.92n 1.36 653.92n -0.36)
+Rbig_a2 a_a2 0 100meg
+CAC_a2  a_a2 0 100f
+L_a2 a_a2 d_a2 20.00u
+Vs_a2 d_a2 in_a2 DC 0
+X_a2 in_a2 rA_a2 rB_a2 ternary_cell
+BpC_a2 pwC_a2 0 V = V(in_a2)*I(Vs_a2)
+BpG_a2 pwG_a2 0 V = V(gPP_a2)*I(VgPP_a2) + V(gN0_a2)*I(VgN0_a2) + V(gNN_a2)*I(VgNN_a2)
+Vclk_a2 clk_a2 0 PWL(0 1 602.14n 1 602.64n 0 604.64n 0 605.14n 1 628.78n 1 629.28n 0 631.28n 0 631.78n 1 655.42n 1 655.92n 0 657.92n 0 658.42n 1)
+XsaA_a2 0 rA_a2 clk_a2 vddsa outA_a2 outAb_a2 sensamp
+XsaB_a2 rB_a2 0 clk_a2 vddsa outB_a2 outBb_a2 sensamp
+BdA_a2 vdA_a2 0 V = V(outA_a2)-V(outAb_a2)
+BdB_a2 vdB_a2 0 V = V(outB_a2)-V(outBb_a2)
+
+* --- measurements A2 ---
+.meas tran epush_a2_drv  INTEG V(pwpLC_a2) FROM=580.00n TO=600.64n
+.meas tran epush_a2_cell INTEG V(pwC_a2)   FROM=580.00n TO=600.64n
+.meas tran epush_a2_gate INTEG V(pwG_a2)   FROM=580.00n TO=600.64n
+.meas tran epush_a2_rec  INTEG V(pwpSA) FROM=602.64n TO=607.64n
+.meas tran epull_a2_drv  INTEG V(pwpLC_a2) FROM=606.64n TO=627.28n
+.meas tran epull_a2_cell INTEG V(pwC_a2)   FROM=606.64n TO=627.28n
+.meas tran epull_a2_gate INTEG V(pwG_a2)   FROM=606.64n TO=627.28n
+.meas tran epull_a2_rec  INTEG V(pwpSA) FROM=629.28n TO=634.28n
+.meas tran ereset_a2_drv  INTEG V(pwpLC_a2) FROM=633.28n TO=653.92n
+.meas tran ereset_a2_cell INTEG V(pwC_a2)   FROM=633.28n TO=653.92n
+.meas tran ereset_a2_gate INTEG V(pwG_a2)   FROM=633.28n TO=653.92n
+.meas tran ereset_a2_rec  INTEG V(pwpSA) FROM=655.92n TO=660.92n
+.meas tran ecyc_a2      INTEG V(pwpLC_a2) FROM=580.00n TO=653.92n
+.meas tran line_a2_pk   MAX V(in_a2) FROM=580.00n TO=600.64n
+.meas tran line_a2_min  MIN V(in_a2) FROM=606.64n TO=627.28n
+.meas tran line_a2_end  FIND V(in_a2) AT=659.92n
+.meas tran railA_a2_pk  MAX V(rA_a2) FROM=583.00n TO=600.64n
+.meas tran railB_a2_min MIN V(rB_a2) FROM=609.64n TO=627.28n
+.meas tran demA_push_a2 FIND V(outA_a2) AT=603.64n
+.meas tran demB_push_a2 FIND V(outB_a2) AT=603.64n
+.meas tran dA_push_a2   FIND V(vdA_a2)  AT=603.64n
+.meas tran dB_push_a2   FIND V(vdB_a2)  AT=603.64n
+.meas tran demA_pull_a2 FIND V(outA_a2) AT=630.28n
+.meas tran demB_pull_a2 FIND V(outB_a2) AT=630.28n
+.meas tran dA_pull_a2   FIND V(vdA_a2)  AT=630.28n
+.meas tran dB_pull_a2   FIND V(vdB_a2)  AT=630.28n
+.meas tran demA_reset_a2 FIND V(outA_a2) AT=656.92n
+.meas tran demB_reset_a2 FIND V(outB_a2) AT=656.92n
+.meas tran dA_reset_a2  FIND V(vdA_a2)  AT=656.92n
+.meas tran dB_reset_a2  FIND V(vdB_a2)  AT=656.92n
+.meas tran ipkP_a2 MIN I(VLCP_a2) FROM=583.00n TO=600.64n
+.meas tran ipkN_a2 MAX I(VLCN_a2) FROM=636.28n TO=653.92n
+.meas tran didtP_a2 MAX V(didtP_a2) FROM=583.00n TO=600.64n
+.meas tran didtN_a2 MAX V(didtN_a2) FROM=636.28n TO=653.92n
+
+* ================= CASE A3: VLC=+-0.36 V, L=9.4u, T/2=10.04n (swing 0.65 V, L=9.4uH) =================
+VLCP_a3 vlcp_a3 0 DC 0.36
+VLCN_a3 vlcn_a3 0 DC -0.36
+BpLC_a3 pwpLC_a3 0 V = -(V(vlcp_a3)*I(VLCP_a3) + V(vlcn_a3)*I(VLCN_a3))
+BdidtP_a3 didtP_a3 0 V = -ddt(I(VLCP_a3))
+BdidtN_a3 didtN_a3 0 V =  ddt(I(VLCN_a3))
+MPP_a3 a_a3 gPP_a3 vlcp_a3 vlcp_a3 PMOS1 W=60u L=0.18u
+VgPP_a3 gPP_a3 0 PWL(0 0.36 720.00n 0.36 723.00n -0.36 733.04n -0.36 736.04n 0.36)
+MN0_a3 a_a3 gN0_a3 0 vlcn_a3 NMOS1 W=10u L=0.18u
+VgN0_a3 gN0_a3 0 PWL(0 -0.36 742.04n -0.36 745.04n 1.0 755.08n 1.0 758.08n -0.36)
+MNN_a3 a_a3 gNN_a3 vlcn_a3 vlcn_a3 NMOS1 W=10u L=0.18u
+VgNN_a3 gNN_a3 0 PWL(0 -0.36 764.08n -0.36 767.08n 1.36 777.11n 1.36 780.11n -0.36)
+Rbig_a3 a_a3 0 100meg
+CAC_a3  a_a3 0 100f
+L_a3 a_a3 d_a3 9.40u
+Vs_a3 d_a3 in_a3 DC 0
+X_a3 in_a3 rA_a3 rB_a3 ternary_cell
+BpC_a3 pwC_a3 0 V = V(in_a3)*I(Vs_a3)
+BpG_a3 pwG_a3 0 V = V(gPP_a3)*I(VgPP_a3) + V(gN0_a3)*I(VgN0_a3) + V(gNN_a3)*I(VgNN_a3)
+Vclk_a3 clk_a3 0 PWL(0 1 737.54n 1 738.04n 0 740.04n 0 740.54n 1 759.58n 1 760.08n 0 762.08n 0 762.58n 1 781.61n 1 782.11n 0 784.11n 0 784.61n 1)
+XsaA_a3 0 rA_a3 clk_a3 vddsa outA_a3 outAb_a3 sensamp
+XsaB_a3 rB_a3 0 clk_a3 vddsa outB_a3 outBb_a3 sensamp
+BdA_a3 vdA_a3 0 V = V(outA_a3)-V(outAb_a3)
+BdB_a3 vdB_a3 0 V = V(outB_a3)-V(outBb_a3)
+
+* --- measurements A3 ---
+.meas tran epush_a3_drv  INTEG V(pwpLC_a3) FROM=720.00n TO=736.04n
+.meas tran epush_a3_cell INTEG V(pwC_a3)   FROM=720.00n TO=736.04n
+.meas tran epush_a3_gate INTEG V(pwG_a3)   FROM=720.00n TO=736.04n
+.meas tran epush_a3_rec  INTEG V(pwpSA) FROM=738.04n TO=743.04n
+.meas tran epull_a3_drv  INTEG V(pwpLC_a3) FROM=742.04n TO=758.08n
+.meas tran epull_a3_cell INTEG V(pwC_a3)   FROM=742.04n TO=758.08n
+.meas tran epull_a3_gate INTEG V(pwG_a3)   FROM=742.04n TO=758.08n
+.meas tran epull_a3_rec  INTEG V(pwpSA) FROM=760.08n TO=765.08n
+.meas tran ereset_a3_drv  INTEG V(pwpLC_a3) FROM=764.08n TO=780.11n
+.meas tran ereset_a3_cell INTEG V(pwC_a3)   FROM=764.08n TO=780.11n
+.meas tran ereset_a3_gate INTEG V(pwG_a3)   FROM=764.08n TO=780.11n
+.meas tran ereset_a3_rec  INTEG V(pwpSA) FROM=782.11n TO=787.11n
+.meas tran ecyc_a3      INTEG V(pwpLC_a3) FROM=720.00n TO=780.11n
+.meas tran line_a3_pk   MAX V(in_a3) FROM=720.00n TO=736.04n
+.meas tran line_a3_min  MIN V(in_a3) FROM=742.04n TO=758.08n
+.meas tran line_a3_end  FIND V(in_a3) AT=786.11n
+.meas tran railA_a3_pk  MAX V(rA_a3) FROM=723.00n TO=736.04n
+.meas tran railB_a3_min MIN V(rB_a3) FROM=745.04n TO=758.08n
+.meas tran demA_push_a3 FIND V(outA_a3) AT=739.04n
+.meas tran demB_push_a3 FIND V(outB_a3) AT=739.04n
+.meas tran dA_push_a3   FIND V(vdA_a3)  AT=739.04n
+.meas tran dB_push_a3   FIND V(vdB_a3)  AT=739.04n
+.meas tran demA_pull_a3 FIND V(outA_a3) AT=761.08n
+.meas tran demB_pull_a3 FIND V(outB_a3) AT=761.08n
+.meas tran dA_pull_a3   FIND V(vdA_a3)  AT=761.08n
+.meas tran dB_pull_a3   FIND V(vdB_a3)  AT=761.08n
+.meas tran demA_reset_a3 FIND V(outA_a3) AT=783.11n
+.meas tran demB_reset_a3 FIND V(outB_a3) AT=783.11n
+.meas tran dA_reset_a3  FIND V(vdA_a3)  AT=783.11n
+.meas tran dB_reset_a3  FIND V(vdB_a3)  AT=783.11n
+.meas tran ipkP_a3 MIN I(VLCP_a3) FROM=723.00n TO=736.04n
+.meas tran ipkN_a3 MAX I(VLCN_a3) FROM=767.08n TO=780.11n
+.meas tran didtP_a3 MAX V(didtP_a3) FROM=723.00n TO=736.04n
+.meas tran didtN_a3 MAX V(didtN_a3) FROM=767.08n TO=780.11n
+
+* ================= CASE B1: VLC=+-0.28 V, L=40.0u, T/2=20.71n (swing 0.5 V, L=40uH) =================
+VLCP_b1 vlcp_b1 0 DC 0.28
+VLCN_b1 vlcn_b1 0 DC -0.28
+BpLC_b1 pwpLC_b1 0 V = -(V(vlcp_b1)*I(VLCP_b1) + V(vlcn_b1)*I(VLCN_b1))
+BdidtP_b1 didtP_b1 0 V = -ddt(I(VLCP_b1))
+BdidtN_b1 didtN_b1 0 V =  ddt(I(VLCN_b1))
+MPP_b1 a_b1 gPP_b1 vlcp_b1 vlcp_b1 PMOS1 W=60u L=0.18u
+VgPP_b1 gPP_b1 0 PWL(0 0.28 860.00n 0.28 863.00n -0.28 883.71n -0.28 886.71n 0.28)
+MN0_b1 a_b1 gN0_b1 0 vlcn_b1 NMOS1 W=10u L=0.18u
+VgN0_b1 gN0_b1 0 PWL(0 -0.28 892.71n -0.28 895.71n 1.0 916.41n 1.0 919.41n -0.28)
+MNN_b1 a_b1 gNN_b1 vlcn_b1 vlcn_b1 NMOS1 W=10u L=0.18u
+VgNN_b1 gNN_b1 0 PWL(0 -0.28 925.41n -0.28 928.41n 1.28 949.12n 1.28 952.12n -0.28)
+Rbig_b1 a_b1 0 100meg
+CAC_b1  a_b1 0 100f
+L_b1 a_b1 d_b1 40.00u
+Vs_b1 d_b1 in_b1 DC 0
+X_b1 in_b1 rA_b1 rB_b1 ternary_cell
+BpC_b1 pwC_b1 0 V = V(in_b1)*I(Vs_b1)
+BpG_b1 pwG_b1 0 V = V(gPP_b1)*I(VgPP_b1) + V(gN0_b1)*I(VgN0_b1) + V(gNN_b1)*I(VgNN_b1)
+Vclk_b1 clk_b1 0 PWL(0 1 888.21n 1 888.71n 0 890.71n 0 891.21n 1 920.91n 1 921.41n 0 923.41n 0 923.91n 1 953.62n 1 954.12n 0 956.12n 0 956.62n 1)
+XsaA_b1 0 rA_b1 clk_b1 vddsa outA_b1 outAb_b1 sensamp
+XsaB_b1 rB_b1 0 clk_b1 vddsa outB_b1 outBb_b1 sensamp
+BdA_b1 vdA_b1 0 V = V(outA_b1)-V(outAb_b1)
+BdB_b1 vdB_b1 0 V = V(outB_b1)-V(outBb_b1)
+
+* --- measurements B1 ---
+.meas tran epush_b1_drv  INTEG V(pwpLC_b1) FROM=860.00n TO=886.71n
+.meas tran epush_b1_cell INTEG V(pwC_b1)   FROM=860.00n TO=886.71n
+.meas tran epush_b1_gate INTEG V(pwG_b1)   FROM=860.00n TO=886.71n
+.meas tran epush_b1_rec  INTEG V(pwpSA) FROM=888.71n TO=893.71n
+.meas tran epull_b1_drv  INTEG V(pwpLC_b1) FROM=892.71n TO=919.41n
+.meas tran epull_b1_cell INTEG V(pwC_b1)   FROM=892.71n TO=919.41n
+.meas tran epull_b1_gate INTEG V(pwG_b1)   FROM=892.71n TO=919.41n
+.meas tran epull_b1_rec  INTEG V(pwpSA) FROM=921.41n TO=926.41n
+.meas tran ereset_b1_drv  INTEG V(pwpLC_b1) FROM=925.41n TO=952.12n
+.meas tran ereset_b1_cell INTEG V(pwC_b1)   FROM=925.41n TO=952.12n
+.meas tran ereset_b1_gate INTEG V(pwG_b1)   FROM=925.41n TO=952.12n
+.meas tran ereset_b1_rec  INTEG V(pwpSA) FROM=954.12n TO=959.12n
+.meas tran ecyc_b1      INTEG V(pwpLC_b1) FROM=860.00n TO=952.12n
+.meas tran line_b1_pk   MAX V(in_b1) FROM=860.00n TO=886.71n
+.meas tran line_b1_min  MIN V(in_b1) FROM=892.71n TO=919.41n
+.meas tran line_b1_end  FIND V(in_b1) AT=958.12n
+.meas tran railA_b1_pk  MAX V(rA_b1) FROM=863.00n TO=886.71n
+.meas tran railB_b1_min MIN V(rB_b1) FROM=895.71n TO=919.41n
+.meas tran demA_push_b1 FIND V(outA_b1) AT=889.71n
+.meas tran demB_push_b1 FIND V(outB_b1) AT=889.71n
+.meas tran dA_push_b1   FIND V(vdA_b1)  AT=889.71n
+.meas tran dB_push_b1   FIND V(vdB_b1)  AT=889.71n
+.meas tran demA_pull_b1 FIND V(outA_b1) AT=922.41n
+.meas tran demB_pull_b1 FIND V(outB_b1) AT=922.41n
+.meas tran dA_pull_b1   FIND V(vdA_b1)  AT=922.41n
+.meas tran dB_pull_b1   FIND V(vdB_b1)  AT=922.41n
+.meas tran demA_reset_b1 FIND V(outA_b1) AT=955.12n
+.meas tran demB_reset_b1 FIND V(outB_b1) AT=955.12n
+.meas tran dA_reset_b1  FIND V(vdA_b1)  AT=955.12n
+.meas tran dB_reset_b1  FIND V(vdB_b1)  AT=955.12n
+.meas tran ipkP_b1 MIN I(VLCP_b1) FROM=863.00n TO=886.71n
+.meas tran ipkN_b1 MAX I(VLCN_b1) FROM=928.41n TO=952.12n
+.meas tran didtP_b1 MAX V(didtP_b1) FROM=863.00n TO=886.71n
+.meas tran didtN_b1 MAX V(didtN_b1) FROM=928.41n TO=952.12n
+
+* ================= CASE B2: VLC=+-0.28 V, L=20.0u, T/2=14.64n (swing 0.5 V, L=20uH) =================
+VLCP_b2 vlcp_b2 0 DC 0.28
+VLCN_b2 vlcn_b2 0 DC -0.28
+BpLC_b2 pwpLC_b2 0 V = -(V(vlcp_b2)*I(VLCP_b2) + V(vlcn_b2)*I(VLCN_b2))
+BdidtP_b2 didtP_b2 0 V = -ddt(I(VLCP_b2))
+BdidtN_b2 didtN_b2 0 V =  ddt(I(VLCN_b2))
+MPP_b2 a_b2 gPP_b2 vlcp_b2 vlcp_b2 PMOS1 W=60u L=0.18u
+VgPP_b2 gPP_b2 0 PWL(0 0.28 1000.00n 0.28 1003.00n -0.28 1017.64n -0.28 1020.64n 0.28)
+MN0_b2 a_b2 gN0_b2 0 vlcn_b2 NMOS1 W=10u L=0.18u
+VgN0_b2 gN0_b2 0 PWL(0 -0.28 1026.64n -0.28 1029.64n 1.0 1044.28n 1.0 1047.28n -0.28)
+MNN_b2 a_b2 gNN_b2 vlcn_b2 vlcn_b2 NMOS1 W=10u L=0.18u
+VgNN_b2 gNN_b2 0 PWL(0 -0.28 1053.28n -0.28 1056.28n 1.28 1070.92n 1.28 1073.92n -0.28)
+Rbig_b2 a_b2 0 100meg
+CAC_b2  a_b2 0 100f
+L_b2 a_b2 d_b2 20.00u
+Vs_b2 d_b2 in_b2 DC 0
+X_b2 in_b2 rA_b2 rB_b2 ternary_cell
+BpC_b2 pwC_b2 0 V = V(in_b2)*I(Vs_b2)
+BpG_b2 pwG_b2 0 V = V(gPP_b2)*I(VgPP_b2) + V(gN0_b2)*I(VgN0_b2) + V(gNN_b2)*I(VgNN_b2)
+Vclk_b2 clk_b2 0 PWL(0 1 1022.14n 1 1022.64n 0 1024.64n 0 1025.14n 1 1048.78n 1 1049.28n 0 1051.28n 0 1051.78n 1 1075.42n 1 1075.92n 0 1077.92n 0 1078.42n 1)
+XsaA_b2 0 rA_b2 clk_b2 vddsa outA_b2 outAb_b2 sensamp
+XsaB_b2 rB_b2 0 clk_b2 vddsa outB_b2 outBb_b2 sensamp
+BdA_b2 vdA_b2 0 V = V(outA_b2)-V(outAb_b2)
+BdB_b2 vdB_b2 0 V = V(outB_b2)-V(outBb_b2)
+
+* --- measurements B2 ---
+.meas tran epush_b2_drv  INTEG V(pwpLC_b2) FROM=1000.00n TO=1020.64n
+.meas tran epush_b2_cell INTEG V(pwC_b2)   FROM=1000.00n TO=1020.64n
+.meas tran epush_b2_gate INTEG V(pwG_b2)   FROM=1000.00n TO=1020.64n
+.meas tran epush_b2_rec  INTEG V(pwpSA) FROM=1022.64n TO=1027.64n
+.meas tran epull_b2_drv  INTEG V(pwpLC_b2) FROM=1026.64n TO=1047.28n
+.meas tran epull_b2_cell INTEG V(pwC_b2)   FROM=1026.64n TO=1047.28n
+.meas tran epull_b2_gate INTEG V(pwG_b2)   FROM=1026.64n TO=1047.28n
+.meas tran epull_b2_rec  INTEG V(pwpSA) FROM=1049.28n TO=1054.28n
+.meas tran ereset_b2_drv  INTEG V(pwpLC_b2) FROM=1053.28n TO=1073.92n
+.meas tran ereset_b2_cell INTEG V(pwC_b2)   FROM=1053.28n TO=1073.92n
+.meas tran ereset_b2_gate INTEG V(pwG_b2)   FROM=1053.28n TO=1073.92n
+.meas tran ereset_b2_rec  INTEG V(pwpSA) FROM=1075.92n TO=1080.92n
+.meas tran ecyc_b2      INTEG V(pwpLC_b2) FROM=1000.00n TO=1073.92n
+.meas tran line_b2_pk   MAX V(in_b2) FROM=1000.00n TO=1020.64n
+.meas tran line_b2_min  MIN V(in_b2) FROM=1026.64n TO=1047.28n
+.meas tran line_b2_end  FIND V(in_b2) AT=1079.92n
+.meas tran railA_b2_pk  MAX V(rA_b2) FROM=1003.00n TO=1020.64n
+.meas tran railB_b2_min MIN V(rB_b2) FROM=1029.64n TO=1047.28n
+.meas tran demA_push_b2 FIND V(outA_b2) AT=1023.64n
+.meas tran demB_push_b2 FIND V(outB_b2) AT=1023.64n
+.meas tran dA_push_b2   FIND V(vdA_b2)  AT=1023.64n
+.meas tran dB_push_b2   FIND V(vdB_b2)  AT=1023.64n
+.meas tran demA_pull_b2 FIND V(outA_b2) AT=1050.28n
+.meas tran demB_pull_b2 FIND V(outB_b2) AT=1050.28n
+.meas tran dA_pull_b2   FIND V(vdA_b2)  AT=1050.28n
+.meas tran dB_pull_b2   FIND V(vdB_b2)  AT=1050.28n
+.meas tran demA_reset_b2 FIND V(outA_b2) AT=1076.92n
+.meas tran demB_reset_b2 FIND V(outB_b2) AT=1076.92n
+.meas tran dA_reset_b2  FIND V(vdA_b2)  AT=1076.92n
+.meas tran dB_reset_b2  FIND V(vdB_b2)  AT=1076.92n
+.meas tran ipkP_b2 MIN I(VLCP_b2) FROM=1003.00n TO=1020.64n
+.meas tran ipkN_b2 MAX I(VLCN_b2) FROM=1056.28n TO=1073.92n
+.meas tran didtP_b2 MAX V(didtP_b2) FROM=1003.00n TO=1020.64n
+.meas tran didtN_b2 MAX V(didtN_b2) FROM=1056.28n TO=1073.92n
+
+* ================= CASE B3: VLC=+-0.28 V, L=9.4u, T/2=10.04n (swing 0.5 V, L=9.4uH) =================
+VLCP_b3 vlcp_b3 0 DC 0.28
+VLCN_b3 vlcn_b3 0 DC -0.28
+BpLC_b3 pwpLC_b3 0 V = -(V(vlcp_b3)*I(VLCP_b3) + V(vlcn_b3)*I(VLCN_b3))
+BdidtP_b3 didtP_b3 0 V = -ddt(I(VLCP_b3))
+BdidtN_b3 didtN_b3 0 V =  ddt(I(VLCN_b3))
+MPP_b3 a_b3 gPP_b3 vlcp_b3 vlcp_b3 PMOS1 W=60u L=0.18u
+VgPP_b3 gPP_b3 0 PWL(0 0.28 1120.00n 0.28 1123.00n -0.28 1133.04n -0.28 1136.04n 0.28)
+MN0_b3 a_b3 gN0_b3 0 vlcn_b3 NMOS1 W=10u L=0.18u
+VgN0_b3 gN0_b3 0 PWL(0 -0.28 1142.04n -0.28 1145.04n 1.0 1155.08n 1.0 1158.08n -0.28)
+MNN_b3 a_b3 gNN_b3 vlcn_b3 vlcn_b3 NMOS1 W=10u L=0.18u
+VgNN_b3 gNN_b3 0 PWL(0 -0.28 1164.08n -0.28 1167.08n 1.28 1177.11n 1.28 1180.11n -0.28)
+Rbig_b3 a_b3 0 100meg
+CAC_b3  a_b3 0 100f
+L_b3 a_b3 d_b3 9.40u
+Vs_b3 d_b3 in_b3 DC 0
+X_b3 in_b3 rA_b3 rB_b3 ternary_cell
+BpC_b3 pwC_b3 0 V = V(in_b3)*I(Vs_b3)
+BpG_b3 pwG_b3 0 V = V(gPP_b3)*I(VgPP_b3) + V(gN0_b3)*I(VgN0_b3) + V(gNN_b3)*I(VgNN_b3)
+Vclk_b3 clk_b3 0 PWL(0 1 1137.54n 1 1138.04n 0 1140.04n 0 1140.54n 1 1159.58n 1 1160.08n 0 1162.08n 0 1162.58n 1 1181.61n 1 1182.11n 0 1184.11n 0 1184.61n 1)
+XsaA_b3 0 rA_b3 clk_b3 vddsa outA_b3 outAb_b3 sensamp
+XsaB_b3 rB_b3 0 clk_b3 vddsa outB_b3 outBb_b3 sensamp
+BdA_b3 vdA_b3 0 V = V(outA_b3)-V(outAb_b3)
+BdB_b3 vdB_b3 0 V = V(outB_b3)-V(outBb_b3)
+
+* --- measurements B3 ---
+.meas tran epush_b3_drv  INTEG V(pwpLC_b3) FROM=1120.00n TO=1136.04n
+.meas tran epush_b3_cell INTEG V(pwC_b3)   FROM=1120.00n TO=1136.04n
+.meas tran epush_b3_gate INTEG V(pwG_b3)   FROM=1120.00n TO=1136.04n
+.meas tran epush_b3_rec  INTEG V(pwpSA) FROM=1138.04n TO=1143.04n
+.meas tran epull_b3_drv  INTEG V(pwpLC_b3) FROM=1142.04n TO=1158.08n
+.meas tran epull_b3_cell INTEG V(pwC_b3)   FROM=1142.04n TO=1158.08n
+.meas tran epull_b3_gate INTEG V(pwG_b3)   FROM=1142.04n TO=1158.08n
+.meas tran epull_b3_rec  INTEG V(pwpSA) FROM=1160.08n TO=1165.08n
+.meas tran ereset_b3_drv  INTEG V(pwpLC_b3) FROM=1164.08n TO=1180.11n
+.meas tran ereset_b3_cell INTEG V(pwC_b3)   FROM=1164.08n TO=1180.11n
+.meas tran ereset_b3_gate INTEG V(pwG_b3)   FROM=1164.08n TO=1180.11n
+.meas tran ereset_b3_rec  INTEG V(pwpSA) FROM=1182.11n TO=1187.11n
+.meas tran ecyc_b3      INTEG V(pwpLC_b3) FROM=1120.00n TO=1180.11n
+.meas tran line_b3_pk   MAX V(in_b3) FROM=1120.00n TO=1136.04n
+.meas tran line_b3_min  MIN V(in_b3) FROM=1142.04n TO=1158.08n
+.meas tran line_b3_end  FIND V(in_b3) AT=1186.11n
+.meas tran railA_b3_pk  MAX V(rA_b3) FROM=1123.00n TO=1136.04n
+.meas tran railB_b3_min MIN V(rB_b3) FROM=1145.04n TO=1158.08n
+.meas tran demA_push_b3 FIND V(outA_b3) AT=1139.04n
+.meas tran demB_push_b3 FIND V(outB_b3) AT=1139.04n
+.meas tran dA_push_b3   FIND V(vdA_b3)  AT=1139.04n
+.meas tran dB_push_b3   FIND V(vdB_b3)  AT=1139.04n
+.meas tran demA_pull_b3 FIND V(outA_b3) AT=1161.08n
+.meas tran demB_pull_b3 FIND V(outB_b3) AT=1161.08n
+.meas tran dA_pull_b3   FIND V(vdA_b3)  AT=1161.08n
+.meas tran dB_pull_b3   FIND V(vdB_b3)  AT=1161.08n
+.meas tran demA_reset_b3 FIND V(outA_b3) AT=1183.11n
+.meas tran demB_reset_b3 FIND V(outB_b3) AT=1183.11n
+.meas tran dA_reset_b3  FIND V(vdA_b3)  AT=1183.11n
+.meas tran dB_reset_b3  FIND V(vdB_b3)  AT=1183.11n
+.meas tran ipkP_b3 MIN I(VLCP_b3) FROM=1123.00n TO=1136.04n
+.meas tran ipkN_b3 MAX I(VLCN_b3) FROM=1167.08n TO=1180.11n
+.meas tran didtP_b3 MAX V(didtP_b3) FROM=1123.00n TO=1136.04n
+.meas tran didtN_b3 MAX V(didtN_b3) FROM=1167.08n TO=1180.11n
+
+.tran 50p 1240n
+
+* --- key waveforms for inspection ---
+.print tran v(in_ref) v(rA_ref) v(rB_ref) v(a_ref)
+.print tran v(in_a1) v(rA_a1) v(rB_a1) v(a_a1) v(gPP_a1) i(VLCP_a1) i(VLCN_a1)
+.print tran v(in_a2) v(rA_a2) v(rB_a2) v(a_a2)
+.print tran v(in_b1) v(rA_b1) v(rB_b1) v(a_b1)
+
+.end

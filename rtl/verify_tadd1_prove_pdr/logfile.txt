@@ -1,0 +1,41 @@
+SBY 22:22:24 [verify_tadd1_prove_smt] Removing directory '/home/ian/dsh/projects/lattice/rtl/verify_tadd1_prove_smt'.
+SBY 22:22:24 [verify_tadd1_prove_pdr] Removing directory '/home/ian/dsh/projects/lattice/rtl/verify_tadd1_prove_pdr'.
+SBY 22:22:24 [verify_tadd1_prove_pdr] Copy '/home/ian/dsh/projects/lattice/rtl/trit_functions.vh' to '/home/ian/dsh/projects/lattice/rtl/verify_tadd1_prove_pdr/src/trit_functions.vh'.
+SBY 22:22:24 [verify_tadd1_prove_pdr] Copy '/home/ian/dsh/projects/lattice/rtl/verify_tadd1.sv' to '/home/ian/dsh/projects/lattice/rtl/verify_tadd1_prove_pdr/src/verify_tadd1.sv'.
+SBY 22:22:24 [verify_tadd1_prove_pdr] engine_0: abc pdr
+SBY 22:22:24 [verify_tadd1_prove_pdr] base: starting process "cd verify_tadd1_prove_pdr/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY 22:22:24 [verify_tadd1_prove_pdr] base: finished (returncode=0)
+SBY 22:22:24 [verify_tadd1_prove_pdr] prep: starting process "cd verify_tadd1_prove_pdr/model; yosys -ql design_prep.log design_prep.ys"
+SBY 22:22:24 [verify_tadd1_prove_pdr] prep: finished (returncode=0)
+SBY 22:22:24 [verify_tadd1_prove_pdr] aig: starting process "cd verify_tadd1_prove_pdr/model; yosys -ql design_aiger.log design_aiger.ys"
+SBY 22:22:25 [verify_tadd1_prove_pdr] aig: finished (returncode=0)
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: starting process "cd verify_tadd1_prove_pdr; yosys-abc -c 'read_aiger model/design_aiger.aig; fold; strash; pdr -v -l; write_cex -a engine_0/trace.aiw'"
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: ABC command line: "read_aiger model/design_aiger.aig; fold; strash; pdr -v -l; write_cex -a engine_0/trace.aiw".
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: Warning: The network has no constraints.
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: VarMax = 300. FrameMax = 10000. QueMax = 0. TimeMax = 159. MonoCNF = no. SkipGen = no. SolveAll = no.
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: Frame Clauses                                                     Max Queue Flops Time
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: 1 : 0 0                                                                 0     0      0.01 sec  T/O =  0  PRV =  0
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: 2 : 0 0 0                                                               0     0      0.01 sec  T/O =  0  PRV =  0
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: Proved output 0 in frame 853763984 (converged).
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: Proved output 1 in frame 0 (converged).
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: Proved output 2 in frame 0 (converged).
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: Block =    0  Oblig =     0  Clause =     0  Call =     6 (sat=0.0%)  Cex =   0  Start =   0
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: SAT solving =     0.00 sec ( 20.81 %)
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: unsat     =     0.00 sec ( 20.81 %)
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: sat       =     0.00 sec (  0.00 %)
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: Generalize  =     0.00 sec (  0.00 %)
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: Push clause =     0.00 sec (  0.02 %)
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: Ternary sim =     0.00 sec (  0.00 %)
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: Containment =     0.00 sec (  0.00 %)
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: CNF compute =     0.00 sec (  0.00 %)
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: Refinement  =     0.00 sec (  0.00 %)
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: TOTAL       =     0.02 sec (100.00 %)
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: Property proved.  Time =     0.02 sec
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: Counter-example is not available.
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: finished (returncode=0)
+SBY 22:22:25 [verify_tadd1_prove_pdr] engine_0: Status returned by engine: PASS
+SBY 22:22:25 [verify_tadd1_prove_pdr] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 22:22:25 [verify_tadd1_prove_pdr] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:01 (1)
+SBY 22:22:25 [verify_tadd1_prove_pdr] summary: engine_0 (abc pdr) returned PASS
+SBY 22:22:25 [verify_tadd1_prove_pdr] summary: engine_0 did not produce any traces
+SBY 22:22:25 [verify_tadd1_prove_pdr] DONE (PASS, rc=0)

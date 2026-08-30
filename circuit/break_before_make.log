@@ -1,0 +1,605 @@
+Note: Starting dynamic gmin stepping
+Note: Dynamic gmin stepping completed
+
+Note: No compatibility mode selected!
+
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+vdd_n0                                       1
+vss_n0                                      -1
+in_n0                                        0
+xgn.ra                                       0
+xgn.rb                                       0
+out_n0                                       0
+l_n0                                         0
+ra_n0                                        0
+rb_n0                                        0
+pg_n0                                 2.02e-12
+vdd_r0                                       1
+vss_r0                                      -1
+in_r0                                        1
+xgr.ra                                0.755947
+xgr.rb                             0.000100097
+out_r0                               -0.988892
+l_r0                                 -0.987161
+ra_r0                             -0.000100096
+rb_r0                                -0.743581
+pg_r0                              1.73084e-05
+vdd_s0                                       1
+vss_s0                                      -1
+in_s0                                        1
+ras0                                  0.755947
+rbs0                               0.000100097
+xsout.mp                             -0.591619
+out_s0                                -0.98757
+epb_s0                                      -1
+xsout.mn                             -0.988806
+enn_s0                                       1
+l_s0                                 -0.985842
+ra_s0                             -0.000100096
+rb_s0                                -0.742311
+pg_s0                              1.76009e-05
+vdd_h0                                       1
+vss_h0                                      -1
+in_h0                                        1
+xgh.ra                                0.755947
+xgh.rb                             0.000100097
+out_h0                               -0.988892
+l_h0                                 -0.987161
+ra_h0                             -0.000100096
+rb_h0                                -0.743581
+pg_h0                              1.73084e-05
+vdd_b0o                                      1
+vss_b0o                                     -1
+vdd_b0n                                      1
+vss_b0n                                     -1
+in_b0                                        1
+xb0.ra                                0.755947
+xb0.rb                             0.000100097
+xb0.dp                               -0.946949
+p0                                           1
+dn0                                         -1
+xb0.ndb                                      1
+nd1_0                                       -1
+xb0.pdb                                     -1
+pd1_0                                        1
+xb0.xa1.mid                                 -1
+xb0.xa1.xn.mid                              -1
+xb0.enn                                      1
+xb0.xa2.mid                                  1
+xb0.xa2.xn.mid                        -1.00062
+xb0.enp                                     -1
+xb0.epb                                      1
+xb0.xout.mp                                  1
+out_b0                               -0.987684
+xb0.xout.mn                          -0.988908
+xd1p_0.m1                                   -1
+xd1n_0.m1                                    1
+l_b0                                 -0.985955
+ra_b0                             -0.000100096
+rb_b0                                 -0.74242
+pgo_b0                             1.72848e-05
+pgn_b0                              3.8939e-05
+vdd_b1o                                      1
+vss_b1o                                     -1
+vdd_b1n                                      1
+vss_b1n                                     -1
+in_b1                                        1
+xb1.ra                                0.755947
+xb1.rb                             0.000100097
+xb1.dp                               -0.946949
+p1                                           1
+dn1                                         -1
+xb1.ndb                                      1
+nd1_1                                       -1
+xb1.pdb                                     -1
+pd1_1                                        1
+xb1.xa1.mid                                 -1
+xb1.xa1.xn.mid                              -1
+xb1.enn                                      1
+xb1.xa2.mid                                  1
+xb1.xa2.xn.mid                        -1.00062
+xb1.enp                                     -1
+xb1.epb                                      1
+xb1.xout.mp                                  1
+out_b1                               -0.987684
+xb1.xout.mn                          -0.988908
+xd1p_1.xd1.m1                               -1
+xd1p_1.m                                     1
+xd1p_1.xd2.m1                               -1
+xd1n_1.xd1.m1                                1
+xd1n_1.m                                    -1
+xd1n_1.xd2.m1                                1
+l_b1                                 -0.985955
+ra_b1                             -0.000100096
+rb_b1                                 -0.74242
+pgo_b1                             1.72848e-05
+pgn_b1                              3.8939e-05
+vdd_b2o                                      1
+vss_b2o                                     -1
+vdd_b2n                                      1
+vss_b2n                                     -1
+in_b2                                        1
+xb2.ra                                0.755947
+xb2.rb                             0.000100097
+xb2.dp                               -0.946949
+p2                                           1
+dn2                                         -1
+xb2.ndb                                      1
+nd1_2                                       -1
+xb2.pdb                                     -1
+pd1_2                                        1
+xb2.xa1.mid                                 -1
+xb2.xa1.xn.mid                              -1
+xb2.enn                                      1
+xb2.xa2.mid                                  1
+xb2.xa2.xn.mid                        -1.00062
+xb2.enp                                     -1
+xb2.epb                                      1
+xb2.xout.mp                                  1
+out_b2                               -0.987684
+xb2.xout.mn                          -0.988908
+xd1p_2.xd1.xd1.m1                           -1
+xd1p_2.xd1.m                                 1
+xd1p_2.xd1.xd2.m1                           -1
+xd1p_2.m                                     1
+xd1p_2.xd2.xd1.m1                           -1
+xd1p_2.xd2.m                                 1
+xd1p_2.xd2.xd2.m1                           -1
+xd1n_2.xd1.xd1.m1                            1
+xd1n_2.xd1.m                                -1
+xd1n_2.xd1.xd2.m1                            1
+xd1n_2.m                                    -1
+xd1n_2.xd2.xd1.m1                            1
+xd1n_2.xd2.m                                -1
+xd1n_2.xd2.xd2.m1                            1
+l_b2                                 -0.985955
+ra_b2                             -0.000100096
+rb_b2                                 -0.74242
+pgo_b2                             1.72848e-05
+pgn_b2                             3.89391e-05
+vdd_b3o                                      1
+vss_b3o                                     -1
+vdd_b3n                                      1
+vss_b3n                                     -1
+in_b3                                        1
+xb3.ra                                0.755947
+xb3.rb                             0.000100097
+xb3.dp                               -0.946949
+p3                                           1
+dn3                                         -1
+xb3.ndb                                      1
+nd1_3                                       -1
+xb3.pdb                                     -1
+pd1_3                                        1
+xb3.xa1.mid                                 -1
+xb3.xa1.xn.mid                              -1
+xb3.enn                                      1
+xb3.xa2.mid                                  1
+xb3.xa2.xn.mid                        -1.00062
+xb3.enp                                     -1
+xb3.epb                                      1
+xb3.xout.mp                                  1
+out_b3                               -0.987684
+xb3.xout.mn                          -0.988908
+xd1p_3.xd1.xd1.xd1.m1                       -1
+xd1p_3.xd1.xd1.m                             1
+xd1p_3.xd1.xd1.xd2.m1                       -1
+xd1p_3.xd1.m                                 1
+xd1p_3.xd1.xd2.xd1.m1                       -1
+xd1p_3.xd1.xd2.m                             1
+xd1p_3.xd1.xd2.xd2.m1                       -1
+xd1p_3.m                                     1
+xd1p_3.xd2.xd1.xd1.m1                       -1
+xd1p_3.xd2.xd1.m                             1
+xd1p_3.xd2.xd1.xd2.m1                       -1
+xd1p_3.xd2.m                                 1
+xd1p_3.xd2.xd2.xd1.m1                       -1
+xd1p_3.xd2.xd2.m                             1
+xd1p_3.xd2.xd2.xd2.m1                       -1
+xd1n_3.xd1.xd1.xd1.m1                        1
+xd1n_3.xd1.xd1.m                            -1
+xd1n_3.xd1.xd1.xd2.m1                        1
+xd1n_3.xd1.m                                -1
+xd1n_3.xd1.xd2.xd1.m1                        1
+xd1n_3.xd1.xd2.m                            -1
+xd1n_3.xd1.xd2.xd2.m1                        1
+xd1n_3.m                                    -1
+xd1n_3.xd2.xd1.xd1.m1                        1
+xd1n_3.xd2.xd1.m                            -1
+xd1n_3.xd2.xd1.xd2.m1                        1
+xd1n_3.xd2.m                                -1
+xd1n_3.xd2.xd2.xd1.m1                        1
+xd1n_3.xd2.xd2.m                            -1
+xd1n_3.xd2.xd2.xd2.m1                        1
+l_b3                                 -0.985955
+ra_b3                             -0.000100096
+rb_b3                                 -0.74242
+pgo_b3                             1.72848e-05
+pgn_b3                             3.89391e-05
+vdd_b4o                                      1
+vss_b4o                                     -1
+vdd_b4n                                      1
+vss_b4n                                     -1
+in_b4                                        1
+xb4.ra                                0.755947
+xb4.rb                             0.000100097
+xb4.dp                               -0.946949
+p4                                           1
+dn4                                         -1
+xb4.ndb                                      1
+nd1_4                                       -1
+xb4.pdb                                     -1
+pd1_4                                        1
+xb4.xa1.mid                                 -1
+xb4.xa1.xn.mid                              -1
+xb4.enn                                      1
+xb4.xa2.mid                                  1
+xb4.xa2.xn.mid                        -1.00062
+xb4.enp                                     -1
+xb4.epb                                      1
+xb4.xout.mp                                  1
+out_b4                               -0.987684
+xb4.xout.mn                          -0.988908
+xd1p_4.xd1.xd1.xd1.xd1.m1                   -1
+xd1p_4.xd1.xd1.xd1.m                         1
+xd1p_4.xd1.xd1.xd1.xd2.m1                   -1
+xd1p_4.xd1.xd1.m                             1
+xd1p_4.xd1.xd1.xd2.xd1.m1                   -1
+xd1p_4.xd1.xd1.xd2.m                         1
+xd1p_4.xd1.xd1.xd2.xd2.m1                   -1
+xd1p_4.xd1.m                                 1
+xd1p_4.xd1.xd2.xd1.xd1.m1                   -1
+xd1p_4.xd1.xd2.xd1.m                         1
+xd1p_4.xd1.xd2.xd1.xd2.m1                   -1
+xd1p_4.xd1.xd2.m                             1
+xd1p_4.xd1.xd2.xd2.xd1.m1                   -1
+xd1p_4.xd1.xd2.xd2.m                         1
+xd1p_4.xd1.xd2.xd2.xd2.m1                   -1
+xd1p_4.m                                     1
+xd1p_4.xd2.xd1.xd1.xd1.m1                   -1
+xd1p_4.xd2.xd1.xd1.m                         1
+xd1p_4.xd2.xd1.xd1.xd2.m1                   -1
+xd1p_4.xd2.xd1.m                             1
+xd1p_4.xd2.xd1.xd2.xd1.m1                   -1
+xd1p_4.xd2.xd1.xd2.m                         1
+xd1p_4.xd2.xd1.xd2.xd2.m1                   -1
+xd1p_4.xd2.m                                 1
+xd1p_4.xd2.xd2.xd1.xd1.m1                   -1
+xd1p_4.xd2.xd2.xd1.m                         1
+xd1p_4.xd2.xd2.xd1.xd2.m1                   -1
+xd1p_4.xd2.xd2.m                             1
+xd1p_4.xd2.xd2.xd2.xd1.m1                   -1
+xd1p_4.xd2.xd2.xd2.m                         1
+xd1p_4.xd2.xd2.xd2.xd2.m1                   -1
+xd1n_4.xd1.xd1.xd1.xd1.m1                    1
+xd1n_4.xd1.xd1.xd1.m                        -1
+xd1n_4.xd1.xd1.xd1.xd2.m1                    1
+xd1n_4.xd1.xd1.m                            -1
+xd1n_4.xd1.xd1.xd2.xd1.m1                    1
+xd1n_4.xd1.xd1.xd2.m                        -1
+xd1n_4.xd1.xd1.xd2.xd2.m1                    1
+xd1n_4.xd1.m                                -1
+xd1n_4.xd1.xd2.xd1.xd1.m1                    1
+xd1n_4.xd1.xd2.xd1.m                        -1
+xd1n_4.xd1.xd2.xd1.xd2.m1                    1
+xd1n_4.xd1.xd2.m                            -1
+xd1n_4.xd1.xd2.xd2.xd1.m1                    1
+xd1n_4.xd1.xd2.xd2.m                        -1
+xd1n_4.xd1.xd2.xd2.xd2.m1                    1
+xd1n_4.m                                    -1
+xd1n_4.xd2.xd1.xd1.xd1.m1                    1
+xd1n_4.xd2.xd1.xd1.m                        -1
+xd1n_4.xd2.xd1.xd1.xd2.m1                    1
+xd1n_4.xd2.xd1.m                            -1
+xd1n_4.xd2.xd1.xd2.xd1.m1                    1
+xd1n_4.xd2.xd1.xd2.m                        -1
+xd1n_4.xd2.xd1.xd2.xd2.m1                    1
+xd1n_4.xd2.m                                -1
+xd1n_4.xd2.xd2.xd1.xd1.m1                    1
+xd1n_4.xd2.xd2.xd1.m                        -1
+xd1n_4.xd2.xd2.xd1.xd2.m1                    1
+xd1n_4.xd2.xd2.m                            -1
+xd1n_4.xd2.xd2.xd2.xd1.m1                    1
+xd1n_4.xd2.xd2.xd2.m                        -1
+xd1n_4.xd2.xd2.xd2.xd2.m1                    1
+l_b4                                 -0.985955
+ra_b4                             -0.000100096
+rb_b4                                 -0.74242
+pgo_b4                             1.72848e-05
+pgn_b4                             3.89393e-05
+vdd_b5o                                      1
+vss_b5o                                     -1
+vdd_b5n                                      1
+vss_b5n                                     -1
+in_b5                                        1
+xb5.ra                                0.755947
+xb5.rb                             0.000100097
+xb5.dp                               -0.946949
+p5                                           1
+dn5                                         -1
+xb5.ndb                                      1
+nd1_5                                       -1
+xb5.pdb                                     -1
+pd1_5                                        1
+xb5.xa1.mid                                 -1
+xb5.xa1.xn.mid                              -1
+xb5.enn                                      1
+xb5.xa2.mid                                  1
+xb5.xa2.xn.mid                        -1.00062
+xb5.enp                                     -1
+xb5.epb                                      1
+xb5.xout.mp                                  1
+out_b5                               -0.987684
+xb5.xout.mn                          -0.988908
+xd1p_5.xd1.xd1.xd1.xd1.xd1.m1               -1
+xd1p_5.xd1.xd1.xd1.xd1.m                     1
+xd1p_5.xd1.xd1.xd1.xd1.xd2.m1               -1
+xd1p_5.xd1.xd1.xd1.m                         1
+xd1p_5.xd1.xd1.xd1.xd2.xd1.m1               -1
+xd1p_5.xd1.xd1.xd1.xd2.m                     1
+xd1p_5.xd1.xd1.xd1.xd2.xd2.m1               -1
+xd1p_5.xd1.xd1.m                             1
+xd1p_5.xd1.xd1.xd2.xd1.xd1.m1               -1
+xd1p_5.xd1.xd1.xd2.xd1.m                     1
+xd1p_5.xd1.xd1.xd2.xd1.xd2.m1               -1
+xd1p_5.xd1.xd1.xd2.m                         1
+xd1p_5.xd1.xd1.xd2.xd2.xd1.m1               -1
+xd1p_5.xd1.xd1.xd2.xd2.m                     1
+xd1p_5.xd1.xd1.xd2.xd2.xd2.m1               -1
+xd1p_5.xd1.m                                 1
+xd1p_5.xd1.xd2.xd1.xd1.xd1.m1               -1
+xd1p_5.xd1.xd2.xd1.xd1.m                     1
+xd1p_5.xd1.xd2.xd1.xd1.xd2.m1               -1
+xd1p_5.xd1.xd2.xd1.m                         1
+xd1p_5.xd1.xd2.xd1.xd2.xd1.m1               -1
+xd1p_5.xd1.xd2.xd1.xd2.m                     1
+xd1p_5.xd1.xd2.xd1.xd2.xd2.m1               -1
+xd1p_5.xd1.xd2.m                             1
+xd1p_5.xd1.xd2.xd2.xd1.xd1.m1               -1
+xd1p_5.xd1.xd2.xd2.xd1.m                     1
+xd1p_5.xd1.xd2.xd2.xd1.xd2.m1               -1
+xd1p_5.xd1.xd2.xd2.m                         1
+xd1p_5.xd1.xd2.xd2.xd2.xd1.m1               -1
+xd1p_5.xd1.xd2.xd2.xd2.m                     1
+xd1p_5.xd1.xd2.xd2.xd2.xd2.m1               -1
+xd1p_5.m                                     1
+xd1p_5.xd2.xd1.xd1.xd1.xd1.m1               -1
+xd1p_5.xd2.xd1.xd1.xd1.m                     1
+xd1p_5.xd2.xd1.xd1.xd1.xd2.m1               -1
+xd1p_5.xd2.xd1.xd1.m                         1
+xd1p_5.xd2.xd1.xd1.xd2.xd1.m1               -1
+xd1p_5.xd2.xd1.xd1.xd2.m                     1
+xd1p_5.xd2.xd1.xd1.xd2.xd2.m1               -1
+xd1p_5.xd2.xd1.m                             1
+xd1p_5.xd2.xd1.xd2.xd1.xd1.m1               -1
+xd1p_5.xd2.xd1.xd2.xd1.m                     1
+xd1p_5.xd2.xd1.xd2.xd1.xd2.m1               -1
+xd1p_5.xd2.xd1.xd2.m                         1
+xd1p_5.xd2.xd1.xd2.xd2.xd1.m1               -1
+xd1p_5.xd2.xd1.xd2.xd2.m                     1
+xd1p_5.xd2.xd1.xd2.xd2.xd2.m1               -1
+xd1p_5.xd2.m                                 1
+xd1p_5.xd2.xd2.xd1.xd1.xd1.m1               -1
+xd1p_5.xd2.xd2.xd1.xd1.m                     1
+xd1p_5.xd2.xd2.xd1.xd1.xd2.m1               -1
+xd1p_5.xd2.xd2.xd1.m                         1
+xd1p_5.xd2.xd2.xd1.xd2.xd1.m1               -1
+xd1p_5.xd2.xd2.xd1.xd2.m                     1
+xd1p_5.xd2.xd2.xd1.xd2.xd2.m1               -1
+xd1p_5.xd2.xd2.m                             1
+xd1p_5.xd2.xd2.xd2.xd1.xd1.m1               -1
+xd1p_5.xd2.xd2.xd2.xd1.m                     1
+xd1p_5.xd2.xd2.xd2.xd1.xd2.m1               -1
+xd1p_5.xd2.xd2.xd2.m                         1
+xd1p_5.xd2.xd2.xd2.xd2.xd1.m1               -1
+xd1p_5.xd2.xd2.xd2.xd2.m                     1
+xd1p_5.xd2.xd2.xd2.xd2.xd2.m1               -1
+xd1n_5.xd1.xd1.xd1.xd1.xd1.m1                1
+xd1n_5.xd1.xd1.xd1.xd1.m                    -1
+xd1n_5.xd1.xd1.xd1.xd1.xd2.m1                1
+xd1n_5.xd1.xd1.xd1.m                        -1
+xd1n_5.xd1.xd1.xd1.xd2.xd1.m1                1
+xd1n_5.xd1.xd1.xd1.xd2.m                    -1
+xd1n_5.xd1.xd1.xd1.xd2.xd2.m1                1
+xd1n_5.xd1.xd1.m                            -1
+xd1n_5.xd1.xd1.xd2.xd1.xd1.m1                1
+xd1n_5.xd1.xd1.xd2.xd1.m                    -1
+xd1n_5.xd1.xd1.xd2.xd1.xd2.m1                1
+xd1n_5.xd1.xd1.xd2.m                        -1
+xd1n_5.xd1.xd1.xd2.xd2.xd1.m1                1
+xd1n_5.xd1.xd1.xd2.xd2.m                    -1
+xd1n_5.xd1.xd1.xd2.xd2.xd2.m1                1
+xd1n_5.xd1.m                                -1
+xd1n_5.xd1.xd2.xd1.xd1.xd1.m1                1
+xd1n_5.xd1.xd2.xd1.xd1.m                    -1
+xd1n_5.xd1.xd2.xd1.xd1.xd2.m1                1
+xd1n_5.xd1.xd2.xd1.m                        -1
+xd1n_5.xd1.xd2.xd1.xd2.xd1.m1                1
+xd1n_5.xd1.xd2.xd1.xd2.m                    -1
+xd1n_5.xd1.xd2.xd1.xd2.xd2.m1                1
+xd1n_5.xd1.xd2.m                            -1
+xd1n_5.xd1.xd2.xd2.xd1.xd1.m1                1
+xd1n_5.xd1.xd2.xd2.xd1.m                    -1
+xd1n_5.xd1.xd2.xd2.xd1.xd2.m1                1
+xd1n_5.xd1.xd2.xd2.m                        -1
+xd1n_5.xd1.xd2.xd2.xd2.xd1.m1                1
+xd1n_5.xd1.xd2.xd2.xd2.m                    -1
+xd1n_5.xd1.xd2.xd2.xd2.xd2.m1                1
+xd1n_5.m                                    -1
+xd1n_5.xd2.xd1.xd1.xd1.xd1.m1                1
+xd1n_5.xd2.xd1.xd1.xd1.m                    -1
+xd1n_5.xd2.xd1.xd1.xd1.xd2.m1                1
+xd1n_5.xd2.xd1.xd1.m                        -1
+xd1n_5.xd2.xd1.xd1.xd2.xd1.m1                1
+xd1n_5.xd2.xd1.xd1.xd2.m                    -1
+xd1n_5.xd2.xd1.xd1.xd2.xd2.m1                1
+xd1n_5.xd2.xd1.m                            -1
+xd1n_5.xd2.xd1.xd2.xd1.xd1.m1                1
+xd1n_5.xd2.xd1.xd2.xd1.m                    -1
+xd1n_5.xd2.xd1.xd2.xd1.xd2.m1                1
+xd1n_5.xd2.xd1.xd2.m                        -1
+xd1n_5.xd2.xd1.xd2.xd2.xd1.m1                1
+xd1n_5.xd2.xd1.xd2.xd2.m                    -1
+xd1n_5.xd2.xd1.xd2.xd2.xd2.m1                1
+xd1n_5.xd2.m                                -1
+xd1n_5.xd2.xd2.xd1.xd1.xd1.m1                1
+xd1n_5.xd2.xd2.xd1.xd1.m                    -1
+xd1n_5.xd2.xd2.xd1.xd1.xd2.m1                1
+xd1n_5.xd2.xd2.xd1.m                        -1
+xd1n_5.xd2.xd2.xd1.xd2.xd1.m1                1
+xd1n_5.xd2.xd2.xd1.xd2.m                    -1
+xd1n_5.xd2.xd2.xd1.xd2.xd2.m1                1
+xd1n_5.xd2.xd2.m                            -1
+xd1n_5.xd2.xd2.xd2.xd1.xd1.m1                1
+xd1n_5.xd2.xd2.xd2.xd1.m                    -1
+xd1n_5.xd2.xd2.xd2.xd1.xd2.m1                1
+xd1n_5.xd2.xd2.xd2.m                        -1
+xd1n_5.xd2.xd2.xd2.xd2.xd1.m1                1
+xd1n_5.xd2.xd2.xd2.xd2.m                    -1
+xd1n_5.xd2.xd2.xd2.xd2.xd2.m1                1
+l_b5                                 -0.985955
+ra_b5                             -0.000100096
+rb_b5                                 -0.74242
+pgo_b5                             1.72848e-05
+pgn_b5                             3.89395e-05
+bpgn_b5#branch                               0
+vdd_b5n#branch                    -1.94698e-05
+vss_b5n#branch                     1.94698e-05
+bpgo_b5#branch                               0
+vdd_b5o#branch                    -1.99768e-12
+vss_b5o#branch                     1.72848e-05
+bpgn_b4#branch                               0
+vdd_b4n#branch                    -1.94696e-05
+vss_b4n#branch                     1.94696e-05
+bpgo_b4#branch                               0
+vdd_b4o#branch                    -1.99768e-12
+vss_b4o#branch                     1.72848e-05
+bpgn_b3#branch                               0
+vdd_b3n#branch                    -1.94696e-05
+vss_b3n#branch                     1.94696e-05
+bpgo_b3#branch                               0
+vdd_b3o#branch                    -1.99768e-12
+vss_b3o#branch                     1.72848e-05
+bpgn_b2#branch                               0
+vdd_b2n#branch                    -1.94695e-05
+vss_b2n#branch                     1.94695e-05
+bpgo_b2#branch                               0
+vdd_b2o#branch                    -1.99768e-12
+vss_b2o#branch                     1.72848e-05
+bpgn_b1#branch                               0
+vdd_b1n#branch                    -1.94695e-05
+vss_b1n#branch                     1.94695e-05
+bpgo_b1#branch                               0
+vdd_b1o#branch                    -1.99768e-12
+vss_b1o#branch                     1.72848e-05
+bpgn_b0#branch                               0
+vdd_b0n#branch                    -1.94695e-05
+vss_b0n#branch                     1.94695e-05
+bpgo_b0#branch                               0
+vdd_b0o#branch                    -1.99768e-12
+vss_b0o#branch                     1.72848e-05
+bpg_h0#branch                                0
+vdd_h0#branch                     -1.99889e-12
+vss_h0#branch                      1.73084e-05
+bpg_s0#branch                                0
+vdd_s0#branch                     -1.59167e-07
+vss_s0#branch                      1.74417e-05
+bpg_r0#branch                                0
+vdd_r0#branch                     -1.99889e-12
+vss_r0#branch                      1.73084e-05
+bpg_n0#branch                                0
+vdd_n0#branch                        -1.01e-12
+vss_n0#branch                         1.01e-12
+vin_b5#branch                     -7.56047e-06
+vin_b4#branch                     -7.56047e-06
+vin_b3#branch                     -7.56047e-06
+vin_b2#branch                     -7.56047e-06
+vin_b1#branch                     -7.56047e-06
+vin_b0#branch                     -7.56047e-06
+vin_h0#branch                     -7.56047e-06
+vepb_s0#branch                               0
+venn_s0#branch                               0
+vin_s0#branch                     -7.56047e-06
+vin_r0#branch                     -7.56047e-06
+vin_n0#branch                                0
+
+ Reference value :  6.98560e-09 Reference value :  1.69256e-08 Reference value :  2.68656e-08 Reference value :  3.68056e-08 Reference value :  4.53656e-08 Reference value :  5.44456e-08 Reference value :  6.40256e-08 Reference value :  7.37056e-08 Reference value :  8.34056e-08 Reference value :  9.32856e-08 Reference value :  1.01432e-07 Reference value :  1.01841e-07 Reference value :  1.02523e-07 Reference value :  1.08030e-07 Reference value :  1.17370e-07 Reference value :  1.21023e-07 Reference value :  1.23422e-07 Reference value :  1.23963e-07 Reference value :  1.24429e-07 Reference value :  1.32150e-07
+No. of Data Rows : 7391
+
+  Measurements for Transient Analysis
+
+e_null              =   1.08166e-13 from=  9.50000e-08 to=  1.35000e-07
+e_full              =   7.37268e-13 from=  9.50000e-08 to=  1.35000e-07
+e_stack             =   8.97350e-13 from=  9.50000e-08 to=  1.35000e-07
+e_held              =   5.43795e-13 from=  9.50000e-08 to=  1.35000e-07
+pt_null             =  5.40828e-14
+pt_full             =  3.68634e-13
+pt_stack            =  4.48675e-13
+pt_held             =  2.71897e-13
+eo_b0               =   7.00817e-13 from=  9.50000e-08 to=  1.35000e-07
+eo_b1               =   7.03333e-13 from=  9.50000e-08 to=  1.35000e-07
+eo_b2               =   7.01571e-13 from=  9.50000e-08 to=  1.35000e-07
+eo_b3               =   6.99284e-13 from=  9.50000e-08 to=  1.35000e-07
+eo_b4               =   6.95624e-13 from=  9.50000e-08 to=  1.35000e-07
+eo_b5               =   6.80277e-13 from=  9.50000e-08 to=  1.35000e-07
+en_b0               =   5.94499e-12 from=  9.50000e-08 to=  1.35000e-07
+en_b1               =   6.31636e-12 from=  9.50000e-08 to=  1.35000e-07
+en_b2               =   7.00817e-12 from=  9.50000e-08 to=  1.35000e-07
+en_b3               =   8.43309e-12 from=  9.50000e-08 to=  1.35000e-07
+en_b4               =   1.14734e-11 from=  9.50000e-08 to=  1.35000e-07
+en_b5               =   1.75769e-11 from=  9.50000e-08 to=  1.35000e-07
+pt_o_b0             =  3.50409e-13
+pt_o_b1             =  3.51667e-13
+pt_o_b2             =  3.50786e-13
+pt_o_b3             =  3.49642e-13
+pt_o_b4             =  3.47812e-13
+pt_o_b5             =  3.40138e-13
+pt_n_b0             =  2.97249e-12
+pt_n_b1             =  3.15818e-12
+pt_n_b2             =  3.50408e-12
+pt_n_b3             =  4.21655e-12
+pt_n_b4             =  5.73670e-12
+pt_n_b5             =  8.78844e-12
+td_b0               =  3.262492e-10 targ=  1.017967e-07 trig=  1.014705e-07
+td_b1               =  3.228065e-10 targ=  1.018213e-07 trig=  1.014985e-07
+td_b2               =  3.236331e-10 targ=  1.018759e-07 trig=  1.015523e-07
+td_b3               =  3.452790e-10 targ=  1.020041e-07 trig=  1.016588e-07
+td_b4               =  4.605227e-10 targ=  1.022003e-07 trig=  1.017398e-07
+td_b5               =  8.921398e-10 targ=  1.026319e-07 trig=  1.017398e-07
+vw_ref_r            =  9.760126e-01
+vw_ref_f            =  -9.871610e-01
+vw_stk_r            =  9.734202e-01
+vw_stk_f            =  -9.858420e-01
+vw_b0_r             =  9.736506e-01
+vw_b0_f             =  -9.859553e-01
+vw_b5_r             =  9.736506e-01
+vw_b5_f             =  -9.859553e-01
+vw_hn_0             =  -8.757745e-02
+vw_hn_p             =  9.760126e-01
+
+
+Total analysis time (seconds) = 5.24519
+
+Total elapsed time (seconds) = 5.256 
+
+Total DRAM available = 62177.324 MB.
+DRAM currently available = 42157.281 MB.
+Maximum ngspice program size =   27.801 MB.
+Current ngspice program size =   17.223 MB.
+
+Shared ngspice pages =   10.883 MB.
+Text (code) pages =    7.578 MB.
+Stack = 0 bytes.
+Library pages =    6.395 MB.
+

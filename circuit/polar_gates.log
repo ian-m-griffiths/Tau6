@@ -1,0 +1,330 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+clk_in                                       1
+clk_out                                      1
+vdd_g1                                       1
+vss_g1                                      -1
+vdd_r1                                       1
+vss_r1                                      -1
+in1                                          1
+out1                                        -1
+l1                                          -1
+r1                                          -1
+xrec1.cs                             -0.599943
+r1b                                         -1
+pg1                                   4.02e-12
+pr1                                3.21989e-12
+vdd_g2                                       1
+vss_g2                                      -1
+vdd_r2                                       1
+vss_r2                                      -1
+a2                                           1
+in2                                          1
+out2                                        -1
+xg2.mid                                     -1
+l2                                          -1
+r2                                          -1
+xrec2.cs                             -0.599947
+r2b                                         -1
+pg2                                   8.04e-12
+pr2                                3.21989e-12
+vdd_g3                                       1
+vss_g3                                      -1
+vdd_r3                                       1
+vss_r3                                      -1
+in3                                          0
+xg3.push                                    -1
+xg3.xpush.cs                         -0.336667
+xg3.pushb                                   -1
+xg3.pull                                    -1
+xg3.xpull.cs                         -0.336667
+xg3.pullb                                   -1
+xg3.gp                                       1
+out3                                         0
+l3                                           0
+rp3                                         -1
+xrecp3.cs                            -0.336667
+rpb3                                        -1
+rn3                                         -1
+xrecn3.cs                            -0.336667
+rnb3                                        -1
+pg3                                1.14267e-11
+pr3                                5.38667e-12
+vdd_g4                                       1
+vss_g4                                      -1
+vdd_r4                                       1
+vss_r4                                      -1
+a4                                           1
+in4                                          0
+xg4.pa                                      -1
+xg4.xpa.cs                           -0.336667
+xg4.pab                                     -1
+xg4.na                                      -1
+xg4.xna.cs                           -0.336667
+xg4.nab                                     -1
+xg4.pb                                      -1
+xg4.xpb.cs                           -0.336667
+xg4.pbb                                     -1
+xg4.nb                                      -1
+xg4.xnb.cs                           -0.336667
+xg4.nbb                                     -1
+xg4.xpand.mid                                1
+xg4.xpand.x1.mid                            -1
+xg4.pusho                                   -1
+xg4.xnor.x1.mid                              1
+xg4.xnor.mid                                 1
+xg4.pullo                                   -1
+xg4.gp                                       1
+out4                                         0
+l4                                           0
+rp4                                         -1
+xrecp4.cs                            -0.336667
+rpb4                                        -1
+rn4                                         -1
+xrecn4.cs                            -0.336667
+rnb4                                        -1
+pg4                                3.69134e-11
+pr4                                5.38667e-12
+vdd_g5                                       1
+vss_g5                                      -1
+vdd_r5                                       1
+vss_r5                                      -1
+a5                                           0
+in5                                          0
+xg5.pa                                      -1
+xg5.xpa.cs                           -0.336667
+xg5.pab                                     -1
+xg5.na                                      -1
+xg5.xna.cs                           -0.336667
+xg5.nab                                     -1
+xg5.pb                                      -1
+xg5.xpb.cs                           -0.336667
+xg5.pbb                                     -1
+xg5.nb                                      -1
+xg5.xnb.cs                           -0.336667
+xg5.nbb                                     -1
+xg5.xpor.x1.mid                              1
+xg5.xpor.mid                                 1
+xg5.pusho                                   -1
+xg5.xnand.mid                                1
+xg5.xnand.x1.mid                            -1
+xg5.pullo                                   -1
+xg5.gp                                       1
+out5                                         0
+l5                                           0
+rp5                                         -1
+xrecp5.cs                            -0.336667
+rpb5                                        -1
+rn5                                         -1
+xrecn5.cs                            -0.336667
+rnb5                                        -1
+pg5                                3.69134e-11
+pr5                                5.38667e-12
+vdd_g6                                       1
+vss_g6                                      -1
+vdd_r6                                       1
+vss_r6                                      -1
+a6                                           0
+in6                                          0
+xg6.pa                                      -1
+xg6.xpa.cs                           -0.336667
+xg6.pab                                     -1
+xg6.na                                      -1
+xg6.xna.cs                           -0.336667
+xg6.nab                                     -1
+xg6.pb                                      -1
+xg6.xpb.cs                           -0.336667
+xg6.pbb                                     -1
+xg6.nb                                      -1
+xg6.xnb.cs                           -0.336667
+xg6.nbb                                     -1
+xg6.xa0.mid                                  1
+xg6.a0                                       1
+xg6.xb0.mid                                  1
+xg6.b0                                       1
+xg6.xp1.mid                                  1
+xg6.xp1.x1.mid                              -1
+xg6.t1                                      -1
+xg6.xp2.mid                                  1
+xg6.xp2.x1.mid                        0.599962
+xg6.t2                                      -1
+xg6.xp3.mid                                  1
+xg6.xp3.x1.mid                              -1
+xg6.t3                                      -1
+xg6.xpor3.x1.x1.mid                          1
+xg6.xpor3.x1.mid                             1
+xg6.xpor3.m1                                -1
+xg6.xpor3.x2.x1.mid                          1
+xg6.xpor3.x2.mid                             1
+xg6.pusho                                   -1
+xg6.xn1.mid                                  1
+xg6.xn1.x1.mid                              -1
+xg6.t4                                      -1
+xg6.xn2.mid                                  1
+xg6.xn2.x1.mid                        0.599962
+xg6.t5                                      -1
+xg6.xn3.mid                                  1
+xg6.xn3.x1.mid                              -1
+xg6.t6                                      -1
+xg6.xnor3.x1.x1.mid                          1
+xg6.xnor3.x1.mid                             1
+xg6.xnor3.m1                                -1
+xg6.xnor3.x2.x1.mid                          1
+xg6.xnor3.x2.mid                             1
+xg6.pullo                                   -1
+xg6.gp                                       1
+out6                                         0
+l6                                           0
+rp6                                         -1
+xrecp6.cs                            -0.336667
+rpb6                                        -1
+rn6                                         -1
+xrecn6.cs                            -0.336667
+rnb6                                        -1
+pg6                                1.42253e-10
+pr6                                5.38667e-12
+bpr6#branch                                  0
+vddr6#branch                      -2.69333e-12
+vssr6#branch                       2.69333e-12
+bpg6#branch                                  0
+vddg6#branch                      -7.11264e-11
+vssg6#branch                       7.11264e-11
+bpr5#branch                                  0
+vddr5#branch                      -2.69333e-12
+vssr5#branch                       2.69333e-12
+bpg5#branch                                  0
+vddg5#branch                      -1.84567e-11
+vssg5#branch                       1.84567e-11
+bpr4#branch                                  0
+vddr4#branch                      -2.69333e-12
+vssr4#branch                       2.69333e-12
+bpg4#branch                                  0
+vddg4#branch                      -1.84567e-11
+vssg4#branch                       1.84567e-11
+bpr3#branch                                  0
+vddr3#branch                      -2.69333e-12
+vssr3#branch                       2.69333e-12
+bpg3#branch                                  0
+vddg3#branch                      -5.71333e-12
+vssg3#branch                       5.71333e-12
+bpr2#branch                                  0
+vddr2#branch                      -1.60995e-12
+vssr2#branch                       1.60995e-12
+bpg2#branch                                  0
+vddg2#branch                         -4.02e-12
+vssg2#branch                          4.02e-12
+bpr1#branch                                  0
+vddr1#branch                      -1.60994e-12
+vssr1#branch                       1.60994e-12
+bpg1#branch                                  0
+vddg1#branch                         -2.01e-12
+vssg1#branch                          2.01e-12
+vin6#branch                                  0
+va6#branch                                   0
+vin5#branch                                  0
+va5#branch                                   0
+vin4#branch                                  0
+va4#branch                                   0
+vin3#branch                                  0
+vin2#branch                                  0
+va2#branch                                   0
+vin1#branch                                  0
+vclkout#branch                               0
+vclkin#branch                                0
+
+ Reference value :  2.21056e-08 Reference value :  4.72856e-08 Reference value :  7.12656e-08 Reference value :  9.55056e-08 Reference value :  1.11210e-07 Reference value :  1.27330e-07
+No. of Data Rows : 7107
+
+  Measurements for Transient Analysis
+
+egate_1             =   1.13905e-13 from=  9.50000e-08 to=  1.35000e-07
+erec_1              =   2.67261e-13 from=  9.50000e-08 to=  1.35000e-07
+egate_2             =   1.63825e-13 from=  9.50000e-08 to=  1.35000e-07
+erec_2              =   2.67322e-13 from=  9.50000e-08 to=  1.35000e-07
+egate_3             =   2.17230e-12 from=  9.50000e-08 to=  1.35000e-07
+erec_3              =   7.58340e-13 from=  9.50000e-08 to=  1.35000e-07
+egate_4             =   3.04515e-12 from=  9.50000e-08 to=  1.35000e-07
+erec_4              =   3.50188e-13 from=  9.50000e-08 to=  1.35000e-07
+egate_5             =   6.85665e-12 from=  9.50000e-08 to=  1.35000e-07
+erec_5              =   3.49787e-13 from=  9.50000e-08 to=  1.35000e-07
+egate_6             =   9.41929e-12 from=  9.50000e-08 to=  1.35000e-07
+erec_6              =   3.50231e-13 from=  9.50000e-08 to=  1.35000e-07
+vw_1_r              =  1.000000e+00
+vr_1_r              =  9.999887e-01
+vw_1_f              =  -1.000000e+00
+vr_1_f              =  -9.353892e-01
+vw_2_r              =  1.000000e+00
+vr_2_r              =  9.999887e-01
+vw_2_f              =  -1.000000e+00
+vr_2_f              =  -9.353892e-01
+vw_3_r              =  -9.961999e-01
+vrp_3_r             =  -9.353892e-01
+vrn_3_r             =  8.045470e-01
+vw_3_f              =  1.768951e-01
+vrp_3_f             =  8.901248e-01
+vrn_3_f             =  -9.643313e-01
+vw_4_r              =  9.962001e-01
+vrp_4_r             =  9.999875e-01
+vrn_4_r             =  -9.999998e-01
+vw_4_f              =  2.046399e-01
+vrp_4_f             =  9.020524e-01
+vrn_4_f             =  -9.682145e-01
+vw_5_r              =  9.962001e-01
+vrp_5_r             =  9.999875e-01
+vrn_5_r             =  -9.999998e-01
+vw_5_f              =  2.053620e-01
+vrp_5_f             =  9.023568e-01
+vrn_5_f             =  -9.683132e-01
+vw_6_r              =  9.962001e-01
+vrp_6_r             =  9.999875e-01
+vrn_6_r             =  -9.999998e-01
+vw_6_f              =  2.045988e-01
+vrp_6_f             =  9.020351e-01
+vrn_6_f             =  -9.682088e-01
+etot_1              =  3.81166e-13
+etot_1_pt           =  1.90583e-13
+etot_2              =  4.31147e-13
+etot_2_pt           =  2.15574e-13
+etot_3              =  2.93064e-12
+etot_3_pt           =  1.46532e-12
+etot_4              =  3.39534e-12
+etot_4_pt           =  1.69767e-12
+etot_5              =  7.20644e-12
+etot_5_pt           =  3.60322e-12
+etot_6              =  9.76952e-12
+etot_6_pt           =  4.88476e-12
+eq_1                =   2.98395e-19 from=  1.00000e-08 to=  8.50000e-08
+eq_2                =   6.03000e-19 from=  1.00000e-08 to=  8.50000e-08
+eq_3                =   8.57000e-19 from=  1.00000e-08 to=  8.50000e-08
+eq_4                =   2.76850e-18 from=  1.00000e-08 to=  8.50000e-08
+eq_5                =   2.76850e-18 from=  1.00000e-08 to=  8.50000e-08
+eq_6                =   1.06690e-17 from=  1.00000e-08 to=  8.50000e-08
+
+
+Total analysis time (seconds) = 1.62417
+
+Total elapsed time (seconds) = 1.636 
+
+Total DRAM available = 61921.320 MB.
+DRAM currently available = 38645.492 MB.
+Maximum ngspice program size =   26.094 MB.
+Current ngspice program size =   15.391 MB.
+
+Shared ngspice pages =   10.766 MB.
+Text (code) pages =    7.578 MB.
+Stack = 0 bytes.
+Library pages =    4.688 MB.
+

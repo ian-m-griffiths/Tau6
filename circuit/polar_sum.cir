@@ -1,0 +1,149 @@
+* =====================================================================
+* polar_sum.cir  --  the POLAR CURRENT-MODE SUM: free addition by Kirchhoff
+*
+* THE CLAIM TO TEST (Ian's "free addition by Kirchhoff"):
+*   In polar ternary (1 line, current DIRECTION), two currents meeting at
+*   a node SUM by Kirchhoff's current law (KCL) with ZERO transistors.
+*   push = +1 unit OUT (positive current), pull = -1 unit IN (negative
+*   current), null = no current.  So +1 (push) + +1 (push) = +2 units,
+*   for free.
+*
+* WHAT THIS NETLIST PROVES (and, honestly, where it stops):
+*   1. KCL is EXACT.  Output current I_out = I_a + I_b, measured for the
+*      four cases  +1+1=+2,  +1-1=0,  -1-1=-2,  +1+0=+1.  Zero error:
+*      the summing node is a conservation-of-charge identity, not a
+*      device, so there is literally nothing to get wrong.
+*   2. The sum is FREE.  There is NO supply, NO clock, NO active device
+*      on the sum path -- only wires meeting at a node.  The ONLY energy
+*      is ohmic I^2*R_wire loss in the (real) wire resistance, which is
+*      (a) present on ANY current-carrying wire, summed or not, and
+*      (b) ~1000x below the measured fJ-class GATE energies.  Ideal
+*      node (Rwire -> 0): exactly 0 J.  See the energy report.
+*   3. THE FREE RIDE ENDS AT THE OUTPUT.  The sum node's current is a
+*      MAGNITUDE in {0, +-1, +-2}: the +-2 states are OUT OF the ternary
+*      range (+-1).  A real balanced-ternary adder must THRESHOLD |sigma|
+*      at 3*Iunit/2 and WRAP +2 -> -1 (carry +1) / -2 -> +1 (carry -1).
+*      That threshold + wrap is a 2-threshold measurement (Law 1) and is
+*      NOT free -- it is the NEXT agent's job, deliberately out of scope
+*      here.  This netlist verifies the FREE part and marks the boundary.
+*
+* CONVENTIONS (reused verbatim from diode_gates.cir / gate_energy.cir):
+*   - The input current sources are IDEAL: they abstract the previous
+*     stage's output driver, whose energy is already counted in that
+*     driver (symmetric to this stage's own output) -- exactly the ideal
+*     input-voltage-source convention of diode_gates.cir / gate_energy.cir.
+*   - 1 unit = Iunit = 1 uA.  The sum is LINEAR in Iunit, so the choice
+*     of magnitude is arbitrary and only scales the (already negligible)
+*     wire loss.
+*   - Rwire = 100 ohm is the honest parasitic wire resistance (same value
+*     as the repo's other netlists), placed in series with each input so
+*     the "tiny parasitic cost" is measured rather than assumed away.
+*   - push +1  = current INTO the sum node  (source: 0 -> wire, +Iunit)
+*     pull -1  = current OUT of the sum node (source: 0 -> wire, -Iunit)
+*     null  0  = no current               (source: 0 -> wire, 0)
+*   - The summing node feeds a 0 V ammeter (Vs) to ground: it reads the
+*     exact short-circuit output current (= the KCL sum) while holding
+*     the node at 0 V, so the ammeter itself dissipates nothing and the
+*     only energy in the circuit is the wire I^2*R.
+*
+* MEASURED RESULT SUMMARY (ngspice 44.2, polar_sum.log):
+*   case        I_out (measured)   expected   wire energy over 1us
+*   +1 + +1     +2.000 uA          +2 uA      0.2 fJ
+*   +1 + -1      0.000 uA           0 uA      0.2 fJ
+*   -1 + -1     -2.000 uA          -2 uA      0.2 fJ
+*   +1 + 0      +1.000 uA          +1 uA      0.1 fJ
+*   -> sum EXACT (KCL).  Energy is only I^2*R_wire (100 pW per conducting
+*   wire = 0.1 fJ/us), ~1000x below the fJ gate toggles in diode_gates.cir.
+* =====================================================================
+
+.options reltol=1e-9 abstol=1e-15 vntol=1e-9
+
+.param Iunit = 1u        ; 1 unit of polar current = 1 uA
+.param Rwire = 100       ; real (parasitic) wire resistance, ohm
+
+* ---------------------------------------------------------------------
+* Each case: two polar current sources (push/pull/null) -> their own wire
+* resistance -> the summing node (sN) -> 0 V ammeter to ground.
+*
+* Current-source direction legend:
+*   push +1 :  I<src> 0 nX {+Iunit}   current 0 -> nX, INTO the sum node
+*   pull -1 :  I<src> 0 nX {-Iunit}   current nX -> 0, OUT of the sum node
+*   null  0 :  I<src> 0 nX {0}
+* ---------------------------------------------------------------------
+
+* ---- CASE 1: +1 + +1 = +2  (push, push) ---------------------------
+Ia1 0 na1 {Iunit}
+Rwa1 na1 s1 {Rwire}
+Ib1 0 nb1 {Iunit}
+Rwb1 nb1 s1 {Rwire}
+Vs1 s1 0 0
+
+* ---- CASE 2: +1 + -1 = 0  (push, pull) ----------------------------
+Ia2 0 na2 {Iunit}
+Rwa2 na2 s2 {Rwire}
+Ib2 0 nb2 {-Iunit}
+Rwb2 nb2 s2 {Rwire}
+Vs2 s2 0 0
+
+* ---- CASE 3: -1 + -1 = -2  (pull, pull) ---------------------------
+Ia3 0 na3 {-Iunit}
+Rwa3 na3 s3 {Rwire}
+Ib3 0 nb3 {-Iunit}
+Rwb3 nb3 s3 {Rwire}
+Vs3 s3 0 0
+
+* ---- CASE 4: +1 + 0 = +1  (push, null) ----------------------------
+Ia4 0 na4 {Iunit}
+Rwa4 na4 s4 {Rwire}
+Ib4 0 nb4 {0}
+Rwb4 nb4 s4 {Rwire}
+Vs4 s4 0 0
+
+* ---------------------------------------------------------------------
+* Wire power B-sources (the ONLY energy in the sum path).  Power in a
+* resistor = V^2 / R, computed from node voltages only (robust; ngspice
+* does not save resistor branch currents by default).  pwN = total wire
+* dissipation for case N, in watts.
+* ---------------------------------------------------------------------
+Bpw1 pw1 0 V = (V(na1,s1)*V(na1,s1) + V(nb1,s1)*V(nb1,s1)) / {Rwire}
+Bpw2 pw2 0 V = (V(na2,s2)*V(na2,s2) + V(nb2,s2)*V(nb2,s2)) / {Rwire}
+Bpw3 pw3 0 V = (V(na3,s3)*V(na3,s3) + V(nb3,s3)*V(nb3,s3)) / {Rwire}
+Bpw4 pw4 0 V = (V(na4,s4)*V(na4,s4) + V(nb4,s4)*V(nb4,s4)) / {Rwire}
+
+* =====================================================================
+* SIMULATION + MEASUREMENTS  (DC sources: currents constant over window)
+* =====================================================================
+.tran 1n 1u
+
+* --- output current magnitudes (the KCL check: I_out = I_a + I_b) ---
+* I(VsN) > 0 = current flows OUT of the sum node (net push out);
+* I(VsN) < 0 = current flows INTO the sum node (net pull in).
+.meas tran iout_1 FIND I(Vs1) AT=500n
+.meas tran iout_2 FIND I(Vs2) AT=500n
+.meas tran iout_3 FIND I(Vs3) AT=500n
+.meas tran iout_4 FIND I(Vs4) AT=500n
+
+* --- summing-node voltage (should be exactly 0 V: ammeter holds it) ---
+.meas tran vsum_1 FIND V(s1) AT=500n
+.meas tran vsum_2 FIND V(s2) AT=500n
+.meas tran vsum_3 FIND V(s3) AT=500n
+.meas tran vsum_4 FIND V(s4) AT=500n
+
+* --- per-input wire voltage drop (= I*Rwire; sanity: each conducting
+*     wire carries exactly 1 unit = 0.1 mV across 100 ohm, NEVER 2) -----
+.meas tran vwire_a1 FIND V(na1) AT=500n
+.meas tran vwire_b1 FIND V(nb1) AT=500n
+
+* --- parasitic wire energy: INTEG of wire power over 1 us -------------
+.meas tran ewire_1 INTEG V(pw1) FROM=0 TO=1u
+.meas tran ewire_2 INTEG V(pw2) FROM=0 TO=1u
+.meas tran ewire_3 INTEG V(pw3) FROM=0 TO=1u
+.meas tran ewire_4 INTEG V(pw4) FROM=0 TO=1u
+
+* --- average wire power (W) over the same window ----------------------
+.meas tran pwire_1 AVG V(pw1) FROM=0 TO=1u
+.meas tran pwire_2 AVG V(pw2) FROM=0 TO=1u
+.meas tran pwire_3 AVG V(pw3) FROM=0 TO=1u
+.meas tran pwire_4 AVG V(pw4) FROM=0 TO=1u
+
+.end

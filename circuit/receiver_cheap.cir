@@ -1,0 +1,372 @@
+* =====================================================================
+* receiver_cheap.cir  --  CAN THE TERNARY CELL'S RECEIVER BE CHEAPENED?
+*
+* CONTEXT: the champion cell `lowswing_resonant.cir` lands at 0.081 pJ/bit
+*   (case B1: VLC=+-0.28 V, L=40 uH).  The DRIVER/wire/tank part is only
+*   0.041 pJ/trit (=0.026 pJ/bit) -- the RECEIVER is now 2/3 of the total:
+*   ~0.0865 pJ/trit (measured avg of push 0.059 + pull 0.100 + reset 0.100,
+*   two PMOS-input sense amps powered LOCALLY at vddsa=1.0 V, 2 ns eval).
+*   The receiver, not the tank, is the energy floor.
+*
+* THIS FILE: a fair-fight receiver benchmark that (a) REPRODUCES the
+*   champion B1 receiver energy exactly, then (b) sweeps three receiver
+*   redesigns, each on its OWN identical B1 resonant cell + its OWN 1.0 V
+*   receiver supply so the energies are separable and there is zero
+*   cross-loading of the rails:
+*
+*   Hypothesis 1 -- WIDER INPUT PAIR (device-paralleling: Ron/N -> less
+*                   drop).  Widen/parallel the SA's PMOS input pair M1/M2
+*                   (W = 1u, 2u, 4u, 8u).  The champion's own cell-level
+*                   winner used N=4 paralleling; does it also help the
+*                   sense amp, or is the SA current TAIL-limited (M5,
+*                   W=0.3u) so widening the pair does nothing for energy?
+*   Hypothesis 2 -- MORE SENSE AMPS IN PARALLEL.  2 -> 4 -> 6 SAs reading
+*                   the same rails.  Expected to DUPLICATE energy (each SA
+*                   draws its own tail current), not divide it.
+*   Bonus lever   -- LOWER-Vt FRONT END.  Reduce the input-pair |Vt| from
+*                   0.4 to 0.2 / 0.1 V (LEVEL=1 allows it; same KP).  Lower
+*                   Vt -> higher overdrive -> more gm (resolution) but also
+*                   more current (energy).  Measured either way.
+*
+* METHOD (fair-fight honesty rules, verbatim from lowswing_resonant.cir):
+*   - Cell:      ternary_cell UNCHANGED (rwire=500, cline=1p, DIDEAL diode
+*                receiver pair, rload=1Meg high-Z rails, cload=0.2p,
+*                rterm=1Meg).
+*   - Driver:    the REAL half-bridge LC switches of case B1, verbatim
+*                (MPP PMOS to +VLC, MN0 NMOS to 0, MNN NMOS to -VLC,
+*                closed for T/2 at the ring-current zero crossing, negative
+*                gate drive on the push switch -- the documented real-
+*                process fix).  Rbig+CAC stabilize the LC node.
+*   - Receiver:  REAL PMOS-input clocked sense amps at vddsa=1.0 V LOCAL.
+*                Each variant = 2 SAs (XsaA reads rA vs 0 = push detect;
+*                XsaB reads rB vs 0 = pull detect), plus the multi-SA
+*                variants (4 and 6 SAs).  All variants share ONE clock.
+*   - Timing:    verbatim B1 schedule.  Push 860-886.71n, pull
+*                892.71-919.41n, reset 925.41-952.12n.  Sense-amp eval
+*                sits in the GAP between phases (2 ns: clk low
+*                888.71-890.71n / 921.41-923.41n / 954.12-956.12n).  The
+*                1 M-ohm rails HOLD their asserts for tau~200 us, so the
+*                reset eval reads the previous pull state (the documented
+*                null caveat) -- reproduced faithfully here because we use
+*                the real cell.
+*   - NULL note: push eval fires with rA asserted / rB~0  (1 strong + 1
+*                weak latch); pull and reset evals fire with BOTH rails
+*                asserted (2 strong latches).  This is why push measures
+*                ~0.059 pJ while pull/reset measure ~0.100 pJ in the
+*                champion -- the mechanism, not a bug.
+*
+* ENERGY ACCOUNTING (all measured):
+*   E_rec(vX)  = INTEG -(vddsa_vX * I(VDDSA_vX)) over each 5 ns eval
+*                window (same windows as the champion).  The three evals
+*                (push/pull/reset) averaged = receiver pJ/trit.
+*   E_drv      = INTEG -(vlcp*I(VLCP) + vlcn*I(VLCN)) over the phase
+*                windows of cell 0 = the driver/tank anchor (must reproduce
+*                the champion's 0.041 pJ/trit; the receiver variants do not
+*                touch the driver).
+*   pJ/bit     = (E_drv_per_trit + E_rec_per_trit) / log2(3) = /1.585.
+*   RESOLUTION = latch differentials dA (push, at 889.71n) and dB (pull, at
+*                922.41n); null baseline ~+-4 mV, OK >= 0.01 V, FAIL < 5 mV
+*                or wrong sign.  Every variant must RESOLVE to count as a
+*                cheaper receiver.
+*
+* VARIANTS (each on its own cell 0..7, own vddsa supply):
+*   V0 baseline   : stock SA, W_in=1u, 2 SAs  -> MUST reproduce 0.0865 pJ/trit
+*   V1 wide2      : W_in=2u, 2 SAs
+*   V2 wide4      : W_in=4u, 2 SAs
+*   V3 wide8      : W_in=8u, 2 SAs
+*   V4 lvt-0.2    : W_in=1u, input-pair VTO=-0.2, 2 SAs
+*   V5 lvt-0.1    : W_in=1u, input-pair VTO=-0.1, 2 SAs
+*   V6 amp4       : W_in=1u, 4 SAs (2 push + 2 pull)
+*   V7 amp6       : W_in=1u, 6 SAs (3 push + 3 pull)
+*
+* HONESTY NOTES: LEVEL=1 models (no subthreshold leakage -- low-Vt devices
+*   below ~0.1 V overdrive are flattered), no body diodes, no device
+*   mismatch (real SA offsets sigma~5-20 mV would erode the thin margins).
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+* ---------- models (verbatim fairfight / lowswing_resonant) ----------
+.model NMOS1   NMOS(LEVEL=1 VTO=0.4  KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1   PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+.model PMOSLV2 PMOS(LEVEL=1 VTO=-0.2 KP=100u LAMBDA=0.05 TOX=2n)
+.model PMOSLV1 PMOS(LEVEL=1 VTO=-0.1 KP=100u LAMBDA=0.05 TOX=2n)
+.model DIDEAL  D (IS=1e-14 RS=50 CJO=0.2p TT=2n N=1.0)
+
+* ---------- cell (verbatim fairfight) ----------
+.subckt ternary_cell in rA rB rwire=500 cline=1p rload=1meg cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+D1 x rA DIDEAL
+D2 rB x DIDEAL
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+* ---------- real receiver: sense amp (stock input pair, W parametrized) --
+* out = high when inP < inM (PMOS conducts more on the lower input).
+* M1/M2 = PMOS input pair (WIN = width lever under test);
+* M5     = PMOS tail (clocked, W=0.3u -- the current limiter);
+* M3/M4  = NMOS cross-coupled latch; M6/M7 = NMOS precharge.
+.subckt sensamp_w inP inM clk vddsa out outb WIN=1u
+M1 out  inP cs cs PMOS1 W={WIN} L=0.18u
+M2 outb inM cs cs PMOS1 W={WIN} L=0.18u
+M5 cs   clk vddsa vddsa PMOS1 W=0.3u L=0.18u
+M3 out  outb 0 0 NMOS1 W=0.5u L=0.18u
+M4 outb out  0 0 NMOS1 W=0.5u L=0.18u
+M6 out  clk  0 0 NMOS1 W=0.5u L=0.18u
+M7 outb clk  0 0 NMOS1 W=0.5u L=0.18u
+CLo  out  0 5f
+CLob outb 0 5f
+.ends
+
+* ---------- low-Vt front end: input pair VTO=-0.2 (tail/latch stock) -----
+.subckt sensamp_lv02 inP inM clk vddsa out outb
+M1 out  inP cs cs PMOSLV2 W=1u L=0.18u
+M2 outb inM cs cs PMOSLV2 W=1u L=0.18u
+M5 cs   clk vddsa vddsa PMOS1 W=0.3u L=0.18u
+M3 out  outb 0 0 NMOS1 W=0.5u L=0.18u
+M4 outb out  0 0 NMOS1 W=0.5u L=0.18u
+M6 out  clk  0 0 NMOS1 W=0.5u L=0.18u
+M7 outb clk  0 0 NMOS1 W=0.5u L=0.18u
+CLo  out  0 5f
+CLob outb 0 5f
+.ends
+
+* ---------- low-Vt front end: input pair VTO=-0.1 (tail/latch stock) -----
+.subckt sensamp_lv01 inP inM clk vddsa out outb
+M1 out  inP cs cs PMOSLV1 W=1u L=0.18u
+M2 outb inM cs cs PMOSLV1 W=1u L=0.18u
+M5 cs   clk vddsa vddsa PMOS1 W=0.3u L=0.18u
+M3 out  outb 0 0 NMOS1 W=0.5u L=0.18u
+M4 outb out  0 0 NMOS1 W=0.5u L=0.18u
+M6 out  clk  0 0 NMOS1 W=0.5u L=0.18u
+M7 outb clk  0 0 NMOS1 W=0.5u L=0.18u
+CLo  out  0 5f
+CLob outb 0 5f
+.ends
+
+* ---------- B1 resonant front end (driver + tank + cell), verbatim -------
+* Reproduced from lowswing_resonant.cir case B1 (VLC=+-0.28 V, L=40 uH).
+* Ports: rA rB (demux rails), line (the wire node, for inspection),
+* pwpLC (power-clock energy probe = -(vlcp*I(VLCP)+vlcn*I(VLCN))).
+.subckt b1cell rA rB line pwpLC
+VLCP vlcp 0 DC 0.28
+VLCN vlcn 0 DC -0.28
+MPP a gPP vlcp vlcp PMOS1 W=60u L=0.18u
+VgPP gPP 0 PWL(0 0.28 860.00n 0.28 863.00n -0.28 883.71n -0.28 886.71n 0.28)
+MN0 a gN0 0 vlcn NMOS1 W=10u L=0.18u
+VgN0 gN0 0 PWL(0 -0.28 892.71n -0.28 895.71n 1.0 916.41n 1.0 919.41n -0.28)
+MNN a gNN vlcn vlcn NMOS1 W=10u L=0.18u
+VgNN gNN 0 PWL(0 -0.28 925.41n -0.28 928.41n 1.28 949.12n 1.28 952.12n -0.28)
+Rbig a 0 100meg
+CAC a 0 100f
+L a d 40.00u
+Vs d line DC 0
+Xcell line rA rB ternary_cell
+BpLC pwpLC 0 V = -(V(vlcp)*I(VLCP) + V(vlcn)*I(VLCN))
+.ends
+
+* =====================================================================
+* EIGHT identical B1 cells (one per receiver variant).  Each receiver
+* variant reads ITS OWN rails -> zero cross-loading, energies separable.
+* =====================================================================
+Xcell0 rA0 rB0 line0 pwLC0 b1cell
+Xcell1 rA1 rB1 line1 pwLC1 b1cell
+Xcell2 rA2 rB2 line2 pwLC2 b1cell
+Xcell3 rA3 rB3 line3 pwLC3 b1cell
+Xcell4 rA4 rB4 line4 pwLC4 b1cell
+Xcell5 rA5 rB5 line5 pwLC5 b1cell
+Xcell6 rA6 rB6 line6 pwLC6 b1cell
+Xcell7 rA7 rB7 line7 pwLC7 b1cell
+
+* ---------- shared sense-amp clock (verbatim B1 eval schedule) ----------
+Vclk clk 0 PWL(0 1 888.21n 1 888.71n 0 890.71n 0 891.21n 1 920.91n 1 921.41n 0 923.41n 0 923.91n 1 953.62n 1 954.12n 0 956.12n 0 956.62n 1)
+
+* =====================================================================
+* V0 : BASELINE receiver (stock SA, W=1u, 2 SAs) -- champion reproduction
+* =====================================================================
+VDDSA_v0 vddsa_v0 0 DC 1.0
+BpSA_v0 pwpSA_v0 0 V = -(V(vddsa_v0)*I(VDDSA_v0))
+XsaA_v0 0 rA0 clk vddsa_v0 outA_v0 outAb_v0 sensamp_w WIN=1u
+XsaB_v0 rB0 0 clk vddsa_v0 outB_v0 outBb_v0 sensamp_w WIN=1u
+BdA_v0 vdA_v0 0 V = V(outA_v0)-V(outAb_v0)
+BdB_v0 vdB_v0 0 V = V(outB_v0)-V(outBb_v0)
+
+* =====================================================================
+* V1 : WIDER input pair, W=2u (paralleling x2)
+* =====================================================================
+VDDSA_v1 vddsa_v1 0 DC 1.0
+BpSA_v1 pwpSA_v1 0 V = -(V(vddsa_v1)*I(VDDSA_v1))
+XsaA_v1 0 rA1 clk vddsa_v1 outA_v1 outAb_v1 sensamp_w WIN=2u
+XsaB_v1 rB1 0 clk vddsa_v1 outB_v1 outBb_v1 sensamp_w WIN=2u
+BdA_v1 vdA_v1 0 V = V(outA_v1)-V(outAb_v1)
+BdB_v1 vdB_v1 0 V = V(outB_v1)-V(outBb_v1)
+
+* =====================================================================
+* V2 : WIDER input pair, W=4u (paralleling x4)
+* =====================================================================
+VDDSA_v2 vddsa_v2 0 DC 1.0
+BpSA_v2 pwpSA_v2 0 V = -(V(vddsa_v2)*I(VDDSA_v2))
+XsaA_v2 0 rA2 clk vddsa_v2 outA_v2 outAb_v2 sensamp_w WIN=4u
+XsaB_v2 rB2 0 clk vddsa_v2 outB_v2 outBb_v2 sensamp_w WIN=4u
+BdA_v2 vdA_v2 0 V = V(outA_v2)-V(outAb_v2)
+BdB_v2 vdB_v2 0 V = V(outB_v2)-V(outBb_v2)
+
+* =====================================================================
+* V3 : WIDER input pair, W=8u (paralleling x8)
+* =====================================================================
+VDDSA_v3 vddsa_v3 0 DC 1.0
+BpSA_v3 pwpSA_v3 0 V = -(V(vddsa_v3)*I(VDDSA_v3))
+XsaA_v3 0 rA3 clk vddsa_v3 outA_v3 outAb_v3 sensamp_w WIN=8u
+XsaB_v3 rB3 0 clk vddsa_v3 outB_v3 outBb_v3 sensamp_w WIN=8u
+BdA_v3 vdA_v3 0 V = V(outA_v3)-V(outAb_v3)
+BdB_v3 vdB_v3 0 V = V(outB_v3)-V(outBb_v3)
+
+* =====================================================================
+* V4 : LOW-Vt front end, input pair VTO=-0.2 (W=1u)
+* =====================================================================
+VDDSA_v4 vddsa_v4 0 DC 1.0
+BpSA_v4 pwpSA_v4 0 V = -(V(vddsa_v4)*I(VDDSA_v4))
+XsaA_v4 0 rA4 clk vddsa_v4 outA_v4 outAb_v4 sensamp_lv02
+XsaB_v4 rB4 0 clk vddsa_v4 outB_v4 outBb_v4 sensamp_lv02
+BdA_v4 vdA_v4 0 V = V(outA_v4)-V(outAb_v4)
+BdB_v4 vdB_v4 0 V = V(outB_v4)-V(outBb_v4)
+
+* =====================================================================
+* V5 : LOW-Vt front end, input pair VTO=-0.1 (W=1u)
+* =====================================================================
+VDDSA_v5 vddsa_v5 0 DC 1.0
+BpSA_v5 pwpSA_v5 0 V = -(V(vddsa_v5)*I(VDDSA_v5))
+XsaA_v5 0 rA5 clk vddsa_v5 outA_v5 outAb_v5 sensamp_lv01
+XsaB_v5 rB5 0 clk vddsa_v5 outB_v5 outBb_v5 sensamp_lv01
+BdA_v5 vdA_v5 0 V = V(outA_v5)-V(outAb_v5)
+BdB_v5 vdB_v5 0 V = V(outB_v5)-V(outBb_v5)
+
+* =====================================================================
+* V6 : MORE SENSE AMPS -- 4 SAs (2 push + 2 pull) on one supply
+* =====================================================================
+VDDSA_v6 vddsa_v6 0 DC 1.0
+BpSA_v6 pwpSA_v6 0 V = -(V(vddsa_v6)*I(VDDSA_v6))
+XsaA_v6a 0 rA6 clk vddsa_v6 outA_v6a outAb_v6a sensamp_w WIN=1u
+XsaA_v6b 0 rA6 clk vddsa_v6 outA_v6b outAb_v6b sensamp_w WIN=1u
+XsaB_v6a rB6 0 clk vddsa_v6 outB_v6a outBb_v6a sensamp_w WIN=1u
+XsaB_v6b rB6 0 clk vddsa_v6 outB_v6b outBb_v6b sensamp_w WIN=1u
+BdA_v6 vdA_v6 0 V = V(outA_v6a)-V(outAb_v6a)
+BdB_v6 vdB_v6 0 V = V(outB_v6a)-V(outBb_v6a)
+
+* =====================================================================
+* V7 : MORE SENSE AMPS -- 6 SAs (3 push + 3 pull) on one supply
+* =====================================================================
+VDDSA_v7 vddsa_v7 0 DC 1.0
+BpSA_v7 pwpSA_v7 0 V = -(V(vddsa_v7)*I(VDDSA_v7))
+XsaA_v7a 0 rA7 clk vddsa_v7 outA_v7a outAb_v7a sensamp_w WIN=1u
+XsaA_v7b 0 rA7 clk vddsa_v7 outA_v7b outAb_v7b sensamp_w WIN=1u
+XsaA_v7c 0 rA7 clk vddsa_v7 outA_v7c outAb_v7c sensamp_w WIN=1u
+XsaB_v7a rB7 0 clk vddsa_v7 outB_v7a outBb_v7a sensamp_w WIN=1u
+XsaB_v7b rB7 0 clk vddsa_v7 outB_v7b outBb_v7b sensamp_w WIN=1u
+XsaB_v7c rB7 0 clk vddsa_v7 outB_v7c outBb_v7c sensamp_w WIN=1u
+BdA_v7 vdA_v7 0 V = V(outA_v7a)-V(outAb_v7a)
+BdB_v7 vdB_v7 0 V = V(outB_v7a)-V(outBb_v7a)
+
+* =====================================================================
+* MEASUREMENTS -- DRIVER anchor (cell 0, verbatim B1 phase windows)
+* =====================================================================
+.meas tran epush_drv  INTEG V(pwLC0) FROM=860.00n TO=886.71n
+.meas tran epull_drv  INTEG V(pwLC0) FROM=892.71n TO=919.41n
+.meas tran ereset_drv INTEG V(pwLC0) FROM=925.41n TO=952.12n
+.meas tran ecyc_drv   INTEG V(pwLC0) FROM=860.00n TO=952.12n
+.meas tran railA0_pk  MAX V(rA0) FROM=863.00n TO=886.71n
+.meas tran railB0_min MIN V(rB0) FROM=895.71n TO=919.41n
+
+* --- receiver per-variant eval energies (verbatim 5 ns windows) ---
+.meas tran epush_v0  INTEG V(pwpSA_v0) FROM=888.71n TO=893.71n
+.meas tran epull_v0  INTEG V(pwpSA_v0) FROM=921.41n TO=926.41n
+.meas tran ereset_v0 INTEG V(pwpSA_v0) FROM=954.12n TO=959.12n
+.meas tran epush_v1  INTEG V(pwpSA_v1) FROM=888.71n TO=893.71n
+.meas tran epull_v1  INTEG V(pwpSA_v1) FROM=921.41n TO=926.41n
+.meas tran ereset_v1 INTEG V(pwpSA_v1) FROM=954.12n TO=959.12n
+.meas tran epush_v2  INTEG V(pwpSA_v2) FROM=888.71n TO=893.71n
+.meas tran epull_v2  INTEG V(pwpSA_v2) FROM=921.41n TO=926.41n
+.meas tran ereset_v2 INTEG V(pwpSA_v2) FROM=954.12n TO=959.12n
+.meas tran epush_v3  INTEG V(pwpSA_v3) FROM=888.71n TO=893.71n
+.meas tran epull_v3  INTEG V(pwpSA_v3) FROM=921.41n TO=926.41n
+.meas tran ereset_v3 INTEG V(pwpSA_v3) FROM=954.12n TO=959.12n
+.meas tran epush_v4  INTEG V(pwpSA_v4) FROM=888.71n TO=893.71n
+.meas tran epull_v4  INTEG V(pwpSA_v4) FROM=921.41n TO=926.41n
+.meas tran ereset_v4 INTEG V(pwpSA_v4) FROM=954.12n TO=959.12n
+.meas tran epush_v5  INTEG V(pwpSA_v5) FROM=888.71n TO=893.71n
+.meas tran epull_v5  INTEG V(pwpSA_v5) FROM=921.41n TO=926.41n
+.meas tran ereset_v5 INTEG V(pwpSA_v5) FROM=954.12n TO=959.12n
+.meas tran epush_v6  INTEG V(pwpSA_v6) FROM=888.71n TO=893.71n
+.meas tran epull_v6  INTEG V(pwpSA_v6) FROM=921.41n TO=926.41n
+.meas tran ereset_v6 INTEG V(pwpSA_v6) FROM=954.12n TO=959.12n
+.meas tran epush_v7  INTEG V(pwpSA_v7) FROM=888.71n TO=893.71n
+.meas tran epull_v7  INTEG V(pwpSA_v7) FROM=921.41n TO=926.41n
+.meas tran ereset_v7 INTEG V(pwpSA_v7) FROM=954.12n TO=959.12n
+
+* --- resolution (latch differentials at the demux times) ---
+.meas tran dA_push_v0 FIND V(vdA_v0) AT=889.71n
+.meas tran dB_pull_v0 FIND V(vdB_v0) AT=922.41n
+.meas tran dA_push_v1 FIND V(vdA_v1) AT=889.71n
+.meas tran dB_pull_v1 FIND V(vdB_v1) AT=922.41n
+.meas tran dA_push_v2 FIND V(vdA_v2) AT=889.71n
+.meas tran dB_pull_v2 FIND V(vdB_v2) AT=922.41n
+.meas tran dA_push_v3 FIND V(vdA_v3) AT=889.71n
+.meas tran dB_pull_v3 FIND V(vdB_v3) AT=922.41n
+.meas tran dA_push_v4 FIND V(vdA_v4) AT=889.71n
+.meas tran dB_pull_v4 FIND V(vdB_v4) AT=922.41n
+.meas tran dA_push_v5 FIND V(vdA_v5) AT=889.71n
+.meas tran dB_pull_v5 FIND V(vdB_v5) AT=922.41n
+.meas tran dA_push_v6 FIND V(vdA_v6) AT=889.71n
+.meas tran dB_pull_v6 FIND V(vdB_v6) AT=922.41n
+.meas tran dA_push_v7 FIND V(vdA_v7) AT=889.71n
+.meas tran dB_pull_v7 FIND V(vdB_v7) AT=922.41n
+
+* --- resolution at END of eval (2 ns) and PEAK over the eval window: ---
+* distinguishes "slower latch" (peak reaches ~1 V but late) from "stuck"
+* (peak stays small -- the wider/over-driven pair never regenerates).
+.meas tran dA_end_v0 FIND V(vdA_v0) AT=890.71n
+.meas tran dA_peak_v0 MAX V(vdA_v0) FROM=888.71n TO=893.71n
+.meas tran dB_end_v0 FIND V(vdB_v0) AT=923.41n
+.meas tran dB_peak_v0 MAX V(vdB_v0) FROM=921.41n TO=926.41n
+.meas tran dA_end_v1 FIND V(vdA_v1) AT=890.71n
+.meas tran dA_peak_v1 MAX V(vdA_v1) FROM=888.71n TO=893.71n
+.meas tran dB_end_v1 FIND V(vdB_v1) AT=923.41n
+.meas tran dB_peak_v1 MAX V(vdB_v1) FROM=921.41n TO=926.41n
+.meas tran dA_end_v2 FIND V(vdA_v2) AT=890.71n
+.meas tran dA_peak_v2 MAX V(vdA_v2) FROM=888.71n TO=893.71n
+.meas tran dB_end_v2 FIND V(vdB_v2) AT=923.41n
+.meas tran dB_peak_v2 MAX V(vdB_v2) FROM=921.41n TO=926.41n
+.meas tran dA_end_v3 FIND V(vdA_v3) AT=890.71n
+.meas tran dA_peak_v3 MAX V(vdA_v3) FROM=888.71n TO=893.71n
+.meas tran dB_end_v3 FIND V(vdB_v3) AT=923.41n
+.meas tran dB_peak_v3 MAX V(vdB_v3) FROM=921.41n TO=926.41n
+.meas tran dA_end_v4 FIND V(vdA_v4) AT=890.71n
+.meas tran dA_peak_v4 MAX V(vdA_v4) FROM=888.71n TO=893.71n
+.meas tran dB_end_v4 FIND V(vdB_v4) AT=923.41n
+.meas tran dB_peak_v4 MAX V(vdB_v4) FROM=921.41n TO=926.41n
+.meas tran dA_end_v5 FIND V(vdA_v5) AT=890.71n
+.meas tran dA_peak_v5 MAX V(vdA_v5) FROM=888.71n TO=893.71n
+.meas tran dB_end_v5 FIND V(vdB_v5) AT=923.41n
+.meas tran dB_peak_v5 MAX V(vdB_v5) FROM=921.41n TO=926.41n
+.meas tran dA_end_v6 FIND V(vdA_v6) AT=890.71n
+.meas tran dA_peak_v6 MAX V(vdA_v6) FROM=888.71n TO=893.71n
+.meas tran dB_end_v6 FIND V(vdB_v6) AT=923.41n
+.meas tran dB_peak_v6 MAX V(vdB_v6) FROM=921.41n TO=926.41n
+.meas tran dA_end_v7 FIND V(vdA_v7) AT=890.71n
+.meas tran dA_peak_v7 MAX V(vdA_v7) FROM=888.71n TO=893.71n
+.meas tran dB_end_v7 FIND V(vdB_v7) AT=923.41n
+.meas tran dB_peak_v7 MAX V(vdB_v7) FROM=921.41n TO=926.41n
+
+.tran 50p 1000n
+
+* --- key waveforms for inspection ---
+.print tran v(line0) v(rA0) v(rB0)
+.print tran v(outA_v0) v(outAb_v0) v(outB_v0) v(outBb_v0)
+.print tran i(VDDSA_v0) i(VDDSA_v1) i(VDDSA_v3)
+
+.end

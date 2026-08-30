@@ -1,0 +1,23 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Lean build artifacts (recreate with `lake build`)
+.lake/
+*.olean
+*.ilean
+*.c
+*.trace
+
+# Secrets — never commit
+.env
+*.pem
+*secret*
+
+# Third-party (clone separately; see THIRD_PARTY.md)
+picorv32/
+neorv32/
+
+# OS
+.DS_Store

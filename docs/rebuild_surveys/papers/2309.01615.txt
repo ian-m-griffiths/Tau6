@@ -1,0 +1,1308 @@
+         A balanced Memristor-CMOS ternary logic family and its application
+
+    Xiao-Yuan Wang 1, Senior Member, IEEE, Jia-Wei Zhou 1, Chuan-Tao Dong1, Xin-Hui Chen1, Sanjoy
+     Kumar Nandi2, Robert G. Elliman2, Sung-Mo Kang4, Life Fellow, and Herbert Ho-Ching Iu3, Senior
+                                            Member, IEEE
+
+Abstract: The design of balanced ternary digital logic circuits based on memristors and conventional CMOS devices is proposed. First,
+balanced ternary minimum gate TMIN, maximum gate TMAX and ternary inverters are systematically designed and verified by
+simulation, and then logic circuits such as ternary encoders, decoders and multiplexers are designed on this basis. Two different schemes
+are then used to realize the design of functional combinational logic circuits such as a balanced ternary half adder, multiplier, and
+numerical comparator. Finally, we report a series of comparisons and analyses of the two design schemes, which provide a reference
+for subsequent research and development of three-valued logic circuits.
+
+
+Keywords: Memristor; Multi-valued Logic; Balanced Ternary; Digital Logic Circuit
+
+
+1.Introduction                                                         CMOS technology, and has shown great potential in the
+                                                                       field of digital logic circuit research[9]-[11]. Notably, the
+   In the past few decades, binary logic has been widely
+                                                                       non-volatility      of   memristors       enables      memory-
+used in digital logic systems, and large-scale
+                                                                       computing integration that can realize novel computer
+integration has seen an ongoing reduction in cost.
+                                                                       architectures that differ from the von Neumann
+However, as the scaling speed of traditional CMOS
+                                                                       architecture[12][13].
+devices gradually slows, achieving the predictions of
+Moore's Law is increasingly difficult[1]. Therefore, in                   With the emergence of novel logic devices, the study
+the post-Moore era, researchers are constantly seeking                 of multi-valued logic circuits has also attracted the
+new solutions, such as the use of new materials, new                   attention of researchers. The multi-valued logic circuit
+devices and new computing paradigms[2]-[4].                            refers to logic systems with more than 2 logic states. To
+                                                                       achieve the same function, multi-valued logic circuits
+   The fabrication of novel devices has enabled the
+                                                                       require fewer interconnections than binary logic circuit,
+continuous improvement of digital logic circuits and
+                                                                       and are expected to improve the power consumption
+has provided new opportunities for the integrated
+                                                                       and data density of the circuit[14][15]. As a typical multi-
+circuit industry. For example, carbon nanotube field
+                                                                       valued logic, ternary logic has been the most widely
+effect transistors (CNTFET) are a promising ideal
+                                                                       studied. Ternary logic representation methods are
+transistor logic device that has larger switching current,
+                                                                       mainly divided into two categories: unbalanced and
+better subthreshold characteristics and stability than
+                                                                       balanced. Unbalanced ternary logic includes positive
+CMOS devices[5][6]. However, in CNTFET-based
+                                                                       {0, 1, 2} and negative {0, -1, -2} ternary states, while
+digital logic circuits, a “charge build-up” problem
+                                                                       balanced ternary logic is represented by {-1, 0, 1}
+occurs that may affect device switching performance[7].
+                                                                       states[16]. In [17], CNTFET-based basic ternary logic
+In 2008, the successful fabrication of a memristor[8]
+                                                                       gates are proposed to reduce the power consumption of
+also attracted the attention of researchers in various
+                                                                       the circuit compared to the CMOS-based design. In
+fields. It has the characteristics of nanometer size, low
+                                                                       2020, [18] proposed a design method of ternary logic
+power consumption, and compatibility with traditional
+gates with the resistances of the tri-valued memristor as   6 presents the characteristics of the fabricated
+logic variables. Subsequently, [19] proposed a ternary      memristor and experimentally validates the balanced
+logic family employing a memristor-CMOS hybrid              ternary half adder based on the memristor. Section 7
+design. This used voltage as the logic variable and         analyses and compares the characteristics of selected
+achieved an impressive improvement in data density.         components, and investigates the power consumption
+  The above studies all employed positive ternary           of the combinational logic circuits designed by the two
+logic, whereas this study focusses on balanced ternary      methods.    Finally,     Section        8   summarizes   the
+logic. Compared to unbalanced ternary logic, balanced       conclusions of this study.
+ternary logic can represent the entire range of integers    2.Basic Logic Gates of Balanced Ternary
+without setting the sign bit[20]. In addition, its
+                                                              In our previous work[19], we investigated unbalanced
+multiplication operation does not generate carry bits
+                                                            positive ternary logic {0, 1, 2} circuits.         Here, we
+and the addition operation only generates carry bits in
+                                                            focus on balanced ternary logic {-1, 0, 1}, where logic
+2 of the 9 input cases. Therefore, balanced ternary logic
+                                                            values ‘-1’, ‘0’, ‘1’ correspond to voltage levels -VDD,
+offers advantages over unbalanced ternary logic in
+                                                            0, VDD, respectively.
+arithmetic operations[21]. Since the memristor is
+compatible with CMOS technology and is smaller than         2.1 TMIN and TMAX Gates
+
+conventional CMOS devices, it is more conducive to                  Table 1 The truth table of TMIN and TMAX
+
+further improvements in circuit integration. Therefore,                 Vin1        Vin2   TMIN         TMAX
+the study of memristive balanced ternary logic circuits                  -1         -1         -1         -1
+
+is expected to improve information storage density and                   -1          0         -1         0
+                                                                         -1          1         -1         1
+information transmission efficiency.
+                                                                         0          -1         -1         0
+  The rest of this paper is organized as follows: Section                0           0         0          0
+2 introduces the balanced ternary basic logic gates,                     0           1         0          1
+including ternary minimum gate TMIN, maximum gate                        1          -1         -1         1
+
+TMAX, and three forms of inverter. In the third section,                 1           0         0          1
+                                                                         1           1         1          1
+we design balanced ternary encoder circuits, including
+a 3-1 encoder and a 9-2 encoder. Section 4 first
+                                                               Table 1 shows the truth table of the designed
+introduces the design of a balanced ternary 1-3 decoder
+                                                            balanced ternary minimum (TMIN) gate and maximum
+and 2-9 decoder, and then further designs functional        (TMAX) gate circuits. As can be seen from Table 1, the
+combinational logic circuits based on the decoder,          outputs of the TMIN and TMAX are the operations of
+including a half adder, multiplier and numerical            taking the minimum value and the maximum value of
+comparator. In Section 5, a novel balanced ternary          the input signals, respectively. Therefore, since its
+multiplexer circuit is introduced and combinational         function is the same as that of the AND gate and the
+                                                            OR gate in the positive ternary logic, the circuit
+logic circuits, including a half adder, multiplier, and
+                                                            structure of Figure 1 in [19] can be used. Its working
+numerical comparator are constructed based on this
+                                                            principle will not be analyzed in detail here. Figure 1
+multiplexer. The circuits designed in each section are      presents LTSpice simulation results for all 9 possible
+simulated and verified by LTSpice to prove the              inputs for TMIN and TMAX using the KNOWM
+effectiveness of the designed circuit structure. Section    memristor model[22]. The value of VDD is 1V. It is worth
+                                                                                                             VDD
+noting that the above two-input gates, TMIN and
+TMAX, can be extended to multiple inputs by simply                                                         M1
+                                                                                                                                                 VDD
+increasing the number of memristors. For example, for                                                                          Vout
+
+the three-input TMIN and TMAX, it is only necessary                                                        M2                                M3
+                                                                                                                                                       Vout
+to increase the number of memristors to three, and the                                               Vin
+                                                                                                                          T2
+                                                                                                                                       Vin
+circuit structure can be found in the circuit design of                                                         T1                                T3
+
+Figure 8 in [19].
+                                                                                                             -VDD      -VDD                   -VDD
+                                                                                                               (a).STI                  (b).PTI、NTI
+                1                                                                                 Figure 2 The structure of balanced ternary inverters
+A/V
+
+
+
+
+                0
+           -1
+                                                                                          The circuit structure of the PTI and NTI gates is the
+            1
+                                                                                  same, which can be realized by changing the ground
+B/V
+
+
+
+
+                0
+           -1                                                                     terminals of the PTI and NTI circuits in [19] to a
+            1
+TMAX/V TMIN/V
+
+
+
+
+                                                                                  voltage source -VDD, as shown in Figure 2(b). Among
+                0
+           -1                                                                     them, the threshold voltage of T3 should satisfy
+            1
+                0                                                                 VDD<vth3<2VDD and 0<vth3<VDD in the PTI and NTI
+           -1                                                                     respectively.
+             0        1      2     3         4          5   6         7   8   9
+                                                 t/ms
+                                                                                          Figure 3 shows the simulation results of LTSpice
+                Figure 1 LTSpice simulation results of TMIN and TMAX
+                                                                                  with three inverters. Where vth1 takes 0.8V, vth2 takes
+2.2 Balanced Ternary Inverters
+                                                                                  1.5V, and the threshold voltages of NMOS in PTI and
+                Balanced ternary inverters also have three forms,
+                                                                                  NTI take 1.5V and 0.8V respectively.
+namely Standard Ternary Inverter (STI), Positive
+                                                                                          1
+Ternary Inverter (PTI) and Negative Ternary Inverter
+                                                                                  A/V
+
+
+
+
+                                                                                          0
+                                                                                      -1
+(NTI), and the corresponding truth table is shown in
+                                                                                      1
+                                                                                  STI/V
+
+
+
+
+Table 2.                                                                                  0
+                                                                                      -1
+                    Table 2 Truth table of balanced ternary inverters                  1
+                                                                                  PTI/V
+
+
+
+
+                                                                                          0
+                            A          STI         PTI          NTI
+                                                                                      -1
+                            -1         1            1            1                     1
+                                                                                  NTI/V
+
+
+
+
+                            0          0            1           -1                        0
+                                                                                      -1
+                            1          -1           -1          -1                            0                      1                       2                3
+                                                                                                                                t/ms
+                By improving our previous work[19], a novel circuit                  Figure 3 The simulation results of balanced ternary inverters
+
+structure for the STI is obtained, as shown in Figure
+                                                                                  3. Encoders of Balanced Ternary Logic
+2(a). By changing the connection method of the
+components, more precise logic operations can be                                          In digital logic circuits, encoders are often used to
+
+achieved, and the output logic level is closer to the                             distinguish a series of different things, each of which is
+
+corresponding preset voltage value. The thresholds of                             represented by a balanced ternary code, which is what
+                                                                                  encoding means. In this section, we first design a
+the transistors T1 and T2 satisfy 0<vth1<VDD and
+VDD<vth2<2VDD respectively.                                                       balanced ternary 3-1 encoder and then extend it to more
+                                                                                  inputs so a balanced ternary 9-2 encoder circuit is
+                                                                                  realized.
+3.1 Balanced Ternary 3-1 Encoder                                                   Figure 5 shows the LTSpice simulation results of the
+  The function of the 3-1 encoder is to encode three                             balanced ternary 3-1 encoder.
+                                                                                                                      1
+input signals with only high and low states (logic "1"
+
+
+
+
+                                                                                                       Y/V X-1/V X0/V X1/V
+                                                                                                                      0
+                                                                                                                     -1
+and logic "-1") into one balanced ternary signal (logic                                                               1
+                                                                                                                      0
+"-1", logic "0" " and logic "1"). Table 3 is the truth table                                                         -1
+                                                                                                                      1
+                                                                                                                      0
+of the 3-1 encoder. It is worth noting that only one                                                                 -1
+                                                                                                                      1
+encoded signal (high level signal) is allowed to be input                                                             0
+                                                                                                                     -1
+                                                                                                                       0                 1               2             3
+at any time, otherwise the output will be ill-defined.                                                                                          t/ms
+
+    Table 3 The truth table of balanced ternary 3-1 encoder                      Figure 5 The simulation results of balanced ternary 3-1 encoder
+
+                  X1          X0         X-1            Y                        3.2 Balanced Ternary 9-2 Encoder
+                  -1          -1         1              -1
+                                                                                   As for the 3-1 encoder, the balanced ternary 9-2
+                  -1          1          -1              0
+                                                                                 encoder is also a common encoder. Its inputs are nine
+                   1          -1         -1              1
+                                                                                 channels of high- or low-level signals, and the output is
+  Figure 4 is the circuit structure of the proposed
+                                                                                 a 2-bit balanced ternary code. The relationship between
+balanced ternary 3-1 encoder, where the threshold
+                                                                                 inputs and outputs is shown in Table 4.
+voltage of the NMOS transistor T1 of the Subcircuit1
+                                                                                        Table 4 The truth table of balanced ternary 9-2 encoder
+module in Figure 4(b) satisfies VDD<vth1<2VDD.
+                                                                                   X4       X3       X2                        X1   X0       X-1       X-2      X-3    X-4       Y1           Y0
+
+                                                                          M1       -1       -1       -1                        -1   -1        -1       -1       -1      1        -1           -1
+     X1
+                                                 Vin
+                                                                          Vout
+     X0                                  Y                                         -1       -1       -1                        -1   -1        -1       -1       1       -1       -1           0
+                   TMIN           TMAX
+    X-1                                                                            -1       -1       -1                        -1   -1        -1       1        -1      -1       -1           1
+                                                                     T1
+                                               Input   Output
+
+                Subcircuit1
+                                                -1
+                                                 0
+                                                         -1
+                                                          0
+                                                                                   -1       -1       -1                        -1   -1        1        -1       -1      -1       0            -1
+                                                 1       -1        -VDD
+                                                                                   -1       -1       -1                        -1   1         -1       -1       -1      -1       0            0
+                        (a)                                  (b)
+                                                                                   -1       -1       -1                        1    -1        -1       -1       -1      -1       0            1
+   Figure 4 (a). The circuit structure of balanced ternary 3-1
+                                                                                   -1       -1        1                        -1   -1        -1       -1       -1      -1       1            -1
+          encoder (b). The circuit structure of Subcircuit1
+                                                                                   -1       1        -1                        -1   -1        -1       -1       -1      -1       1            0
+
+  When X1, X0 and X-1 are "-1", "-1" and "1",                                      1        -1       -1                        -1   -1        -1       -1       -1      -1       1            1
+
+respectively, the TMIN in Figure 4(a) outputs logic "-                             The circuit structure to achieve the logic in Table 4
+1", and the Subcircuit1 also outputs logic "-1".                                 is shown in Figure 6. The threshold voltage of T1 of the
+Therefore, the final output of the circuit is a logic "-1".                      Subcircuit2 in Fig. 6(b) satisfies 0<vth1<VDD.
+  When X1, X0 and X-1 are "-1", "1" and "-1", the output                          X4 X3 X2 X1 X0 X-1X-2 X-3 X-4
+                                                                                                                                    U1                                       VDD
+of the TMIN is logic "0", and the output of the                                                                                                            U7
+                                                                                                                                                                Y1                   M1
+                                                                                                                                             U5
+Subcircuit1 is "-1". Therefore, after the maximum                                                                                   U2
+                                                                                                                                         Subcircuit2
+                                                                                                                                                                                              Vout
+
+                                                                                                                                                                      Vin
+operation, the final output Y of the circuit is logic "0".                                                                          U3                                         T1             M2
+                                                                                                                                                           U8
+                                                                                                                                                                Y0
+  When X1, X0, and X-1 are "1", "-1" and "-1"                                                                                       U4       U6
+                                                                                                                                                                             -VDD -VDD
+                                                                                                                                                                             Input   Output
+                                                                                                                                         Subcircuit2                          -1        0
+respectively, because X1 is directly connected to one of                                                                                                                       0
+                                                                                                                                                                               1
+                                                                                                                                                                                       -1
+                                                                                                                                                                                       -1
+
+
+
+the input terminals of the TMAX, the final output of the
+                                                                                                                             (a)                                              (b)
+circuit is logic "1"。                                                               Figure 6 (a). The circuit structure of balanced ternary 9-2
+                                                                                           encoder (b). The circuit structure of Subcircuit2
+                                                             For the Y1 output circuit, when any one of X4, X3, X2                     Table 5 The truth table of balanced ternary 1-3 decoder
+
+is at high level, U1 outputs logic "1", at this time U2                                                                                            Y        Y-1       Y0         Y1
+outputs logic "-1" and then converted to logic "0" after                                                                                          -1        1         -1         -1
+Subcircuit2, so U7 finally outputs logic "1". When any                                                                                             0        -1        1          -1
+
+one of X1, X0, X-1 is high, U1 outputs logic "-1", U5 still                                                                                        1        -1        -1         1
+
+outputs logic "0", so Y1 is logic "0". When any one of                                                                                The    balanced     ternary    1-3    decoder     can      be
+X-2, X-3, X-4 is high, U1 outputs logic "-1", U2 is logic                                                                           implemented by changing all ground terminals in the
+"1", and then converted to logic "-1" after Subcircuit2.                                                                            positive ternary decoder of Figure 14 in [19] to -VDD
+So U7 finally outputs logic "-1". The working principle                                                                             (with 5 transistors and 7 memristors), but in order to
+of the Y0 part is similar to this and will not be analyzed                                                                          simplify the circuit structure, the circuit is improved in
+in detail here. Figure 7 shows the LTSpice simulation                                                                               this paper, and a novel balanced ternary 1-3 decoder
+waveforms of the balanced ternary 9-2 encoder circuit.                                                                              structure (including 5 transistors and 5 memristors) is
+                                                             1                                                                      proposed. It can be seen that the components required
+Y0/V Y1/V X4/V X3/V X2/V X1/V X0/V X-1/V X-2/VX-3/V X-4/V
+
+
+
+
+                                                             0
+                                                            -1
+                                                             1                                                                      by the circuit are reduced from 12 to 10, which reduces
+                                                             0
+                                                            -1
+                                                             1
+                                                             0
+                                                                                                                                    the circuit area. The circuit structure is shown in Figure
+                                                            -1
+                                                             1
+                                                             0                                                                      8, in which Y-1 is composed of an NTI, and Y1 is
+                                                            -1
+                                                             1
+                                                             0
+                                                            -1                                                                      composed of a PTI and an NTI. The thresholds of
+                                                             1
+                                                             0
+                                                            -1
+                                                             1
+                                                                                                                                    transistors T2 and T3 in the Y0 part both satisfy VDD <
+                                                             0
+                                                            -1
+                                                             1
+                                                             0
+                                                                                                                                    vth2, vth3 < 2VDD. The working principle of the Y0 part is
+                                                            -1
+                                                             1
+                                                             0                                                                      analyzed as follows：
+                                                            -1
+                                                             1
+                                                             0
+                                                            -1                                                                      ⚫ Input logic "-1": When the input is -VDD (logic "-
+                                                             1
+                                                             0
+                                                            -1
+                                                              0     1      2        3       4          5     6    7     8       9
+                                                                                                                                         1"), T2 is turned off, T3 is turned on, and the
+                                                                                                t/ms
+                                                                                                                                         memristors M1 and M2 form a TMIN, and the
+Figure 7 The simulation results of balanced ternary 9-2 encoder
+                                                                                                                                         inputs are equivalent to logic "-1" and "1", so the
+4. Design of the Balanced Ternary                                                                                                        output is logic "-1".
+Combinational Logic Circuits Based on                                                                                               ⚫ Input logic "0": When the input is GND (logic
+Decoder
+                                                                                                                                         "0"), T2 and T3 are both turned off, and the output
+                                                             In this section, a balanced ternary 1-3 decoder circuit                     terminal is pulled up to VDD through the memristor
+is first designed and then used to inform the design of                                                                                  M2, that is, the output is logic "1".
+a 2-9 decoder. In Section 4.3, we apply the decoder to                                                                              ⚫ Input logic "1": When the input is VDD (logic
+the                                                               design       of       functional         balanced   ternary            "1"), both T2 and T3 are turned on, and the output
+combinational logic circuits, including half adder,                                                                                      terminal will be directly connected to -VDD
+multiplier, and comparator circuits.                                                                                                     through T3 and T2, the output is logic "-1".
+4.1 Balanced Ternary 1-3 Decoder
+                                                             The function of the balanced ternary 1-3 decoder is
+to convert a balanced ternary signal into corresponding
+output high- and low-level signals. The detailed logical
+relationship is shown in Table 5.
+                                              Y                                                         1          0          -1          -1           -1             -1            -1            -1          -1        1       -1
+
+                                                                                                        1          1          -1          -1           -1             -1            -1            -1          -1        -1      1
+             VDD                                  VDD                            VDD
+                                                                                                                                                             B -1             0            1
+                                                                                                                                                       A
+       M1                         M2              M3                   M4             M5                                                               -1         1           -1           -1
+
+                                                                                                                                                       0          -1          -1           -1
+
+             T1                        T2                T3                 T4             T5                                                          1          -1          -1           -1
+                                                                                                                                                                              Y-4
+            -VDD                       -VDD                                      -VDD                   Figure 10 Karnaugh map of output terminal Y-4 of balanced
+              Y-1                                         Y0                                Y1                                                        ternary 2-9 decoder
+   Figure 8 Novel structure of balanced ternary 1-3 decoder
+
+                                                                                                        From Table 6, we can see that for each input
+  Figure 9 shows the simulated waveform of the                                                        combination, only one output is high (logic "1"), and
+proposed balanced ternary 1-3 decoder from LTSpice,                                                   the rest of the outputs are low (logic "-1"). Taking Y-4
+where the threshold voltages vth1 and vth5 of T1 and T5                                               as an example, the Karnaugh map can be obtained as
+are 0.8V, and the threshold voltages vth2, vth3 and vth4 of                                           shown in Figure 10, and then the input-output
+T2, T3 and T4 take 1.5V.                                                                              relationship can be obtained as Y- 4=A-1•B-1. Similarly,
+                        1                                                                             all the relationships between input and output can be
+                  Y/V
+
+
+
+
+                        0
+                       -1
+                        1
+                                                                                                      obtained as follows:
+                  Y-1/V
+
+
+
+
+                        0                                                                                              Y-4 = A−1 B−1                       Y-1 = A0 B−1                        Y2 = A1 B−1
+                       -1                                                                                              
+                        1                                                                                              Y-3 = A−1 B0                        Y0 = A0 B0                          Y3 = A1 B0                          (1)
+                  Y0/V
+
+
+
+
+                        0                                                                                              Y = A B                             Y1 = A0 B1                          Y4 = A1 B1
+                                                                                                                        -2    −1  1
+                       -1
+                        1
+                                                                                                      the subscripts of A and B represent their values
+                  Y1/V
+
+
+
+
+                        0
+                       -1
+                         0                   1                     2                  3               respectively,                       and           "•"             represents                     the            minimum
+                                                        t/ms
+                                                                                                      operation.
+  Figure 9 Simulation results of balanced ternary 1-3 decoder
+                                                                                                        According to the analysis in the previous section, the
+4.2 Balanced ternary 2-9 decoder
+                                                                                                      balanced ternary 1-3 decoder has the characteristic that
+  A balanced ternary 2-9 decoder is designed based on                                                 when the input is X=k, the corresponding output is
+the 1-3 decoder. The input is a two-bit balanced ternary                                              Xk=1, and the other outputs are -1. Therefore, according
+code, and the outputs are 9 signals, which are high or                                                to formula (1), we can use Am, Bn (m, n are -1, 0, 1) as
+low levels corresponding to the input codes. The truth                                                the inputs of the TMIN, and Y-4-Y4 are obtained as the
+table is shown in Table 6, where A and B are input                                                    output of the TMINs. The circuit structure is shown in
+ternary signals, and Y-4-Y4 are output signals.                                                       Figure 11. Among them, A is the high-order input of the
+      Table 6 The truth table of balanced ternary 2-9 decoder                                         2-9 decoder, B is the low-order input, and Y-4-Y4 are the
+  A     B         Y-4        Y-3       Y-2        Y-1         Y0       Y1        Y2        Y3    Y4   outputs of the designed balanced ternary 2-9 decoder.
+ -1     -1         1         -1        -1         -1          -1       -1        -1        -1    -1                                                                                                                A-1 1-3      A
+                                                                                                                                                                                                                   A0 Decoder
+                                                                                                                                                                                                                   A1
+ -1     0         -1         1         -1         -1          -1       -1        -1        -1    -1
+                                                                                                                                                                                                                   B-1 1-3      B
+ -1     1         -1         -1        1          -1          -1       -1        -1        -1    -1                                                                                                                B0 Decoder
+                                                                                                                                                                                                                   B1
+  0     -1        -1         -1        -1         1           -1       -1        -1        -1    -1
+                                                                                                            TMIN
+
+
+                                                                                                                       TMIN
+
+
+                                                                                                                                   TMIN
+
+
+                                                                                                                                               TMIN
+
+
+                                                                                                                                                           TMIN
+
+
+                                                                                                                                                                       TMIN
+
+
+                                                                                                                                                                                    TMIN
+
+
+                                                                                                                                                                                                TMIN
+
+
+                                                                                                                                                                                                       TMIN
+
+
+
+
+  0     0         -1         -1        -1         -1          1        -1        -1        -1    -1
+
+  0     1         -1         -1        -1         -1          -1       1         -1        -1    -1         Y-4        Y-3         Y-2         Y-1          Y0         Y1           Y2          Y3     Y4
+  1     -1        -1         -1        -1         -1          -1       -1        1         -1    -1   Figure 11 Schematic diagram of balanced ternary 2-9 decoder
+                                                           Taking the input combination as A=-1 and B=1 as an                           -1     1               0             0            -1       -1
+
+example, at this time, the output of the 1-3 decoder only                                                                                0     -1             -1             0            0        1
+                                                                                                                                         0     0               0             0            0        0
+has A-1 and B1 as logic "1", A0, A1, B-1 and B0 are logic
+                                                                                                                                         0     1               1             0            0        -1
+"-1", therefore, after the TMINs, only Y-2 is logic "1",
+                                                                                                                                         1     -1              0             0            -1       1
+and the rest of the output terminals are logic "-1".                                                                                     1     0               1             0            0        1
+Figure 12 shows the corresponding simulation results                                                                                     1     1              -1             1            1        0
+for2-9 decoder.
+                                                                                                                                                        B -1        0   1        -1   0        1
+                                                                                                                                                   A
+                                                           1
+Y4/V Y3/V Y2/V Y1/V Y0/V Y-1/V Y-2/VY-3/V Y-4/V B/V A/V
+
+
+
+
+                                                           0                                                                                       -1     1        -1   0        -1   0        0
+                                                          -1
+                                                           1
+                                                           0                                                                                        0     -1        0   1        0    0        0
+                                                          -1
+                                                           1
+                                                           0                                                                                        1     0         1   -1       0    0        1
+                                                          -1
+                                                           1
+                                                           0                                                                                                        S                 C
+                                                          -1
+                                                           1
+                                                           0
+                                                          -1                                                                          Figure 13 Karnaugh map of balanced ternary half adder
+                                                           1
+                                                           0
+                                                          -1
+                                                           1
+                                                           0
+                                                                                                                                     The balanced ternary decoder can realize the
+                                                          -1
+                                                           0                                                                       function of decoding one ternary signal into three
+                                                          -1
+                                                           1
+                                                           0                                                                       binary signals. Therefore, after the two input signals A
+                                                          -1
+                                                           1
+                                                           0
+                                                          -1
+                                                                                                                                   and B pass through the two ternary 1-3 decoders, the
+                                                           1
+                                                           0
+                                                          -1                                                                       outputs A-1, A0, A1 and B-1, B0, B1 can be obtained
+                                                            0        1        2       3     4          5    6    7         8   9
+                                                                                                t/ms
+                                                                                                                                   respectively, and each output has only two states that
+                                Figure 12 Simulation results of balanced ternary 2-9 decoder                                       logic "1" and logic "-1". Take input A=B="0" as an
+4.3 Design of Functional Balanced Ternary                                                                                          example, at this time, A-1= A1= B-1= B1="-1", A0=
+Combinational Logic Circuits Based on Decoder                                                                                      B0="1". Using the working characteristics of the
+                                                           In this section, the balanced ternary functional                        balanced ternary 1-3 decoder, combined with the
+combinational logic circuits based on the 1-3 decoder                                                                              Karnaugh map of the balanced ternary half adder
+are designed, including half adder, multiplier and                                                                                 shown in Figure 13, the logical expressions of the sum
+numerical comparator.                                                                                                              S and the carry C can be deduced as follows:
+                                                           Table 7 shows the truth table of these three functional                    S=0•(A-1B1+ A0B0+ A1B-1) + (A-1B-1+ A0B1+ A1B0)                   (2)
+
+combinational logic circuits, where HA-S (Half Adder                                                                                C=0•(A-1B0+A-1B1+ A0B-1+ A0B0 + A0B1+A1B-1+ A1B0)
+                                                                                                                                                                                                        (3)
+                                                                                                                                                                   +(A1B1)
+- Sum) and HA-C (Half Adder - Carry) are the sum and
+carry of the half adder, respectively. MUL (Multiplier)                                                                            Among them, "•" represents the minimum operation
+
+is the output of the multiplier; MLE (More, Less,                                                                                  (some "•" are omitted, such as A-1B1), and "+"
+
+Equality) is the output of the numerical comparator, the                                                                           represents the maximum operation. The circuit
+
+logic "-1" means "A<B", the logic "0" means "A=B",                                                                                 structure of the designed balanced ternary half adder is
+
+the logic "1" means "A>B".                                                                                                         shown in Figure 14.
+
+                              Table 7 Truth table of balanced ternary half adder, multiplier
+                                                                                  and numerical comparator
+                                                                A        B         HA-S      HA-C          MUL       MLE
+                                                                -1       -1           1         -1          1         0
+                                                                -1       0           -1         0           0        -1
+                                                                                                                                                                                                 U1
+                                                                                                                                                                                                     A-1 1-3
+                                                                                                                                                                                                     A0 Decoder
+                                                                                                                                                                                                                A      For example, when A=1, B=1, A1 and B1 are both
+                                                                                                                                                                                                     A
+                                                                                                                                                                                                 U 2 B1
+                                                                                                                                                                                                      -1  1-3
+                                                                                                                                                                                                     B0 Decoder
+                                                                                                                                                                                                                B   logic "1" at this time, A-1, A0, B-1, B0 are logic "-1",
+                                                                                                                                                                                                     B1
+        U3          U4          U5              U6            U7            U8          U9                U10             U11          U12          U13          U14          U15          U16                      therefore, only the output terminal of U4 is logic "1",
+
+
+
+
+                                                                                                                                                                       TMIN
+
+
+                                                                                                                                                                                    TMIN
+ TMIN
+
+
+             TMIN
+
+
+                         TMIN
+
+
+                                         TMIN
+
+                                                       TMIN
+
+
+                                                                     TMIN
+
+
+                                                                                 TMIN
+
+
+                                                                                                   TMIN
+
+
+                                                                                                                   TMIN
+
+
+                                                                                                                                TMIN
+
+
+                                                                                                                                             TMIN
+
+
+                                                                                                                                                          TMIN
+                                                                                                                                                                                                                    and other TMINs U3, U5-U9 all output logic "-1". At
+                                                                                                                                                                   TMAX U19
+                                                                                                                                                                                                                    this time, the output of U10 is logic "1", the output of
+                                       TMAX U                                                                              TMAX U18
+                                                       17
+
+                                                                                                                                                                                                                    U11 is logic "-1", and after performing the minimum
+
+
+
+
+                                                                                                                                                                   TMIN
+                                                                                                                                                                              U21
+                                                                                                                                                                                                                    operation with logic "0”, the output of U12 is logic "-1",
+                                       TMIN
+
+
+
+
+                                                U20
+
+                                                              TMAX
+                                                                            U22                                                                TMAX
+                                                                                                                                                          U23                                                       so the TMAX U12 finally outputs logic "1".
+                                                                        HA-C                                                                          HA-S                                                             The balanced ternary numerical comparator can also
+Figure 14 Balanced ternary half adder circuit designed based on                                                                                                                                                     be implemented by decoder-based method. For
+                                                                                                                                                                                                                    example, we proposed a design scheme of a positive
+                                                                            the decoder method
+                                                                                                                                                                                                                    ternary numerical comparator in [23]. The circuit has
+  Compared with the positive ternary multiplier, the                                                                                                                                                                three output terminals, which are used to represent A>
+multiplication operation of the balanced ternary does                                                                                                                                                               B, A=B and A<B, the effective signal of the output
+not generate carry, so it only needs two input terminals                                                                                                                                                            terminal is high level signal, which requires 10
+and one output terminal. Its logical Karnaugh map is                                                                                                                                                                transistors and 41 memristors. This paper proposes a
+shown in Figure 15. Combined with the working                                                                                                                                                                       more optimal design scheme, which can reduce the
+characteristics of 1-3 decoder, its logical expression                                                                                                                                                              number of components, requiring only 10 transistors
+can be deduced:                                                                                                                                                                                                     and 32 memristors. Because ternary logic has three
+         MUL=0•(A-1B0+A0B-1+ A0B0 +A0B1+ A1B0) +(A-1B-1+
+                                                                                                                                                                                                      (4)           different logic states, only one output can be used to
+                                                                                        A1B1)
+                                                                                                                                                                                                                    represent the results of three numerical comparisons.
+                                                                                        B -1                    0               1
+                                                                             A                                                                                                                                         Similarly, according to the Karnaugh map of the
+                                                                             -1                  1              0            -1
+                                                                                                                                                                                                                    ternary numerical comparator shown in Figure 17 and
+                                                                                 0               0              0               0
+                                                                                                                                                                                                                    the working characteristics of the 1-3 decoder, its
+                                                                                 1               -1             0               1                                                                                   logical expression can be deduced as follows:
+                                                                                                           MUL
+                                                                                                                                                                                                                        MLE=0•(A-1B-1+A0B0+A1B1) +(A0B-1+ A1B-1+ A1B0)       (5)
+         Figure 15 Karnaugh map of balanced ternary multiplier
+                                                                                                                                                                                                                    It can be seen that only two 1-3 decoders, seven 2-input
+Where A-1, A0, A1, B-1, B0, B1 are the outputs of two 1-3                                                                                                                                                           TMIN gates, one 2-input TMAX and two 3-input
+decoders respectively. According to formula (4), only                                                                                                                                                               TMAX gates are required. As shown in Figure 18, it is
+two 1-3 decoders, eight 2-input TMINs, two 2-input                                                                                                                                                                  the circuit structure of the balanced ternary numerical
+TMAXs, and one 5-input TMAX are required to                                                                                                                                                                         comparator designed based on the decoder method.
+complete the design of balanced ternary multiplier, as                                                                                                                                                                                        B -1    0    1
+                                                                                                                                                                                                                                         A
+shown in Figure 16.                                                                                                                                                                                                                             0    -1    -1
+                                                                                                                                                                                                                                         -1
+                                                                                                                                         U1 A
+                                                                                                                                             -1  1-3   A                                                                                 0      1     0    -1
+                                                                                                                                            A0 Decoder
+                                                                                                                                            A1
+                                                                                                                                         U2 B-1        B                                                                                 1      1     1    0
+                                                                                                                                                 1-3
+                                                                                                                                            B0 Decoder
+                                                                                                                                            B1
+                                       U3              U4            U5              U6             U7             U8               U9
+                                                                                                                                                                                                                                                     MLE
+                                                                                            TMIN
+
+
+                                                                                                            TMIN
+
+
+                                                                                                                           TMIN
+                                                TMIN
+
+                                                              TMIN
+                                TMIN
+
+
+
+
+                                                                             TMIN
+
+
+
+
+                                                                                                                                                                                                                      Figure 17 Karnaugh Map of Balanced Ternary Numerical
+                                                                                                                                                                                                                                              Comparator
+                                       TMAX U                                           TMAX
+                                                        10                                                U11
+                                                                                          TMIN
+
+
+
+
+                                                                                                    U12
+
+
+                                                        TMAX         U13
+
+                                                               MUL
+
+
+Figure 16 Balanced ternary multiplier circuit designed based on
+                                                                            the decoder method
+                                                                                                              U1 A-1                  design of any combinational logic function circuit. In
+                                                                                                                      1-3     A
+                                                                                                                 A0
+                                                                                                                 A Decoder
+                                                                                                              U2 B-11                 this section, we proposed a design for a balanced
+                                                                                                                      1-3     B
+                                                                                                                 B0
+                                                                                                                 B1 Decoder           ternary multiplexer at first, and then a balanced ternary
+                                         U3          U4          U5              U6          U7          U8
+                                                                                                                                      half adder, multiplier, and numerical comparator are
+                                                                          TMIN
+
+
+                                                                                      TMIN
+
+
+                                                                                                  TMIN
+                                  TMIN
+
+
+                                              TMIN
+
+
+                                                          TMIN
+
+
+
+
+                                                                                                                                      designed on this basis.
+                                          TMAX U                                  TMAX
+                                                9                                             U10
+                                                                                                                                         Table 8 The input-output relationship of balanced ternary
+                                                                                  TMIN
+
+
+                                                                                             U11
+                                                                                                                                                               multiplexer
+                                                                  TMAX U
+                                                                        12                                                                                 S                  OUT
+                                                                      MLE                                                                                 -1                   I-1
+                                                                                                                                                           0                   I0
+                            Figure 18 Balanced ternary numerical comparator circuit
+                                                                                                                                                           1                   I1
+                                              designed based on the decoder method
+
+                            In order to verify the validity of the above circuits,
+each circuit was simulated in LTSpice with the                                                                                        5.1 Balanced Ternary Multiplexer
+
+simulation results of the balanced ternary half adder,                                                                                   The logic function of the multiplexer is to select
+multiplier and numerical comparator based on the                                                                                      different input terminals according to the selection
+decoder method shown in Figure 19. The results                                                                                        signals. Table 8 shows the input-output relationship of
+confirm the validity of the circuit designs.                                                                                          the designed balanced ternary multiplexer.
+
+                             1                                                                                                           S is the selection signal, I-1, I0, I1 are three input
+A/V
+
+
+
+
+                             0
+                            -1
+                                                                                                                                      signals, and OUT is the output terminal. When S is
+                             1
+                                                                                                                                      logic "-1", the output of the circuit is equal to the logic
+B/V
+
+
+
+
+                             0
+                            -1
+                             1                                                                                                        value of I-1, when S is logic "0", OUT is equal to the
+MLE/V MUL/V HA-C/V HA-S/V
+
+
+
+
+                             0
+                            -1
+                                                                                                                                      logic value of I0, when S is logic "1", OUT is the state
+                             1
+                             0                                                                                                        of I1.
+                            -1
+                             1                                                                                                           The multiplexer designed in this paper includes a
+                             0
+                            -1                                                                                                        balanced ternary 1-3 decoder, three 2-input TMIN
+                             1
+                             0                                                                                                        gates and a 3-input TMAX gate. Its circuit structure is
+                            -1
+                              0           1               2           3           4
+                                                                                         t/ms
+                                                                                                  5           6        7      8   9   shown in Figure 20.
+                                                                                                                                                               I-1            U2
+                      Figure 19 Simulation results of balanced ternary half adder,                                                                 U1                  TMIN
+                                                                                                                                                        S-1                          U5
+                        multiplier and numerical comparator designed based on the                                                                              I0             U3            OUT
+                                                                                                                                                        S0             TMIN
+                                                                                                                                           S    Decoder
+                                                                      decoder method                                                                    S1                           TMAX
+                                                                                                                                                               I1             U4
+                                                                                                                                                                       TMIN
+5. Design of the Balanced Ternary
+                                                                                                                                        Figure 20 Circuit structure of balanced ternary multiplexer
+Combinational Logic Circuits Based on
+Multiplexer                                                                                                                              When the selection signal S is logic "-1", the output
+                                                                                                                                      terminal S-1 of the decoder U1 in Figure 20 is logic "1",
+                            In digital logic circuits, it is sometimes necessary to
+                                                                                                                                      and the outputs of the S0 and S1 terminals are logic "-
+select a particular output signal from multiple input
+                                                                                                                                      1". At this time, the state of the output of U2 is equal to
+signals, which requires a multiplexer circuit. In
+                                                                                                                                      the state of the input of I-1, and the outputs of U3 and U4
+addition, multiplexers play an important role in the
+                                                                                                                                      are both logic "-1". Therefore, the three inputs of the U5
+are the state of I-1, logic "-1", logic "-1", so the output                                                   First Stage    Second Stage
+                                                                                         1   I-1         U1
+is the state of I-1. When the selection signal S is logic                               -1   I0 MUX3:1                               I-1
+                                                                                                                                           U3
+                                                                                                                        U2                       HA-S
+"0", the output terminal S0 of U1 is logic "1". At this                                 0    I1          0        I-1        B       I0 MUX3:1
+                                                                                                          1      I0 MUX3:1           I1
+time, the state of the output terminal of U3 is equal to                                                 -1      I1
+                                                                                B                                                         A
+the state of I0, and the output terminals of U2 and U4 are
+                                                                                        -1   I-1     U4
+both logic "-1", so the final output of the circuit is the                              0    I0 MUX3:1                               I-1
+                                                                                                                                           U6
+                                                                                                                        U5                       HA-C
+state of I0. When the selection signal S is logic "1", S1                               0    I1           0       I-1            0   I0 MUX3:1
+                                                                                                          0      I0 MUX3:1           I1
+is logic "1". At this time, the state of the output terminal                                              1      I1
+
+of U4 is equal to the state of the input terminal of I1, and                    A
+
+the output terminals of U2 and U3 are both logic "-1".
+                                                                       Figure 22 Balanced ternary half adder designed based on the
+Therefore, the output terminal of U5 is the state of I1.
+                                                                                             multiplexer method
+Figure 21 shows the LTSpice simulation results for the
+                                                                        For the half adder circuit shown in Figure 22, U1, U2,
+balanced ternary multiplexer.
+                                                                      U4, and U5 are the first-stage multiplexers, and their
+     1
+S/V
+
+
+
+
+     0                                                                selection signals are all input signal B, and U3 and U6
+    -1
+     1
+I-1/V
+
+
+
+
+     0                                                                are the second-stage multiplexers, their selection
+    -1
+     1                                                                signals are both another input A. Among them, U1-U3
+I0/V
+
+
+
+
+     0
+    -1                                                                constitute the "sum" output circuit of the half adder and
+     1
+I1/V
+
+
+
+
+     0                                                                the multiplexers U4-U6 constitute the "carry" output
+    -1
+     1
+OUT/V
+
+
+
+
+     0
+                                                                      circuit. For example, when A is logic "1" and B is logic
+    -1
+      0      1     2    3      4          5   6    7      8       9   "0", the I0 input terminals of U2 and U5 are "selected",
+                                   t/ms
+                                                                      and the I1 input terminals of U3 and U6 are "selected".
+   Figure 21 Simulation results of balanced ternary multiplexer
+                                                                      Therefore, the output sum S is logic "1", and the carry
+5.2 Design of Functional Balanced Ternary
+                                                                      C is logic "0".
+Combinational Logic Circuits Based on Multiplexer
+                                                                        A balanced ternary multiplier can also be designed
+        When using this method to design balanced ternary
+                                                                      and   implemented            based                on   two          multiplexers.
+logic circuits, the input signals are used as the selection
+                                                                      According to the truth table of the balanced ternary
+signals of the two-stage multiplexers and the three logic
+                                                                      multiplier given in Table 7, when one of the inputs A is
+levels are used as the inputs of the first-stage
+                                                                      logic "-1" and B takes logic "-1", "0", and "1", the
+multiplexers. The outputs of the first-stage multiplexers
+                                                                      output is logic "1", "0", "-1" respectively. Therefore,
+are used as the inputs of the second-stage multiplexers,
+                                                                      the above logic relationship can be converted by a
+and the outputs of the second-stage multiplexers are the
+                                                                      multiplexer. And when A is logic "0", no matter what
+output terminals of the entire circuit. Figure 22 shows
+                                                                      value B takes, the output terminal is logic "0". When A
+the logical structure diagram of the balanced ternary
+                                                                      is a logic "1", the state of the output is the same as the
+half adder designed based on the multiplexer method.
+                                                                      input B. As shown in Figure 23, it is the circuit structure
+                                                                      of the balanced ternary multiplier designed based on
+                                                                      the multiplexer method.
+                                                First Stage                     Second
+                                                                                                                            6. Experimental Results
+                                                            U1                   Stage
+                                       1         I-1
+                                                                                                                               To validate the effectiveness of the proposed
+                                                                                          U2
+                                       0         I0 MUX3:1                       I-1
+                                                                                               MUL                          balanced ternary digital logic circuits, we conducted
+                                       -1        I1                   0          I0 MUX3:1
+                                                                                                                            two experiments utilizing a balanced ternary 3-1
+                                       B                                         I1
+                                       A
+                                                                                                                            encoder and a half adder as illustrative examples.
+                                                                                                                               To achieve the physical implementation of the
+      Figure 23 Balanced ternary multiplier designed based on the
+                                                                                                                            designed 3-1 encoder circuit, this research involved the
+                                                      multiplexer method
+                                                                                                                            fabrication of bipolar metal-oxide-based memristor
+   Similarly, the balanced ternary numerical                                                                                with reliable resistive switching behavior[24]. The
+comparator can also be implemented by using                                                                                 device exhibits bipolar memristive switching
+multiplexer method, specifically, four multiplexers are                                                                     characteristics, demonstrating its ability to transition
+required. Among them, the input signal A is used as the                                                                     between high resistance states (HRS) and low
+selection signal of the second-stage multiplexer U4, and                                                                    resistance states (LRS). As shown in Figure 26, the
+the three multiplexers U1-U3 are the first-stage                                                                            device exhibits repeatable SET and RESET operations
+multiplexers, as shown in Figure 24.                                                                                        when subjected to multiple sweeps of positive and
+                                            0               U1        First Stage              Second
+                                                  I-1
+                                                                                                Stage                       negative voltages. During the SET process, the voltage
+                                           -1     I0 MUX3:1
+
+                                           -1     I1
+                                                                                                       U4
+                                                                                                                            varies between 0.4 to 0.7V, indicating the device's
+                                                                                U2
+                                                                 1        I-1                  I-1
+                                                                                                              MLE           transition from HRS to LRS, as depicted by curve 1 and
+                                                                  0       I0 MUX3:1            I   0 MUX3:1
+
+
+                                                                 -1       I1                   I1                           curve 2. To mitigate the risk of breakdown resulting
+                                            1               U3
+                                                  I-1
+                                            1
+                                                                                                                            from high currents during the SET process, a
+                                                  I0 MUX3:1
+
+                                            0     I1                                                                        compliance current preset of 0.01mA has been
+                                   B                                                                                        employed. Conversely, during the RESET process, the
+                                   A
+                                                                                                                            voltage ranges varies from -0.3 to -0.4V, and the
+              Figure 24 Balanced ternary numerical comparator designed
+                                                                                                                            transition from LRS back to HRS is depicted by curves
+                                       based on the multiplexer method
+                                                                                                                            3 and curve 4.
+   Figure 25 shows the LTSpice simulation results for
+the balanced ternary half adder, multiplier, and
+numerical comparator designed based on the
+multiplexer method.
+                              1
+ A/V
+
+
+
+
+                              0
+                             -1
+                              1
+ B/V
+
+
+
+
+                              0
+                             -1
+                              1
+ MLE/V MUL/V HA-C/V HA-S/V
+
+
+
+
+                             0
+                             -1
+                              1
+                             0                                                                                                 Figure 26 Voltage- current characteristics of the bipolar
+                             -1
+                              1                                                                                                                       memristor
+                              0
+                             -1                                                                                                Non-volatility is a crucial requirement for storage-
+                              1
+                             0
+                                                                                                                            computing integrated circuits, as it empowers them to
+                             -1                                                                                             exhibit low-power characteristics. Hence, we
+                               0   1        2           3             4               5        6              7     8   9
+                                                                          t/ms
+                                                                                                                            conducted additional verification of the non-volatile
+            Figure 25 Simulation results of balanced ternary half adder,
+                                                                                                                            properties inherent in the designed components. As
+              multiplier and numerical comparator designed based on the
+                                                                                                                            illustrated in Figure 27, we applied a continuous low-
+                                                      multiplexer method
+                                                                                                                            level voltage of 0.1V at room temperature to measure
+                                                                                                                            the resistance value. Both the high-resistance and low-
+resistance states endured for a minimum of 104 s. These         In the context of the half adder circuit, it is worth
+experimental findings serve as compelling evidence of        noting that while the overall connection configuration
+the circuit's endurance.                                     of the circuit may appear complex, it is important to
+                                                             highlight that a significant portion of the sub-module
+                                                             circuits maintain a consistent structure. Hence, in order
+                                                             to accommodate the limited availability of devices,
+                                                             each stage was tested independently. As for the
+                                                             balanced ternary half adder in Figure 14, the decoder
+                                                             stage was first tested, followed by the TMIN stage,
+                                                             followed by the output generation with both TMIN and
+                                                             TMAX gates. As for the half adder in Figure 22, each
+          Figure 27 Room-temperature endurance.              multiplexer used was individually tested.
+   Expanding upon this groundwork, we employed a                The experimental results of the balanced ternary half
+specific configuration of connections involving TMIN         adder designed based on the decoder and multiplexer
+gates, TMAX gates, and inverters. For the TMIN gates,        methods are shown in Figure 29 and Figure 30,
+we utilized two memristors, with their top electrodes        respectively. It can be seen from the figures that the
+connected as the output terminal and their bottom            experimental results are mostly consistent with the
+electrodes linked as the two input signal terminals. In      SPICE simulation results.
+                                                                             1
+contrast, the three-input TMAX gate employed three
+                                                             A/V
+
+
+
+
+                                                                             0
+memristors interconnected at their bottom electrodes to                -1
+                                                                        1
+serve as the output, while their top electrodes
+                                                             B/V
+
+
+
+
+                                                                             0
+functioned as the three input signal terminals. For a                  -1
+                                                                        1
+                                                             HA-C/V HA-S/V
+
+
+
+
+comprehensive understanding of the circuit's structure
+                                                                             0
+and operational principles, the reader is referred to                   -1
+                                                                         1
+previous work[19]. These experimental results
+                                                                             0
+conclusively demonstrate the circuit's successful                       -1
+                                                                          0        1     2     3      4          5   6   7        8   9
+implementation as a 3-1 encoder, as visually                                                              t/ms
+represented in Figure 28.                                           Figure 29 Experimental results of the balanced ternary adder
+                                                                                  designed based on the decoder-based method
+                                                                             1
+                                                             A/V
+
+
+
+
+                                                                             0
+                                                                       -1
+                                                                        1
+                                                             B/V
+
+
+
+
+                                                                             0
+                                                                      -1
+                                                                       1
+                                                             HA-C/V HA-S/V
+
+
+
+
+                                                                             0
+                                                                       -1
+                                                                        1
+                                                                             0
+                                                                       -1
+                                                                         0         1     2      3     4          5   6   7        8   9
+                                                                                                          t/ms
+
+                                                                    Figure 30 Experimental results of the balanced ternary adder
+                                                                                 designed based on the multiplexer-based method
+
+
+  Figure 28 The experiment results of balanced ternary 3-1
+                          encoder
+7. Comparison and Analysis                                                To further investigate the practical potential of the
+                                                                       two methods, we present the power consumption
+  For the balanced ternary functional combinational
+                                                                       estimates in Table 10. By taking the sum of the voltage-
+logic circuits designed by the decoder-based method
+                                                                       current product through each component, we can get
+and multiplexer-based method, we have carried out
+                                                                       static power dissipation. Average power dissipation is
+comparison and analysis to demonstrate the advantages
+                                                                       the average value of the static power dissipation for
+and disadvantages of the two methods. Table 9 presents
+                                                                       every input combination. Dynamic power consumption
+the quantity statistics of the components in the circuits
+                                                                       is the absolute value of the difference between the
+designed above. It is worth noting that the multiplexer
+                                                                       maximum instantaneous power consumption and the
+is designed based on the 1-3 decoder, therefore in the
+                                                                       average power consumption, all of them can be
+combinational logic circuits designed based on the
+                                                                       obtained through the SPICE simulations. As shown in
+multiplexer method, the 1-3 decoders can be reused for
+                                                                       Table 10, the average power consumption of the half
+multiplexers with the same selection signal, which can
+                                                                       adder using decoder-based method is reduced by
+further reduce the component consumption in the
+                                                                       99.77%. And in terms of dynamic power consumption,
+circuits.
+                                                                       the gap between the two method is even more obvious;
+Table 9 Number of components in the circuits designed in this
+                                                                       The half-adder, multiplier and numerical comparator
+                                paper
+                                                                       designed based on the multiplexer method are 9.2
+                                    Components
+    Method                                                             times, 6.65 times and 2.23 times that of the decoder-
+                        THA           MUL              MLE
+  Decoder-                                                             based method respectively. Therefore, the decoder-
+                       10T59M           10T35M       10T32M
+   Based
+ Multiplexer-
+                                                                       based approach has a significant advantage in terms of
+                       10T64M           10T28M       10T46M
+   Based                                                               circuit power consumption.
+1 T: Transistor. 2 M: Memristor.
+                                                                          In summary, the decoder-based method has obvious
+  According to the statistical results shown in Table 9,
+                                                                       advantages both in terms of component numbers and
+the number of components used in the balanced ternary
+                                                                       power consumption, but the multiplexer-based method
+multiplier circuit designed based on the multiplexer
+                                                                       has the advantages of being based on a simple operating
+method is less than that based on the decoder method,
+                                                                       principle and ease of implementation. If multiplexer
+while for the half adder and numerical comparator
+                                                                       circuits with lower power consumption could be
+circuits, the decoder-based approach uses a relatively
+                                                                       designed, they would definitely be more widely used.
+small number of components. From this it follows that
+the decoder-based method has an advantage in terms of
+components numbers.
+
+
+                              Table 10 Power consumption statistics of designed circuits by the two methods
+
+                                  Avg. Power(uW)                 Static Power(uW)                 Dynamic Power(mW)
+            Method
+                           THA         MUL       MLE          THA       MUL     MLE             THA     MUL      MLE
+            Decoder-                                          3.01        2.00      2.13
+                           0.17          0.18      0.18                                         0.55          0.69   0.73
+             Based                                           [1&1]      [-1&-1]    [1&-1]
+        Multiplexer-                                           201        181       1.51
+                           72.65         72.84     0.56                                         5.06          4.59   1.63
+          Based                                              [-1&1]      [0&1]     [0&-1]
+                                                                       low-delay and low-power multi-digit adder designs. IET
+8. Conclusion
+                                                                       Circuits, Devices & Systems. 2017. 11(4):352-364.
+      This paper presented the design methods for                [7]   J Appenzeller, Y M Lin, J Knoch, Z H Chen and P Avouris.
+ memristor-based balanced ternary digital logic                        Comparing carbon nanotube transistors - the ideal choice:
+ circuits. Firstly, balanced ternary basic logic gates                 a novel tunneling device design. IEEE Transactions on
+ TMIN, TMAX and TI were designed based on the                          Electron Devices. 52(12):2568-2576.
+ binary characteristics of memristor and the switching           [8]   D B Strukov, G S Snider, D R Stewart and R S Williams.
+ characteristics of MOSFETs. Balanced ternary                          The     missing    memristor    found.      Nature.   2008.
+ encoder, decoder and multiplexer circuits were then                   453(7191):80-83.
+ designed on this basis and were shown to operate with           [9]   S Kvatinsky, N Wald, G Satat, A Kolodny, U C Weiser and
+ fewer components than previous designs. Finally,                      E G Friedman. MRL — Memristor Ratioed Logic. 2012
+ functional combinational logic circuits, including a                  13th International Workshop on Cellular Nanoscale
+ balanced ternary half adder, multiplier and numerical                 Networks and their Applications. 2012:1-6.
+ comparator were designed using two methods: a                   [10] A K Maan, D A Jayadevi and A P James. A Survey of
+ decoder-based method and a multiplexer-based                          Memristive Threshold Logic Circuits. IEEE Transactions
+ method. The above circuits were verified and                          on Neural Networks and Learning Systems. 2017.
+ compared by LTSpice simulations, providing new                        28(8):1734-1746.
+ insight into the advantages and disadvantages of the            [11] A Siemon, T Breuer, N Asiam, S Ferch, W Kim, H J Van
+ different approaches and a strong foundation for the                  Den, V Rana, S Hoffmann-Eifert, R Waser, S Menzel and
+ further development of balanced ternary digital logic                 E Linn. Realization of Boolean Logic Functionality Using
+ circuits.                                                             Redox‐Based Memristive Devices. Advanced Functional
+                                                                       Materials. 2015. 25(40):6414-6423.
+                        References
+                                                                 [12] J Borghetti, G S Snider, P J Kuekes, J J Yang, D R Stewart
+[1]   K J Kuhn. Considerations for Ultimate CMOS Scaling.              and R S Williams. Memristive switches enable ‘stateful’
+      IEEE Transactions on Electron Devices. 2012. 59(7):1813-         logic operations via material implication. Nature. 2010.
+      1828.                                                            464(7290):873-876.
+[2]   Z T Sandhie, F U Ahmed and M H Chowdhury. Design of        [13] S Kvatinsky, D Belousov, S Liman, G Satat, N Wald, E G
+      Ternary Logic and Arithmetic Circuits Using GNRFET.              Friedman, A Kolodny and U C Weiser. MAGIC-
+      IEEE Open Journal of Nanotechnology. 2020. 1:77-87.              Memristor-Aided Logic. IEEE Transactions on Circuits
+[3]   S Karmakar, J A Chandy and F C Jain. Design of Ternary           and Systems II: Express Briefs. 2014. 61(11):895-899.
+      Logic Combinational Circuits Based on Quantum Dot          [14] V Gaudet. A survey and tutorial on contemporary aspects
+      Gate FETS. IEEE Transactions on Very Large Scale                 of    multiple-valued   logic   and   its   application   to
+      Integration (VLSI) Systems. 2013. 21(5):793-806.                 microelectronic circuits. IEEE Journal on Emerging and
+[4]   S Kvatinsky, G Satat, N Wald, E G Friedman, A Kolodny            Selected Topics in Circuits and Systems. 2016. 6(1):5-12.
+      and U C Weiser. Memristor-Based Material Implication       [15] S Kim, S Y Lee, S Park, K R Kim and S Kang. A Logic
+      (IMPLY) Logic: Design Principles and Methodologies.              Synthesis Methodology for Low-Power Ternary Logic
+      IEEE Transactions on Very Large Scale Integration (VLSI)         Circuits. IEEE Transactions on Circuits and Systems I:
+      Systems. 2014. 22(10):2054-2066.                                 Regular Papers. 2020. 67(9):3138-3151.
+[5]   O Hashemipour, M H Moaiyeri, R F Mirzaee, A                [16] B Mondal, P Sarkar, P K Saha and S Chakraborty.
+      Doostaregan and K Navi. A universal method for                   Synthesis of Balanced Ternary Reversible Logic Circuit.
+      designing   low-power    carbon    nanotube   FET-based          2013 IEEE 43rd International Symposium on Multiple-
+      multiple-valued logic circuits. IET Computers & Digital          Valued Logic. 2013:334-339.
+      Techniques. 2013. 7(4):167-181.                            [17] S Lin, Y Kim and F Lombardi. CNTFET-Based Design of
+[6]   B Srinivasu and K Sridharan. Carbon nanotube FET-based           Ternary Logic Gates and Atithmetic Circuits. IEEE
+     Transacations on Nanotechnology. 2011. 10(2):217-225.
+[18] L Luo, Z K Dong, X F Hu, L D Wang and S K Duan. MTL:
+     Memristor Ternary Logic Design. International Journal of
+     Bifurcation and Chaos. 2020. 30(15):2050222.
+[19] X Y Wang, P F Zhou, J K Eshraghian, C Y Lin, H H Ching
+     Iu, T C Chang and S M Kang. High-Density Memristor-
+     CMOS Ternary Logic Family. IEEE Transactions on
+     Circuits and Systems--I: Regular Papers. 2021. 68(1):264-
+     274.
+[20] P Beckett Towards a balanced ternary FPGA. 2009
+     International     Conference        on    Field-Programmable
+     Technology. 2009:46-53.
+[21] M Toulabinejad, M Taheri, K Navi and N Bagherzadeh.
+     Toward efficient implementation of basic balanced ternary
+     arithmetic      operations     in        CNFET   technology.
+     Microelectronics Journal. 2019. 90:267-277.
+[22] T W Molter, M A Nugent. The Generalized Metastable
+     Switch Memristor Model. CNNA 2016; 15th International
+     Workshop on Cellular Nanoscale Networks and their
+     Applications. 2016:1-2.
+[23] X Y Wang, C T Dong, P F Zhou, S K Nandi, S K Nath, R
+     G Elliman, H H Ching Iu, S M Kang and J K Eshraghian.
+     Low-Variance Memristor-Based Multi-Level Ternary
+     Combinational Logic. IEEE Transactions on Circuits and
+     Systems I: Regular Papers. 2022. 69(6):2423-2434.
+[24] Y J Zhang, X H Chen, et al., “Implementation of All 27
+     Possible Univariate Ternary Logics With a Single ZnO
+     Memristor,” IEEE Transactions on Electron Devices, vol.
+     66, no. 11, pp. 4710-4715, Nov. 2019.
+

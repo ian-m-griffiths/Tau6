@@ -1,0 +1,37 @@
+// Hardcoded program for the naive balanced-ternary CPU (16-bit binary words).
+// Single source of truth: cpu.v reads it via $readmemh, and cpu_tb.v reads the
+// same file and cross-checks it against a TB-built program image.
+//
+//   addr  op        effect                              expected
+//   0     LDI r0,#1        r0 = (1, 0)
+//   1     TADD r1,r0,r0    r1 = (2, 0)   [1+1: low digit -1 carry +1 => "1T"]
+//   2     TROT r2,r1,#3    r2 = (-2, 0)  [w^3 = -1: negation]
+//   3     TROT r3,r1,#1    r3 = (0, 2)   [w: (-b, a+b) = 2w]
+//   4     TADD r1,r1,r2    r1 = (0, 0)   [2 + (-2)]
+//   5     TSUB r4,r3,r2    r4 = (2, 2)   [(0,2) - (-2,0)]
+//   6     LDI r5,#2        r5 = (2, 0)
+//   7     LDI r6,#1        r6 = (1, 0)
+//   8     TNORM r7,r5,r6   r7 = (7, 0)   [N(2,1) = 4+2+1 = 7]
+//   9     TNORM r6,r5,r5   r6 = (12, 0)  [N(2,2) = 4+4+4 = 12]
+//   A     TROT r6,r6,#5    r6 = (12,-12) [w^5 = 1-w]
+//   B     TROT r7,r7,#2    r7 = (-7, 7)  [w^2 = -1+w]
+//   C     TADD r6,r6,r7    r6 = (5, -5)  [coefficient add with carry]
+//   D     TMUL r6,r6,r7    r6 = (0, 35)  [Eisenstein (5-5w)(-7+7w) = 35w]
+//   E     TROT r7,r7,#4    r7 = (7, 0)   [w^4: (b, -(a+b))]
+//   F     HLT
+4001
+0200
+2458
+2648
+0250
+18D0
+4A02
+4C01
+3F70
+3D68
+2DA8
+2FD0
+0DB8
+5DB8
+2FE0
+F000

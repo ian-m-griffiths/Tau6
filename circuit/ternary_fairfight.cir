@@ -1,0 +1,229 @@
+* =====================================================================
+* ternary_fairfight.cir  --  "fair fight" honesty check on the ternary
+* cell's 0.562 pJ/transfer claim (N=4 paralleled diode-connected MOSFETs,
+* charge-transfer: IP=1mA, PW=1ns, RW=100, CL=1p, +/-0.27V swing).
+*
+* The 0.562 pJ figure (ternary_transistor.cir, case g) credited the
+* transfer to an IDEAL current source (zero supply, zero switching cost,
+* infinite compliance) and a FREE ideal comparator (the asserted rail was
+* just read off the capacitor). This netlist re-measures the SAME cell
+* with those two idealizations removed:
+*
+*   1. REAL DRIVER  -- CMOS push-pull inverter (PMOS1/NMOS1 models from
+*      binary_baseline.cir, VTO=+/-0.4, KP 100u/200u), sized to deliver
+*      ~1 mA, driven from +VDDR / -VDDR rails (bipolar line). Its own
+*      switching (gate charge) and dissipation (on-resistance, channel
+*      current) are counted. Swept: VDDR and WP.
+*   2. REAL RECEIVER -- two PMOS-input clocked sense amplifiers (7 MOS
+*      each) that produce the demux output: SA_A compares rail rA vs 0
+*      (detects +1 = push), SA_B compares rB vs 0 (detects -1 = pull).
+*      Their supply energy per evaluation is measured and included.
+*
+* Cell (tcell4) is UNCHANGED from the 0.562 pJ measurement (N=4
+* paralleled NMOSDIODEB legs, WLB=300, VTONB=0.30, RW=100, CL=1p,
+* RLA=RLB=500, CLA=CLB=0.2p, Rterm=1Meg).
+*
+* Energy accounting per transfer (all measured, all in one window):
+*   E_drain  = energy delivered by the driver supply pair (+VDDR,-VDDR)
+*              during the transfer  = line/cell energy + driver dissipation
+*   E_gate   = gate-charge energy of the driver (Q_gate x VG per transfer)
+*   E_rec    = sense-amp supply energy for one demux evaluation
+*   E_fair   = E_drain + E_gate + E_rec     (the honest per-transfer cost)
+*   E_cell   = energy actually delivered INTO the cell at the driver node
+*              (the apples-to-apples equivalent of the old 0.562 pJ meas)
+*
+* Binary comparison: 0.748 pJ/bit (measured binary_baseline.cir: ecycle
+* 1.496 pJ / 2 transitions, full 0<->1V swing on 1.5 pF at VDD=1V).
+*
+* MEASURED (final config VDDR=1.0V, WP=11u; rail asserts 0.250 V,
+* line peaks 0.698 V, peak driver current 1.26 mA -- same operating
+* point as the 0.562 pJ winner's 0.267 V/0.722 V/1 mA):
+*   PUSH  E_drv=1.131 pJ  E_cell=0.521 pJ  E_gate=0.023 pJ  E_rec=0.048 pJ
+*   PULL  E_drv=1.130 pJ  E_cell=0.521 pJ  E_gate=0.012 pJ  E_rec=0.051 pJ
+*   NULL  E_drv=~0        E_rec=0.052 pJ
+*   E_fair(transfer) = 1.20 pJ  ->  2.14x the claimed 0.562 pJ (+114%).
+*   vs binary 0.748 pJ/bit: 1.61x WORSE per transfer; per bit of info
+*   (log2 3 = 1.585) 0.758 pJ/bit = dead heat. The win is gone.
+*   The ideal current source was hiding ~0.61 pJ/transfer of driver
+*   channel headroom loss (VDD - V_line)*I; the free comparator hid the
+*   ~0.05 pJ receiver. Null is still ~free (receiver only).
+*   REAL-PROCESS CAVEAT: these LEVEL=1 models have NO bulk diode; a real
+*   PMOS body diode (verified by adding DIDEAL vdd->drv) clamps the PULL
+*   phase (rail stuck at -0.015 V, demux fails, 2.9 pJ wasted). A real
+*   bipolar driver needs body-isolated devices or current steering.
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+* ------------------------------------------------------------------
+* DRIVER PARAMS (final honest operating point from the 16x16 sweep:
+* min E at rail >= 0.25 V is VDDR=1.0, WP=11u -> E_fair = 1.20 pJ;
+* note: a real push-pull driver needs +/-1.0 V rails -- the bipolar
+* line must be driven from a supply that exceeds line_peak + |VT|,
+* and 1 mA in 1 ns needs Vov >= 0.6, i.e. VDDR >= ~1.0 V.)
+* ------------------------------------------------------------------
+.param VDDR = 1.0
+.param WP   = 11u
+.param WN   = {WP/2}
+.param WLB  = 300
+.param LEN  = 0.18u
+
+* ---------------- models (verbatim from binary_baseline + cell) ----
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4 KP=200u LAMBDA=0.05 TOX=2n)  ; TOX added for real gate cap
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)  ; TOX added for real gate cap
+.model NMOSDIODEB NMOS(LEVEL=1 VTO=0.30 KP=200u LAMBDA=0.05 GAMMA=0 PHI=0.7 TOX=2n IS=0)
+
+* ---------------- cell: UNCHANGED N=4 paralleled transistor-diodes ----
+.subckt tcell4 in rA rB rwire=100 cline=1p rload=500 cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+M1  x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1B x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1C x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1D x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M2  rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2B rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2C rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2D rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+* ---------------- REAL RECEIVER: PMOS-input clocked sense amplifier ----
+* PMOS diff pair (M1/M2) reads inP vs inM; PMOS tail (M5, gate=CLK,
+* active low); NMOS cross-coupled loads (M3/M4) regenerate; NMOS
+* precharge (M6/M7, gate=CLK, active high) resets outputs to 0.
+* out = high when inP < inM (PMOS conducts more on the lower input).
+.subckt sensamp inP inM clk vddsa out outb
+M1 out  inP cs cs PMOS1 W=1u  L=0.18u
+M2 outb inM cs cs PMOS1 W=1u  L=0.18u
+M5 cs   clk vddsa vddsa PMOS1 W=0.3u L=0.18u
+M3 out  outb 0 0 NMOS1 W=0.5u L=0.18u
+M4 outb out  0 0 NMOS1 W=0.5u L=0.18u
+M6 out  clk  0 0 NMOS1 W=0.5u L=0.18u
+M7 outb clk  0 0 NMOS1 W=0.5u L=0.18u
+CLo  out  0 5f
+CLob outb 0 5f
+.ends
+
+* =====================================================================
+* SHARED SUPPLIES
+* =====================================================================
+VDD   vdd   0 DC {VDDR}
+VSS   vss   0 DC {-VDDR}
+VDDSA vddsa 0 DC 1.0
+BpSUP pwpSUP 0 V = -(V(vdd)*I(VDD) + V(vss)*I(VSS))
+BpSA  pwpSA  0 V = -(V(vddsa)*I(VDDSA))
+
+* =====================================================================
+* CASE 1: PUSH (+1)  -- real driver pulses line positive at 160 ns
+* =====================================================================
+MP1 drv1 gP1 vdd vdd PMOS1 W={WP} L=0.18u
+MN1 drv1 gN1 vss vss NMOS1 W={WN} L=0.18u
+VgP1 gP1 0 PULSE({VDDR} 0 160n 0.2n 0.2n 1n 200n)   ; PMOS on (gate low)
+VgN1 gN1 0 DC {-VDDR}                                ; NMOS off
+Vs1  drv1 cell1 DC 0                                 ; 0V sense: energy into cell
+Xc1  cell1 rA1 rB1 tcell4
+BpL1 pwpL1 0 V = V(cell1)*I(Vs1)                     ; power into the cell
+BpG1 pwpG1 0 V = V(gP1)*I(VgP1)                      ; gate-source power
+BqG1 qG1 0 V = I(VgP1)
+Bipk1 ipk1 0 V = -I(VDD)                               ; driver supply current                                ; gate current probe
+Vclk1 clk1 0 PULSE(1 0 161.4n 0.1n 0.1n 1.0n 200n)   ; precharge..eval
+XsaA1 0 rA1 clk1 vddsa outAp1 outApb1 sensamp        ; SA_A: rA > 0 ?
+XsaB1 rB1 0 clk1 vddsa outBp1 outBpb1 sensamp        ; SA_B: rB < 0 ?
+BpCLK1 pwpCLK1 0 V = V(clk1)*I(Vclk1)
+BdA1 vdiffA1 0 V = V(outAp1)-V(outApb1)
+BdB1 vdiffB1 0 V = V(outBp1)-V(outBpb1)
+
+* =====================================================================
+* CASE 2: PULL (-1)  -- real driver pulls line negative at 180 ns
+* =====================================================================
+MP2 drv2 gP2 vdd vdd PMOS1 W={WP} L=0.18u
+MN2 drv2 gN2 vss vss NMOS1 W={WN} L=0.18u
+VgP2 gP2 0 DC {VDDR}                                 ; PMOS off
+VgN2 gN2 0 PULSE({-VDDR} 0 180n 0.2n 0.2n 1n 200n)   ; NMOS on (gate high)
+Vs2  drv2 cell2 DC 0
+Xc2  cell2 rA2 rB2 tcell4
+BpL2 pwpL2 0 V = V(cell2)*I(Vs2)
+BpG2 pwpG2 0 V = V(gN2)*I(VgN2)
+BqG2 qG2 0 V = I(VgN2)                                ; gate current probe
+Vclk2 clk2 0 PULSE(1 0 181.4n 0.1n 0.1n 1.0n 200n)
+XsaA2 0 rA2 clk2 vddsa outAp2 outApb2 sensamp
+XsaB2 rB2 0 clk2 vddsa outBp2 outBpb2 sensamp
+BpCLK2 pwpCLK2 0 V = V(clk2)*I(Vclk2)
+BdA2 vdiffA2 0 V = V(outAp2)-V(outApb2)
+BdB2 vdiffB2 0 V = V(outBp2)-V(outBpb2)
+
+* =====================================================================
+* CASE 3: NULL (0)  -- driver idle; rails should stay ~0
+* =====================================================================
+MP3 drv3 gP3 vdd vdd PMOS1 W={WP} L=0.18u
+MN3 drv3 gN3 vss vss NMOS1 W={WN} L=0.18u
+VgP3 gP3 0 DC {VDDR}
+VgN3 gN3 0 DC {-VDDR}
+Vs3  drv3 cell3 DC 0
+Xc3  cell3 rA3 rB3 tcell4
+BpL3 pwpL3 0 V = V(cell3)*I(Vs3)
+Vclk3 clk3 0 PULSE(1 0 201.4n 0.1n 0.1n 1.0n 200n)
+XsaA3 0 rA3 clk3 vddsa outAp3 outApb3 sensamp
+XsaB3 rB3 0 clk3 vddsa outBp3 outBpb3 sensamp
+BpCLK3 pwpCLK3 0 V = V(clk3)*I(Vclk3)
+BdA3 vdiffA3 0 V = V(outAp3)-V(outApb3)
+BdB3 vdiffB3 0 V = V(outBp3)-V(outBpb3)
+
+* =====================================================================
+* SIMULATION + MEASUREMENTS
+* =====================================================================
+.tran 20p 230n
+
+* --- PUSH: driver supply energy, cell energy, gate charge, receiver ---
+.meas tran epush_drv  INTEG V(pwpSUP) FROM=159n TO=164n
+.meas tran epush_cell INTEG V(pwpL1)  FROM=159n TO=164n
+.meas tran epush_gts INTEG V(pwpG1)   FROM=159n TO=164n
+.meas tran qg_push INTEG V(qG1) FROM=161.1n TO=162.2n     ; off-edge gate charge (<0)
+.meas tran epush_rec INTEG V(pwpSA)  FROM=158n TO=168n
+.meas tran epush_clk INTEG V(pwpCLK1) FROM=158n TO=168n
+.meas tran ipk_push MAX V(ipk1) FROM=159n TO=164n        ; peak driver current
+.meas tran railA_push MAX V(rA1) FROM=160n TO=163n
+.meas tran railB_push MAX V(rB1) FROM=160n TO=163n
+.meas tran line_push MAX V(drv1) FROM=160n TO=163n
+.meas tran demuxA_push FIND V(outAp1) AT=162.2n
+.meas tran demuxB_push FIND V(outBp1) AT=162.2n
+.meas tran dA_push FIND V(vdiffA1) AT=162.2n
+.meas tran dB_push FIND V(vdiffB1) AT=162.2n
+
+* --- PULL ---
+.meas tran epull_drv  INTEG V(pwpSUP) FROM=179n TO=184n
+.meas tran epull_cell INTEG V(pwpL2)  FROM=179n TO=184n
+.meas tran qg_pull INTEG V(qG2) FROM=181.1n TO=182.2n
+.meas tran epull_rec INTEG V(pwpSA)  FROM=178n TO=188n
+.meas tran ipk_pull MAX I(VSS) FROM=179n TO=184n
+.meas tran railA_pull MAX V(rA2) FROM=180n TO=183n
+.meas tran railB_pull MIN V(rB2) FROM=180n TO=183n
+.meas tran demuxA_pull FIND V(outAp2) AT=182.2n
+.meas tran demuxB_pull FIND V(outBp2) AT=182.2n
+.meas tran dA_pull FIND V(vdiffA2) AT=182.2n
+.meas tran dB_pull FIND V(vdiffB2) AT=182.2n
+
+* --- NULL ---
+.meas tran enull_drv  INTEG V(pwpSUP) FROM=199n TO=206n
+.meas tran enull_rec INTEG V(pwpSA)  FROM=198n TO=208n
+.meas tran railA_null MAX V(rA3) FROM=200n TO=206n
+.meas tran railB_null MAX V(rB3) FROM=200n TO=206n
+.meas tran demuxA_null FIND V(outAp3) AT=202.2n
+.meas tran demuxB_null FIND V(outBp3) AT=202.2n
+.meas tran dA_null FIND V(vdiffA3) AT=202.2n
+.meas tran dB_null FIND V(vdiffB3) AT=202.2n
+
+* ------------------------------------------------------------------
+* SIZING SWEEP (disabled: this ngspice-44.2 build rejects .step).
+* Sweep was run externally (16x16 (VDDR,WP) variants; min energy with
+* rail >= 0.25 V lands at VDDR=1.0, WP=11u). Uncomment on a build
+* with .step support to reproduce:
+* .step param VDDR list 0.7 0.8 0.9 1.0 1.05 1.1 1.15 1.2
+* .step param WP list 3u 6u 8u 10u 11u 12u 14u 16u 18u 24u 50u 100u
+
+.end

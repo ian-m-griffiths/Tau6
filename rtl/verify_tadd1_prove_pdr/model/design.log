@@ -1,0 +1,326 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2025  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+
+-- Executing script file `../model/design.ys' --
+
+1. Executing Verilog-2005 frontend: verify_tadd1.sv
+Parsing SystemVerilog input from `verify_tadd1.sv' to AST representation.
+Generating RTLIL representation for module `\tadd1_wrapper'.
+Generating RTLIL representation for module `\tadd1_verify'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \tadd1_verify
+Used module:     \tadd1_wrapper
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \tadd1_verify
+Used module:     \tadd1_wrapper
+Removed 0 unused modules.
+Module tadd1_verify directly or indirectly contains formal properties -> setting "keep" attribute.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 25 assignments to connections.
+
+2.2.4. Executing PROC_INIT pass (extract init attributes).
+
+2.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+2.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\tadd1_verify.$proc$verify_tadd1.sv:0$176'.
+Creating decoders for process `\tadd1_verify.$proc$verify_tadd1.sv:0$167'.
+Creating decoders for process `\tadd1_verify.$proc$verify_tadd1.sv:0$158'.
+Creating decoders for process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+
+2.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\tadd1_verify.\cout_val' from process `\tadd1_verify.$proc$verify_tadd1.sv:0$176'.
+No latch inferred for signal `\tadd1_verify.\sum_val' from process `\tadd1_verify.$proc$verify_tadd1.sv:0$176'.
+No latch inferred for signal `\tadd1_verify.\cop_exp' from process `\tadd1_verify.$proc$verify_tadd1.sv:0$167'.
+No latch inferred for signal `\tadd1_verify.\con_exp' from process `\tadd1_verify.$proc$verify_tadd1.sv:0$167'.
+No latch inferred for signal `\tadd1_verify.\sp_exp' from process `\tadd1_verify.$proc$verify_tadd1.sv:0$167'.
+No latch inferred for signal `\tadd1_verify.\sn_exp' from process `\tadd1_verify.$proc$verify_tadd1.sv:0$167'.
+No latch inferred for signal `\tadd1_verify.\va' from process `\tadd1_verify.$proc$verify_tadd1.sv:0$158'.
+No latch inferred for signal `\tadd1_verify.\vb' from process `\tadd1_verify.$proc$verify_tadd1.sv:0$158'.
+No latch inferred for signal `\tadd1_verify.\vc' from process `\tadd1_verify.$proc$verify_tadd1.sv:0$158'.
+No latch inferred for signal `\tadd1_verify.\s' from process `\tadd1_verify.$proc$verify_tadd1.sv:0$158'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$1.$result' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$2.$result' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$2.a' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$2.b' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$2.cin' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$2.ap' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$2.bp' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$2.cp' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$2.an' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$2.bn' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$2.cn' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$2.cop' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$2.con' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$2.sp' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+No latch inferred for signal `\tadd1_wrapper.\tadd1$func$verify_tadd1.sv:46$2.sn' from process `\tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+
+2.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+2.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `tadd1_verify.$proc$verify_tadd1.sv:0$176'.
+Removing empty process `tadd1_verify.$proc$verify_tadd1.sv:0$167'.
+Removing empty process `tadd1_verify.$proc$verify_tadd1.sv:0$158'.
+Removing empty process `tadd1_wrapper.$proc$verify_tadd1.sv:0$3'.
+Cleaned up 0 empty switches.
+
+2.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tadd1_verify.
+<suppressed ~27 debug messages>
+Optimizing module tadd1_wrapper.
+
+2.3. Executing FUTURE pass.
+
+2.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tadd1_verify.
+Optimizing module tadd1_wrapper.
+
+2.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tadd1_verify..
+Finding unused cells or wires in module \tadd1_wrapper..
+Removed 0 unused cells and 42 unused wires.
+<suppressed ~2 debug messages>
+
+2.6. Executing CHECK pass (checking for obvious problems).
+Checking module tadd1_verify...
+Checking module tadd1_wrapper...
+Found and reported 0 problems.
+
+2.7. Executing OPT pass (performing simple optimizations).
+
+2.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tadd1_verify.
+Optimizing module tadd1_wrapper.
+
+2.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tadd1_verify'.
+<suppressed ~276 debug messages>
+Finding identical cells in module `\tadd1_wrapper'.
+<suppressed ~156 debug messages>
+Removed a total of 144 cells.
+
+2.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tadd1_verify..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \tadd1_wrapper..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~5 debug messages>
+
+2.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tadd1_verify.
+  Optimizing cells in module \tadd1_wrapper.
+Performed a total of 0 changes.
+
+2.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tadd1_verify'.
+Finding identical cells in module `\tadd1_wrapper'.
+Removed a total of 0 cells.
+
+2.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tadd1_verify..
+Finding unused cells or wires in module \tadd1_wrapper..
+Removed 0 unused cells and 144 unused wires.
+<suppressed ~2 debug messages>
+
+2.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tadd1_verify.
+Optimizing module tadd1_wrapper.
+
+2.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \tadd1_verify..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \tadd1_wrapper..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~5 debug messages>
+
+2.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \tadd1_verify.
+  Optimizing cells in module \tadd1_wrapper.
+Performed a total of 0 changes.
+
+2.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tadd1_verify'.
+Finding identical cells in module `\tadd1_wrapper'.
+Removed a total of 0 cells.
+
+2.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tadd1_verify..
+Finding unused cells or wires in module \tadd1_wrapper..
+
+2.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tadd1_verify.
+Optimizing module tadd1_wrapper.
+
+2.7.14. Finished OPT passes. (There is nothing left to do.)
+
+2.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 29 bits (of 32) from port B of cell tadd1_verify.$ge$verify_tadd1.sv:70$168 ($ge).
+Removed top 30 bits (of 32) from port B of cell tadd1_verify.$le$verify_tadd1.sv:71$169 ($le).
+Removed top 30 bits (of 32) from port B of cell tadd1_verify.$eq$verify_tadd1.sv:72$170 ($eq).
+Removed top 30 bits (of 32) from port B of cell tadd1_verify.$eq$verify_tadd1.sv:72$171 ($eq).
+Removed top 31 bits (of 32) from port B of cell tadd1_verify.$eq$verify_tadd1.sv:73$173 ($eq).
+Removed top 29 bits (of 32) from port B of cell tadd1_verify.$eq$verify_tadd1.sv:73$174 ($eq).
+Removed top 29 bits (of 32) from port A of cell tadd1_verify.$mul$verify_tadd1.sv:86$187 ($mul).
+Removed top 1 bits (of 2) from port B of cell tadd1_verify.$eq$verify_tadd1.sv:98$204 ($eq).
+Removed top 1 bits (of 2) from port B of cell tadd1_verify.$eq$verify_tadd1.sv:98$217 ($eq).
+Removed top 1 bits (of 2) from port B of cell tadd1_verify.$eq$verify_tadd1.sv:98$255 ($eq).
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tadd1_verify..
+Finding unused cells or wires in module \tadd1_wrapper..
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module tadd1_verify.
+Optimizing module tadd1_wrapper.
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\tadd1_verify'.
+Finding identical cells in module `\tadd1_wrapper'.
+Removed a total of 0 cells.
+
+2.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \tadd1_verify..
+Finding unused cells or wires in module \tadd1_wrapper..
+
+2.11.4. Finished fast OPT passes.
+
+2.12. Printing statistics.
+
+=== tadd1_verify ===
+
+   Number of wires:                 86
+   Number of wire bits:            529
+   Number of public wires:          16
+   Number of public wire bits:     211
+   Number of ports:                  4
+   Number of port bits:             10
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                112
+     $add                            3
+     $check                         30
+     $eq                            12
+     $ge                             1
+     $le                             1
+     $logic_and                     39
+     $logic_not                      4
+     $logic_or                       5
+     $mul                            1
+     $mux                           10
+     $ne                             5
+     tadd1_wrapper                   1
+
+=== tadd1_wrapper ===
+
+   Number of wires:                 95
+   Number of wire bits:            104
+   Number of public wires:          17
+   Number of public wire bits:      26
+   Number of ports:                  4
+   Number of port bits:             10
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 82
+     $and                           56
+     $not                            6
+     $or                            20
+
+=== design hierarchy ===
+
+   tadd1_verify                      1
+     tadd1_wrapper                   1
+
+   Number of wires:                181
+   Number of wire bits:            633
+   Number of public wires:          33
+   Number of public wire bits:     237
+   Number of ports:                  8
+   Number of port bits:             20
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                193
+     $add                            3
+     $and                           56
+     $check                         30
+     $eq                            12
+     $ge                             1
+     $le                             1
+     $logic_and                     39
+     $logic_not                      4
+     $logic_or                       5
+     $mul                            1
+     $mux                           10
+     $ne                             5
+     $not                            6
+     $or                            20
+
+2.13. Executing CHECK pass (checking for obvious problems).
+Checking module tadd1_verify...
+Checking module tadd1_wrapper...
+Found and reported 0 problems.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `tadd1_verify'. Setting top module to tadd1_verify.
+
+3.1. Analyzing design hierarchy..
+Top module:  \tadd1_verify
+Used module:     \tadd1_wrapper
+
+3.2. Analyzing design hierarchy..
+Top module:  \tadd1_verify
+Used module:     \tadd1_wrapper
+Removed 0 unused modules.
+Module tadd1_verify directly or indirectly contains formal properties -> setting "keep" attribute.
+
+4. Executing jny backend.
+
+5. Executing RTLIL backend.
+Output filename: ../model/design.il
+
+End of script. Logfile hash: a932384132, CPU: user 0.08s system 0.01s, MEM: 14.96 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 21% 5x opt_clean (0 sec), 19% 6x opt_expr (0 sec), ...

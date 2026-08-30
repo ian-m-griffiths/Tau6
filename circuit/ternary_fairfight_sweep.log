@@ -1,0 +1,12 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * =====================================================================
+
+Error on line 200 or its substitute:
+  .step param vddr list 1.0 1.1 1.2 1.3
+ unimplemented dot command '.step'
+    Simulation interrupted due to error!
+
+Note: No ".plot", ".print", or ".fourier" lines; no simulations run

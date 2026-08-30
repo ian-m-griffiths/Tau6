@@ -1,0 +1,84 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+engine_0 (smtbmc z3) returned pass
+cover trace: engine_0/trace0.vcd
+cover trace: engine_0/trace0.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_305 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace1.vcd
+cover trace: engine_0/trace1.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_251 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace10.vcd
+cover trace: engine_0/trace10.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_245 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace11.vcd
+cover trace: engine_0/trace11.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_353 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace12.vcd
+cover trace: engine_0/trace12.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_341 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace13.vcd
+cover trace: engine_0/trace13.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_233 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace14.vcd
+cover trace: engine_0/trace14.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_287 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace15.vcd
+cover trace: engine_0/trace15.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_215 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace16.vcd
+cover trace: engine_0/trace16.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_269 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace17.vcd
+cover trace: engine_0/trace17.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_323 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace18.vcd
+cover trace: engine_0/trace18.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_329 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace19.vcd
+cover trace: engine_0/trace19.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_221 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace2.vcd
+cover trace: engine_0/trace2.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_317 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace20.vcd
+cover trace: engine_0/trace20.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_275 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace21.vcd
+cover trace: engine_0/trace21.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_257 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace22.vcd
+cover trace: engine_0/trace22.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_203 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace23.vcd
+cover trace: engine_0/trace23.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_311 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace24.vcd
+cover trace: engine_0/trace24.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_239 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace25.vcd
+cover trace: engine_0/trace25.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_293 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace26.vcd
+cover trace: engine_0/trace26.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_347 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace3.vcd
+cover trace: engine_0/trace3.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_197 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace4.vcd
+cover trace: engine_0/trace4.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_209 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace5.vcd
+cover trace: engine_0/trace5.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_263 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace6.vcd
+cover trace: engine_0/trace6.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_335 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace7.vcd
+cover trace: engine_0/trace7.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_227 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace8.vcd
+cover trace: engine_0/trace8.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_281 at verify_tadd1.sv:97.85-98.55
+cover trace: engine_0/trace9.vcd
+cover trace: engine_0/trace9.yw
+  reached cover statement tadd1_verify._witness_.check_cover_verify_tadd1_sv_97_299 at verify_tadd1.sv:97.85-98.55

@@ -1,0 +1,104 @@
+* =====================================================================
+* ternary_cell.cir  —  AC-polarity ternary cell energy measurement
+* Measure E = integral V(drv)*I(Vs) dt for push (+1), pull (-1), null (0),
+* and a push->pull back-to-back (charge recycling) case.
+* (Demux is read directly from the rail voltages V(rA)/V(rB) — no B-source
+*  comparators, because the discontinuous `>` in a B-source makes the solver
+*  collapse the diode circuit.)
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param IP = 1m
+.param PW = 3n
+
+* ---------- diode model: ideal-ish with small leakage ----------
+.model DIDEAL D (IS=1e-14 RS=50 CJO=0.2p TT=2n N=1.0)
+* .model DSCHOTTKY D (IS=1e-9 RS=50 CJO=0.2p TT=1n N=1.05)
+
+* ---------- reusable cell: wire + 2-diode receiver + load ----------
+.subckt ternary_cell in rA rB rwire=500 cline=1p rload=500 cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+D1 x rA DIDEAL
+D2 rB x DIDEAL
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+* =====================================================================
+* TEST CASE (a): PUSH (+1)  — 1 mA into the wire, 10..15 ns
+* =====================================================================
+IpA 0 dA PULSE(0 {IP} 10n 1n 1n {PW} 200n)
+VsA dA drvA DC 0
+Xpush drvA rAp rBp ternary_cell
+BpA pwpA 0 V = V(drvA)*I(VsA)
+
+* =====================================================================
+* TEST CASE (b): PULL (-1)  — -1 mA, 40..45 ns
+* =====================================================================
+IpB 0 dB PULSE(0 {-IP} 40n 1n 1n {PW} 200n)
+VsB dB drvB DC 0
+Xpull drvB rAq rBq ternary_cell
+BpB pwpB 0 V = V(drvB)*I(VsB)
+
+* =====================================================================
+* TEST CASE (c): NULL (0) — idle driver; rails should stay ~0
+* =====================================================================
+In 0 dN DC 0
+RidleN dN 0 10meg
+VsN dN drvN DC 0
+RwN drvN xN 500
+CxN xN 0 1p
+RtermN xN 0 1meg
+D1N xN rAn DIDEAL
+D2N rBn xN DIDEAL
+RLAN rAn 0 500
+CLAN rAn 0 0.2p
+RLBN rBn 0 500
+CLBN rBn 0 0.2p
+BpN pwpN 0 V = V(drvN)*I(VsN)
+
+* =====================================================================
+* TEST CASE (d): PUSH then PULL back-to-back (charge recycling), 100..110 ns
+* =====================================================================
+Icy1 0 dC PULSE(0 {IP} 100n 1n 1n {PW} 200n)
+Icy2 0 dC PULSE(0 {-IP} 105n 1n 1n {PW} 200n)
+VsC dC drvC DC 0
+Xcyc drvC rAc rBc ternary_cell
+BpC pwpC 0 V = V(drvC)*I(VsC)
+
+* =====================================================================
+* SIMULATION CONTROL + MEASUREMENTS
+* =====================================================================
+.tran 100p 200n
+
+* --- transfer-window energy [J] = integral of driver power ---
+.meas tran epush INTEG V(pwpA) FROM=10n TO=16n
+.meas tran epull INTEG V(pwpB) FROM=40n TO=46n
+.meas tran enull INTEG V(pwpN) FROM=70n TO=90n
+.meas tran ecyc1 INTEG V(pwpC) FROM=100n TO=106n
+.meas tran ecyc2 INTEG V(pwpC) FROM=105n TO=111n
+.meas tran ecycT INTEG V(pwpC) FROM=100n TO=111n
+
+* --- receiver rail levels at mid-pulse checkpoints (demux check) ---
+.meas tran vrA_push FIND V(rAp) AT=14n
+.meas tran vrB_push FIND V(rBp) AT=14n
+.meas tran vrA_pull FIND V(rAq) AT=44n
+.meas tran vrB_pull FIND V(rBq) AT=44n
+.meas tran vrA_null FIND V(rAn) AT=80n
+.meas tran vrB_null FIND V(rBn) AT=80n
+
+* --- driver-side line voltage at mid-pulse ---
+.meas tran vline_push FIND V(drvA) AT=14n
+.meas tran vline_pull FIND V(drvB) AT=44n
+
+.print tran v(drvA) v(rAp) v(rBp)
+.print tran v(drvB) v(rAq) v(rBq)
+.print tran v(rAn) v(rBn)
+.print tran v(drvC) v(rAc) v(rBc)
+
+.end

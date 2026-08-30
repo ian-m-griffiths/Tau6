@@ -1,0 +1,139 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+0_vmeas_0                                    0
+sum1                               4.31993e-19
+0_vmeas_1                                    0
+car1                              -8.63554e-16
+0_vmeas_2                                    0
+sum2                               4.31993e-19
+0_vmeas_3                                    0
+car2                              -8.63554e-16
+0_vmeas_4                                    0
+sum3                               4.31993e-19
+0_vmeas_5                                    0
+car3                              -8.63554e-16
+0_vmeas_6                                    0
+sum4                               4.31993e-19
+0_vmeas_7                                    0
+car4                              -8.63554e-16
+0_vmeas_8                                    0
+sum5                               4.31993e-19
+0_vmeas_9                                    0
+car5                              -8.63554e-16
+0_vmeas_10                                   0
+sum6                               4.31993e-19
+0_vmeas_11                                   0
+car6                              -8.63554e-16
+ic1                               -4.31993e-22
+ic2                               -4.31993e-22
+ic3                               -4.31993e-22
+ic4                               -4.31993e-22
+ic5                               -4.31993e-22
+ic6                               -4.31993e-22
+pthr1                              1.44544e-22
+pthr2                              1.44544e-22
+pthr3                              1.44544e-22
+pthr4                              1.44544e-22
+pthr5                              1.44544e-22
+pthr6                              1.44544e-22
+prs1                              -1.44544e-22
+prs2                              -1.44544e-22
+prs3                              -1.44544e-22
+prs4                              -1.44544e-22
+prs5                              -1.44544e-22
+prs6                              -1.44544e-22
+bprs6#branch                                 0
+bprs5#branch                                 0
+bprs4#branch                                 0
+bprs3#branch                                 0
+bprs2#branch                                 0
+bprs1#branch                                 0
+bpthr6#branch                                0
+bpthr5#branch                                0
+bpthr4#branch                                0
+bpthr3#branch                                0
+bpthr2#branch                                0
+bpthr1#branch                                0
+bic6#branch                                  0
+v_ia6#branch                                 0
+v_ib6#branch                                 0
+bic5#branch                                  0
+v_ia5#branch                                 0
+v_ib5#branch                                 0
+bic4#branch                                  0
+v_ia4#branch                                 0
+v_ib4#branch                                 0
+bic3#branch                                  0
+v_ia3#branch                                 0
+v_ib3#branch                                 0
+bic2#branch                                  0
+v_ia2#branch                                 0
+v_ib2#branch                                 0
+bic1#branch                                  0
+v_ia1#branch                                 0
+v_ib1#branch                                 0
+
+ Reference value :  1.11850e-07 Reference value :  2.33210e-07 Reference value :  3.55170e-07 Reference value :  4.75110e-07 Reference value :  5.94650e-07
+No. of Data Rows : 31080
+
+  Measurements for Transient Analysis
+
+icar_p2             =  4.990076e-04
+icar_p1             =  6.544634e-07
+icar_0              =  0.000000e+00
+icar_c0             =  0.000000e+00
+icar_m1             =  -2.218596e-07
+icar_m2             =  -4.989854e-04
+vsum_p2             =  1.500992e+00
+vsum_p1             =  9.993455e-01
+vsum_0              =  0.000000e+00
+vsum_c0             =  0.000000e+00
+vsum_m1             =  -9.997781e-01
+vsum_m2             =  -1.501015e+00
+vcar_p2             =  9.824675e-01
+vcar_p1             =  6.529730e-01
+vcar_0              =  0.000000e+00
+vcar_c0             =  0.000000e+00
+vcar_m1             =  -2.173916e-01
+vcar_m2             =  -5.184964e-01
+ethr_p2             =   7.36246e-12 from=  1.00000e-07 to=  1.10000e-07
+ethr_p1             =   6.44455e-15 from=  2.00000e-07 to=  2.10000e-07
+ethr_0              =   0.00000e+00 from=  3.00000e-07 to=  3.10000e-07
+ethr_c0             =   0.00000e+00 from=  4.00000e-07 to=  4.10000e-07
+ethr_m1             =   2.17912e-15 from=  5.00000e-07 to=  5.10000e-07
+ethr_m2             =   7.36223e-12 from=  6.00000e-07 to=  6.10000e-07
+ers_p2              =   2.22967e-11 from=  1.00000e-07 to=  1.10000e-07
+ers_p1              =   9.85379e-12 from=  2.00000e-07 to=  2.10000e-07
+ers_0               =   0.00000e+00 from=  3.00000e-07 to=  3.10000e-07
+ers_c0              =   0.00000e+00 from=  4.00000e-07 to=  4.10000e-07
+ers_m1              =   9.86233e-12 from=  5.00000e-07 to=  5.10000e-07
+ers_m2              =   2.22974e-11 from=  6.00000e-07 to=  6.10000e-07
+
+
+Total analysis time (seconds) = 1.28712
+
+Total elapsed time (seconds) = 1.297 
+
+Total DRAM available = 62177.324 MB.
+DRAM currently available = 37241.059 MB.
+Maximum ngspice program size =   31.016 MB.
+Current ngspice program size =   20.312 MB.
+
+Shared ngspice pages =   10.750 MB.
+Text (code) pages =    7.578 MB.
+Stack = 0 bytes.
+Library pages =    9.609 MB.
+

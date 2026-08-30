@@ -1,0 +1,311 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+clk                                          1
+vdd1                                         1
+vddsa1                                       1
+in1                                          1
+out1                                 7.575e-10
+l1                                   7.575e-10
+s1o                                   1.02e-09
+xsa1.cs                                   0.33
+s1ob                                  1.02e-09
+pwr1                                  1.01e-12
+pwrsa1                                 6.8e-13
+d1                                           0
+vdd2                                         1
+vddsa2                                       1
+a2                                           1
+b2                                           1
+out2                                 1.515e-09
+xg2.x1.mid                           7.575e-10
+l2                                   1.515e-09
+s2o                                   1.02e-09
+xsa2.cs                                   0.33
+s2ob                                  1.02e-09
+pwr2                                  2.02e-12
+pwrsa2                                 6.8e-13
+d2                                -2.06795e-25
+vdd3                                         1
+vddsa3                                       1
+a3                                           0
+b3                                           1
+xg3.x1.mid                                   1
+out3                                 7.575e-10
+l3                                   7.575e-10
+s3o                                   1.02e-09
+xsa3.cs                                   0.33
+s3ob                                  1.02e-09
+pwr3                                  1.01e-12
+pwrsa3                                 6.8e-13
+d3                                           0
+vdd4                                         1
+vddsa4                                       1
+p4                                           0
+n4                                           0
+pout4                                        0
+nout4                                        0
+lp4                                          0
+ln4                                          0
+sp4o                                  1.02e-09
+xsap4.cs                                  0.33
+sp4ob                                 1.02e-09
+sn4o                                  1.02e-09
+xsan4.cs                                  0.33
+sn4ob                                 1.02e-09
+pwr4                                         0
+pwrsa4                                1.36e-12
+dp4                                          0
+dn4                               -2.06795e-25
+vdd5                                         1
+vddsa5                                       1
+ap5                                          1
+an5                                          0
+bp5                                          0
+bn5                                          0
+xg5.xp.mid                                   1
+xg5.xp.x1.mid                         0.599977
+pout5                                7.575e-10
+xg5.xn.x1.mid                                1
+xg5.xn.mid                                   1
+nout5                                7.575e-10
+lp5                                  7.575e-10
+ln5                                  7.575e-10
+sp5o                                  1.02e-09
+xsap5.cs                                  0.33
+sp5ob                                 1.02e-09
+sn5o                                  1.02e-09
+xsan5.cs                                  0.33
+sn5ob                                 1.02e-09
+pwr5                               6.26995e-12
+pwrsa5                                1.36e-12
+dp5                                          0
+dn5                                          0
+vdd6                                         1
+vddsa6                                       1
+ap6                                          0
+an6                                          0
+bp6                                          0
+bn6                                          0
+xg6.xp.x1.mid                                1
+xg6.xp.mid                                   1
+pout6                                7.575e-10
+xg6.xn.mid                                   1
+xg6.xn.x1.mid                      2.90149e-29
+nout6                                7.575e-10
+lp6                                  7.575e-10
+ln6                                  7.575e-10
+sp6o                                  1.02e-09
+xsap6.cs                                  0.33
+sp6ob                                 1.02e-09
+sn6o                                  1.02e-09
+xsan6.cs                                  0.33
+sn6ob                                 1.02e-09
+pwr6                                  5.05e-12
+pwrsa6                                1.36e-12
+dp6                                          0
+dn6                                          0
+vdd7                                         1
+vddsa7                                       1
+ap7                                          0
+an7                                          0
+bp7                                          0
+bn7                                          0
+xg7.xa0.mid                                  1
+xg7.a0                                       1
+xg7.xb0.mid                                  1
+xg7.b0                                       1
+xg7.xp1.mid                                  1
+xg7.xp1.x1.mid                   -7.63352e-176
+xg7.t1                               7.575e-10
+xg7.xp2.mid                                  1
+xg7.xp2.x1.mid                        0.599977
+xg7.t2                               7.575e-10
+xg7.xp3.mid                                  1
+xg7.xp3.x1.mid                     2.90149e-29
+xg7.t3                               7.575e-10
+xg7.xp.x1.x1.mid                             1
+xg7.xp.x1.mid                                1
+xg7.xp.m1                            7.575e-10
+xg7.xp.x2.x1.mid                             1
+xg7.xp.x2.mid                                1
+pout7                                7.575e-10
+xg7.xn1.mid                                  1
+xg7.xn1.x1.mid                   -7.63352e-176
+xg7.t4                               7.575e-10
+xg7.xn2.mid                                  1
+xg7.xn2.x1.mid                        0.599977
+xg7.t5                               7.575e-10
+xg7.xn3.mid                                  1
+xg7.xn3.x1.mid                     2.90149e-29
+xg7.t6                               7.575e-10
+xg7.xn.x1.x1.mid                             1
+xg7.xn.x1.mid                                1
+xg7.xn.m1                            7.575e-10
+xg7.xn.x2.x1.mid                             1
+xg7.xn.x2.mid                                1
+nout7                                7.575e-10
+lp7                                  7.575e-10
+ln7                                  7.575e-10
+sp7o                                  1.02e-09
+xsap7.cs                                  0.33
+sp7ob                                 1.02e-09
+sn7o                                  1.02e-09
+xsan7.cs                                  0.33
+sn7ob                                 1.02e-09
+pwr7                               3.07199e-11
+pwrsa7                                1.36e-12
+dp7                                          0
+dn7                                          0
+bdn7#branch                                  0
+bdp7#branch                                  0
+bpwrsa7#branch                               0
+vddsa7#branch                        -1.36e-12
+bpwr7#branch                                 0
+vdd7#branch                       -3.07199e-11
+bdn6#branch                                  0
+bdp6#branch                                  0
+bpwrsa6#branch                               0
+vddsa6#branch                        -1.36e-12
+bpwr6#branch                                 0
+vdd6#branch                          -5.05e-12
+bdn5#branch                                  0
+bdp5#branch                                  0
+bpwrsa5#branch                               0
+vddsa5#branch                        -1.36e-12
+bpwr5#branch                                 0
+vdd5#branch                       -6.26995e-12
+bdn4#branch                                  0
+bdp4#branch                                  0
+bpwrsa4#branch                               0
+vddsa4#branch                        -1.36e-12
+bpwr4#branch                                 0
+vdd4#branch                                  0
+bd3#branch                                   0
+bpwrsa3#branch                               0
+vddsa3#branch                         -6.8e-13
+bpwr3#branch                                 0
+vdd3#branch                          -1.01e-12
+bd2#branch                                   0
+bpwrsa2#branch                               0
+vddsa2#branch                         -6.8e-13
+bpwr2#branch                                 0
+vdd2#branch                          -2.02e-12
+bd1#branch                                   0
+bpwrsa1#branch                               0
+vddsa1#branch                         -6.8e-13
+bpwr1#branch                                 0
+vdd1#branch                          -1.01e-12
+vbn7#branch                                  0
+vbp7#branch                                  0
+van7#branch                                  0
+vap7#branch                                  0
+vbn6#branch                                  0
+vbp6#branch                                  0
+van6#branch                                  0
+vap6#branch                                  0
+vbn5#branch                                  0
+vbp5#branch                                  0
+van5#branch                                  0
+vap5#branch                                  0
+v.xg4.vswn#branch                            0
+v.xg4.vswp#branch                            0
+vn4#branch                                   0
+vp4#branch                                   0
+vb3#branch                                   0
+va3#branch                                   0
+vb2#branch                                   0
+va2#branch                                   0
+vin1#branch                                  0
+vclk#branch                                  0
+
+ Reference value :  1.35228e-08 Reference value :  2.80928e-08 Reference value :  4.35328e-08 Reference value :  5.60050e-08 Reference value :  7.04962e-08
+No. of Data Rows : 8050
+
+  Measurements for Transient Analysis
+
+egate_not           =   1.58612e-14 from=  4.90000e-08 to=  8.00000e-08
+erec_not            =   4.87027e-14 from=  4.90000e-08 to=  8.00000e-08
+vout_not            =  1.000052e+00
+d_not               =  9.954550e-01
+egate_nand          =   2.52077e-14 from=  4.90000e-08 to=  8.00000e-08
+erec_nand           =   4.87023e-14 from=  4.90000e-08 to=  8.00000e-08
+vout_nand           =  1.000048e+00
+d_nand              =  9.954560e-01
+egate_nor           =   1.94499e-14 from=  4.90000e-08 to=  8.00000e-08
+erec_nor            =   4.87177e-14 from=  4.90000e-08 to=  8.00000e-08
+vout_nor            =  1.000056e+00
+d_nor               =  9.954539e-01
+egate_tneg          =   0.00000e+00 from=  4.90000e-08 to=  8.00000e-08
+erec_tneg           =   1.23744e-13 from=  4.90000e-08 to=  8.00000e-08
+vpush_tneg          =  3.189758e-08
+vpull_tneg          =  1.000006e+00
+dp_tneg             =  7.644671e-04
+dn_tneg             =  9.954823e-01
+egate_tand          =   4.66360e-14 from=  4.90000e-08 to=  8.00000e-08
+erec_tand           =   1.23735e-13 from=  4.90000e-08 to=  8.00000e-08
+vpush_tand          =  1.000052e+00
+vpull_tand          =  -5.759333e-07
+dp_tand             =  9.954565e-01
+dn_tand             =  7.704089e-03
+egate_tor           =   4.17210e-14 from=  4.90000e-08 to=  8.00000e-08
+erec_tor            =   1.23733e-13 from=  4.90000e-08 to=  8.00000e-08
+vpush_tor           =  1.000052e+00
+vpull_tor           =  -5.771948e-07
+dp_tor              =  9.954569e-01
+dn_tor              =  7.708088e-03
+egate_tsum          =   2.43490e-13 from=  4.90000e-08 to=  8.00000e-08
+erec_tsum           =   1.23725e-13 from=  4.90000e-08 to=  8.00000e-08
+vpush_tsum          =  1.000052e+00
+vpull_tsum          =  -5.757856e-07
+dp_tsum             =  9.954682e-01
+dn_tsum             =  7.704178e-03
+egate_not_pt        =  7.93059e-15
+erec_not_pt         =  2.43513e-14
+egate_nand_pt       =  1.26039e-14
+erec_nand_pt        =  2.43512e-14
+egate_nor_pt        =  9.72497e-15
+erec_nor_pt         =  2.43589e-14
+egate_tneg_pt       =  0.00000e+00
+erec_tneg_pt        =  6.18720e-14
+egate_tand_pt       =  2.33180e-14
+erec_tand_pt        =  6.18677e-14
+egate_tor_pt        =  2.08605e-14
+erec_tor_pt         =  6.18664e-14
+egate_tsum_pt       =  1.21745e-13
+erec_tsum_pt        =  6.18624e-14
+eq_not              =   3.03000e-20 from=  1.00000e-08 to=  4.00000e-08
+eq_nand             =   6.06000e-20 from=  1.00000e-08 to=  4.00000e-08
+eq_nor              =   3.03000e-20 from=  1.00000e-08 to=  4.00000e-08
+eq_tneg             =   0.00000e+00 from=  1.00000e-08 to=  4.00000e-08
+eq_tand             =   1.88099e-19 from=  1.00000e-08 to=  4.00000e-08
+eq_tor              =   1.51500e-19 from=  1.00000e-08 to=  4.00000e-08
+eq_tsum             =   9.21596e-19 from=  1.00000e-08 to=  4.00000e-08
+
+
+Total analysis time (seconds) = 1.42496
+
+Total elapsed time (seconds) = 1.438 
+
+Total DRAM available = 61921.320 MB.
+DRAM currently available = 47626.781 MB.
+Maximum ngspice program size =   26.461 MB.
+Current ngspice program size =   15.676 MB.
+
+Shared ngspice pages =   10.664 MB.
+Text (code) pages =    7.578 MB.
+Stack = 0 bytes.
+Library pages =    5.055 MB.
+

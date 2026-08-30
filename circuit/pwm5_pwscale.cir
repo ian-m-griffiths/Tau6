@@ -1,0 +1,103 @@
+* =====================================================================
+* pwm5_pwscale.cir  --  pulse-width energy scaling test for the PWM-5
+* driver (companion to pwm5.cir). Verifies Ian's claim: "the driver is
+* ON only for the pulse, so energy scales with pulse duration, not the
+* symbol clock" -- AND the RC floor below which the rail stops asserting
+* (the short pulse can't be arbitrarily short).
+*
+* Setup: ONE real CMOS push driver (same WP=11u PMOS / WN=5.5u NMOS,
+* +/-1.0 V rails as pwm5.cir / ternary_fairfight.cir) into the verbatim
+* tcell4 (rwire=100, cline=1p, rload=500, cload=0.2p, rterm=1Meg), one
+* activation from rest, symbol period fixed at 60 ns (i.e., the pulse is
+* a tiny fraction of the clock window -- if energy were clock-proportional
+* it would be the same for every PW; it is not, it tracks PW).
+*
+* PW swept {0.3 0.5 0.75 1.0 1.25 1.5 1.75 2.0} ns via a control-block
+* foreach/alterparam loop (this ngspice-44.2 build rejects .step).
+* Per PW: E_drv (supply pair), E_line (energy into the cell), rail MAX
+* (assertion), line MAX, peak driver current.
+*
+* MEASURED FINDINGS (see pwm5_pwscale.log / ENERGY_RESULTS.md):
+*   - Above ~1.0 ns, E_drv and E_line scale LINEARLY with PW (energy is
+*     proportional to the pulse, not the 60 ns clock -- a clock-proportional
+*     scheme would show a flat, 10-50x larger cost).
+*   - Below ~0.8-1.0 ns the rail stops asserting (RC floor): the line
+*     never reaches the diode-leg turn-on before the driver releases, the
+*     rail collapses. That is the honest lower bound on the SHORT pulse:
+*     SHORTPW = 1.0 ns is already AT the floor, so the "short" symbol
+*     cannot be shortened further in this cell.
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6
+
+.param VDDR = 1.0
+.param WP   = 11u
+.param WN   = {WP/2}
+.param WLB  = 300
+.param LEN  = 0.18u
+.param PW   = 1.0n       ; swept
+
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4 KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+.model NMOSDIODEB NMOS(LEVEL=1 VTO=0.30 KP=200u LAMBDA=0.05 GAMMA=0 PHI=0.7 TOX=2n IS=0)
+
+.subckt tcell4 in rA rB rwire=100 cline=1p rload=500 cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+M1  x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1B x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1C x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1D x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M2  rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2B rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2C rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2D rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+VDD  vdd  0 DC {VDDR}
+VSS  vss  0 DC {-VDDR}
+BpSUP pwpSUP 0 V = -(V(vdd)*I(VDD) + V(vss)*I(VSS))
+
+* push driver, pulse at 100n, width PW, period 60n (fixed clock)
+MP1 drv1 gP1 vdd vdd PMOS1 W={WP} L=0.18u
+MN1 drv1 gN1 vss vss NMOS1 W={WN} L=0.18u
+VgP1 gP1 0 PULSE({VDDR} 0 100n 0.2n 0.2n {PW} 60n)
+VgN1 gN1 0 DC {-VDDR}
+Vs1  drv1 cell1 DC 0
+Xc1  cell1 rA1 rB1 tcell4
+BpL1 pwpL1 0 V = V(cell1)*I(Vs1)
+
+* pull driver, pulse at 130n (for the pull-side scaling)
+MP2 drv2 gP2 vdd vdd PMOS1 W={WP} L=0.18u
+MN2 drv2 gN2 vss vss NMOS1 W={WN} L=0.18u
+VgP2 gP2 0 DC {VDDR}
+VgN2 gN2 0 PULSE({-VDDR} 0 130n 0.2n 0.2n {PW} 60n)
+Vs2  drv2 cell2 DC 0
+Xc2  cell2 rA2 rB2 tcell4
+BpL2 pwpL2 0 V = V(cell2)*I(Vs2)
+
+.tran 20p 150n
+
+.meas tran epush_drv INTEG V(pwpSUP) FROM=99n TO={100n+PW+6n}
+.meas tran epush_line INTEG V(pwpL1) FROM=99n TO={100n+PW+6n}
+.meas tran push_rail MAX V(rA1) FROM=100n TO={100n+PW+6n}
+.meas tran push_line MAX V(Xc1.x) FROM=100n TO={100n+PW+6n}
+.meas tran epull_drv INTEG V(pwpSUP) FROM=129n TO={130n+PW+6n}
+.meas tran epull_line INTEG V(pwpL2) FROM=129n TO={130n+PW+6n}
+.meas tran pull_rail MIN V(rB2) FROM=130n TO={130n+PW+6n}
+.meas tran pull_line MIN V(Xc2.x) FROM=130n TO={130n+PW+6n}
+
+.control
+foreach w 0.3n 0.5n 0.75n 1.0n 1.25n 1.5n 1.75n 2.0n
+  alterparam PW = $w
+  reset
+  run
+end
+.endc
+
+.end

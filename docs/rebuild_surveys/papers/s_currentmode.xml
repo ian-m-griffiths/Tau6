@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/IZydHwk0I87NNMN5icqkykJBQks</id>
+  <title>arXiv Query: search_query=all:ternary OR all:current-mode&amp;id_list=&amp;start=0&amp;max_results=6</title>
+  <updated>2026-08-29T07:27:48Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=all:ternary+OR+all:current-mode&amp;start=0&amp;max_results=6&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>6</opensearch:itemsPerPage>
+  <opensearch:totalResults>16122</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1510.07955v1</id>
+    <title>The ternary operations of groupoids</title>
+    <updated>2015-10-12T15:22:45Z</updated>
+    <link href="https://arxiv.org/abs/1510.07955v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1510.07955v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We investigate ternary products of groupoids and prove that there is a one-to-one correspondence between the collection of right modular groupoids with a left identity element l and laterally commutative, l-bi-unital semiheaps. This result is applied to prove that the natural ternary product induced by a right modular groupoid S with left identity is isomorphic to the natural ternary product of a groupoid T if and only if S and T are isomorphic groupoids. Ternary products of other classes of groupoids are also characterised, including the natural and standard ternary products of inverse semigroups. These two classes of ternary products are proved to be varieties of type (3,1,1).</summary>
+    <category term="math.GM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2015-10-12T15:22:45Z</published>
+    <arxiv:comment>The paper is 28 pages, with one table listing the characterisations of various ternary products</arxiv:comment>
+    <arxiv:primary_category term="math.GM"/>
+    <author>
+      <name>R. A. R. Monzo</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2309.08081v2</id>
+    <title>A note on the Assmus--Mattson theorem for some ternary codes (a resume)</title>
+    <updated>2024-02-20T01:15:34Z</updated>
+    <link href="https://arxiv.org/abs/2309.08081v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2309.08081v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Let $C$ be a two and three-weight ternary code. Furthermore, we assume that $C_\ell$ are $t$-designs for all $\ell$ by the Assmus--Mattson theorem. We show that $t \leq 5$. As a corollary, we provide a new characterization of the (extended) ternary Golay code.</summary>
+    <category term="math.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IT" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-09-15T00:51:42Z</published>
+    <arxiv:comment>6 pages, this is a resume of "A note on the Assmus--Mattson theorem for some ternary codes"</arxiv:comment>
+    <arxiv:primary_category term="math.CO"/>
+    <author>
+      <name>Eiichi Bannai</name>
+    </author>
+    <author>
+      <name>Tsuyoshi Miezaki</name>
+    </author>
+    <author>
+      <name>Hiroyuki Nakasora</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1407.7911v2</id>
+    <title>Synthesis and transport properties of ternary type-I Si clathrate K8Al7Si39</title>
+    <updated>2015-07-29T09:12:48Z</updated>
+    <link href="https://arxiv.org/abs/1407.7911v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1407.7911v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A ternary type-I Si clathrate, K8AlxSi46-x, which is a candidate functional material composed of abundant non-toxic elements, was synthesized and its transport properties were investigated at temperatures ranging from 10 to 320 K. The synthesized compound is confirmed to be the ternary type-I Si clathrate K8Al7Si39 with a lattice parameter of a = 10.442 A using neutron powder diffractometry and inductively coupled plasma optical emission spectrometry. Electrical resistivity and Hall coefficient measurements revealed that K8Al7Si39 is a metal with electrons as the dominant carriers at a density of approximately 1x10^27 /m3. The value of Seebeck coefficient for K8Al7Si39 is negative and its absolute value increases with the temperature. The temperature dependence of the thermal conductivity is similar to that for a crystalline solid. The dimensionless figure of merit is approximately 0.01 at 300 K, which is comparable to that for other ternary Si clathrates.</summary>
+    <category term="cond-mat.mtrl-sci" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2014-07-30T00:39:52Z</published>
+    <arxiv:comment>Ternary type-I Clathrate, Accepted in Japanese Journal of Applied Physics 2015</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.mtrl-sci"/>
+    <arxiv:journal_ref>Japanese Journal of Applied Physics, 54, 091801 (2015)</arxiv:journal_ref>
+    <author>
+      <name>Shiva Kumar Singh</name>
+    </author>
+    <author>
+      <name>Takashi Mochiku</name>
+    </author>
+    <author>
+      <name>Soshi Ibuka</name>
+    </author>
+    <author>
+      <name>Yukihiro Isoda</name>
+    </author>
+    <author>
+      <name>Akinori Hoshikawa</name>
+    </author>
+    <author>
+      <name>Toru Ishigaki</name>
+    </author>
+    <author>
+      <name>Motoharu Imai</name>
+    </author>
+    <arxiv:doi>10.7567/JJAP.54.091801</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.7567/JJAP.54.091801" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1605.02756v4</id>
+    <title>Factoring with Qutrits: Shor's Algorithm on Ternary and Metaplectic Quantum Architectures</title>
+    <updated>2017-04-08T14:38:54Z</updated>
+    <link href="https://arxiv.org/abs/1605.02756v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1605.02756v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We determine the cost of performing Shor's algorithm for integer factorization on a ternary quantum computer, using two natural models of universal fault-tolerant computing:
+  (i) a model based on magic state distillation that assumes the availability of the ternary Clifford gates, projective measurements, classical control as its natural instrumentation set; (ii) a model based on a metaplectic topological quantum computer (MTQC). A natural choice to implement Shor's algorithm on a ternary quantum computer is to translate the entire arithmetic into a ternary form. However, it is also possible to emulate the standard binary version of the algorithm by encoding each qubit in a three-level system. We compare the two approaches and analyze the complexity of implementing Shor's period finding function in the two models. We also highlight the fact that the cost of achieving universality through magic states in MTQC architecture is asymptotically lower than in generic ternary case.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.ET" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2016-05-09T20:13:18Z</published>
+    <arxiv:comment>22 pages, 7 figures; v3: significant overhaul; this version focuses on the use of true ternary vs. emulated binary encoding</arxiv:comment>
+    <arxiv:primary_category term="quant-ph"/>
+    <arxiv:journal_ref>Phys. Rev. A 96, 012306 (2017)</arxiv:journal_ref>
+    <author>
+      <name>Alex Bocharov</name>
+    </author>
+    <author>
+      <name>Martin Roetteler</name>
+    </author>
+    <author>
+      <name>Krysta M. Svore</name>
+    </author>
+    <arxiv:doi>10.1103/PhysRevA.96.012306</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1103/PhysRevA.96.012306" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2512.05895v2</id>
+    <title>A Machine Learning Framework for Predicting Glass-Forming Ability in Ternary Alloy Systems</title>
+    <updated>2025-12-08T21:48:44Z</updated>
+    <link href="https://arxiv.org/abs/2512.05895v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2512.05895v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Predicting the glass-forming ability (GFA) of chemical compositions remains a fundamental challenge in materials science, especially for oxide glasses with broad compositional diversity. Traditional empirical and thermodynamic approaches often fail to capture the complex, nonlinear factors governing vitrification. In this study, we applied two ensemble machine learning algorithms-Random Forest (RF) and Extreme Gradient Boosting (XGB)-to the glass_ternary_hipt dataset to predict the GFA of ternary oxide glasses directly from composition-derived descriptors. Both models achieved excellent predictive accuracy (R^2 &gt; 0.92, MAE &lt; 0.04), confirming that GFA is learnable from compositional features alone. Feature importance analysis revealed that electronegativity variance, atomic size mismatch, and valence electron descriptors are the most influential factors, while cohesive energy and ionic radius provided secondary contributions. These chemically interpretable features align with established theories of glass formation, thereby bridging predictive performance with physical understanding. The novelty of this work lies in systematically extending ML-based predictive modeling to ternary oxide glasses, a class less studied compared to metallic and binary systems. Our results demonstrate that ensemble learning not only enables accurate GFA prediction but also provides actionable insights for designing new glass compositions with enhanced stability.</summary>
+    <category term="cond-mat.mtrl-sci" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-12-05T17:15:54Z</published>
+    <arxiv:comment>Keywords: Glass-Forming Ability, Ternary Oxide Systems, Materials Informatics, Machine Learning, Random Forest, XGBoost</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.mtrl-sci"/>
+    <author>
+      <name>Fatemeh Mahmoudi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2104.08798v1</id>
+    <title>Near-miss Identities and Spinor Genus Classification of Ternary Quadratic Forms with Congruence Conditions</title>
+    <updated>2021-04-18T10:09:42Z</updated>
+    <link href="https://arxiv.org/abs/2104.08798v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2104.08798v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this paper, near-miss identities for the number of representations of some integral ternary quadratic forms with congruence conditions are found and proven. The genus and spinor genus of the corresponding lattice cosets are then classified. Finally, a complete genus and spinor genus classification for all conductor 2 lattice cosets of 2-adically unimodular lattices is given.</summary>
+    <category term="math.NT" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-04-18T10:09:42Z</published>
+    <arxiv:comment>33 pages, no figures, 9 tables (3 unnumbered) For associated Python and C++ programme files, see https://github.com/kush1729/ternary-quadratic-forms/blob/master/README.md</arxiv:comment>
+    <arxiv:primary_category term="math.NT"/>
+    <author>
+      <name>Kush Singhal</name>
+      <arxiv:affiliation>The University of Hong Kong</arxiv:affiliation>
+    </author>
+  </entry>
+</feed>

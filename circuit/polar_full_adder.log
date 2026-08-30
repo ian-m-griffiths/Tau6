@@ -1,0 +1,2128 @@
+
+Note: No compatibility mode selected!
+
+
+Circuit: * =====================================================================
+
+Doing analysis at TEMP = 27.000000 and TNOM = 27.000000
+
+Using SPARSE 1.3 as Direct Linear Solver
+
+Initial Transient Solution
+--------------------------
+
+Node                                   Voltage
+----                                   -------
+at1                                          1
+bt1                                          1
+ct1                                          1
+xtt1.xra.ra                           0.755947
+xtt1.xra.rb                        0.000100097
+xtt1.xra.midp                               -1
+vddt                                         1
+vsst                                        -1
+xtt1.pa                                      1
+xtt1.na                                     -1
+xtt1.xrb.ra                           0.755947
+xtt1.xrb.rb                        0.000100097
+xtt1.xrb.midp                               -1
+xtt1.pb                                      1
+xtt1.nb                                     -1
+xtt1.xrc.ra                           0.755947
+xtt1.xrc.rb                        0.000100097
+xtt1.xrc.midp                               -1
+xtt1.pc                                      1
+xtt1.nc                                     -1
+xtt1.xp2a.mid                               -1
+xtt1.xp2a.x1.mid                            -1
+xtt1.p21                                     1
+xtt1.xp2b.mid                               -1
+xtt1.xp2b.x1.mid                            -1
+xtt1.p22                                     1
+xtt1.xp2c.mid                               -1
+xtt1.xp2c.x1.mid                            -1
+xtt1.p23                                     1
+xtt1.xp2.xn.m1                               1
+xtt1.xp2.xn.m2                               1
+xtt1.xp2.mid                                -1
+xtt1.p2                                      1
+xtt1.xn2a.mid                                1
+xtt1.xn2a.x1.mid                            -1
+xtt1.n21                                    -1
+xtt1.xn2b.mid                                1
+xtt1.xn2b.x1.mid                            -1
+xtt1.n22                                    -1
+xtt1.xn2c.mid                                1
+xtt1.xn2c.x1.mid                            -1
+xtt1.n23                                    -1
+xtt1.xn2.xn.m1                               1
+xtt1.xn2.xn.m2                               1
+xtt1.xn2.mid                                 1
+xtt1.n2                                     -1
+xtt1.xpz.m1                                  1
+xtt1.xpz.m2                                  1
+xtt1.pz                                     -1
+xtt1.xnz.m1                                  1
+xtt1.xnz.m2                                  1
+xtt1.nz                                      1
+xtt1.xa3p.mid                               -1
+xtt1.xa3p.xn.m1                             -1
+xtt1.xa3p.xn.m2                             -1
+xtt1.a3p                                     1
+xtt1.xa3n.mid                                1
+xtt1.xa3n.xn.m1                             -1
+xtt1.xa3n.xn.m2                             -1
+xtt1.a3n                                    -1
+xtt1.a3pb                                   -1
+xtt1.a3nb                                    1
+xtt1.xp2x.mid                                1
+xtt1.xp2x.x1.mid                      0.599962
+xtt1.p2x                                    -1
+xtt1.xn2x.mid                                1
+xtt1.xn2x.x1.mid                            -1
+xtt1.n2x                                    -1
+xtt1.xpany.xn.m1                             1
+xtt1.xpany.xn.m2                             1
+xtt1.xpany.mid                              -1
+xtt1.pany                                    1
+xtt1.xnany.xn.m1                             1
+xtt1.xnany.xn.m2                             1
+xtt1.xnany.mid                               1
+xtt1.nany                                   -1
+xtt1.p2b                                    -1
+xtt1.n2b                                     1
+xtt1.xp1.mid                                 1
+xtt1.xp1.x1.mid                       0.599962
+xtt1.p1                                     -1
+xtt1.xn1.mid                                 1
+xtt1.xn1.x1.mid                             -1
+xtt1.n1                                     -1
+xtt1.xcop.mid                               -1
+xtt1.xcop.x1.mid                            -1
+xtt1.cop                                     1
+xtt1.xcon.mid                                1
+xtt1.xcon.x1.mid                            -1
+xtt1.con                                    -1
+xtt1.xsp1.mid                                1
+xtt1.xsp1.x1.mid                            -1
+xtt1.t1                                     -1
+xtt1.xsp2.mid                                1
+xtt1.xsp2.x1.mid                            -1
+xtt1.t2                                     -1
+xtt1.xsp3.mid                                1
+xtt1.xsp3.x1.mid                            -1
+xtt1.t3                                     -1
+xtt1.xsp.xn.m1                               1
+xtt1.xsp.xn.m2                               1
+xtt1.xsp.mid                                 1
+xtt1.sp                                     -1
+xtt1.xsn1.mid                                1
+xtt1.xsn1.x1.mid                            -1
+xtt1.t4                                     -1
+xtt1.xsn2.mid                                1
+xtt1.xsn2.x1.mid                            -1
+xtt1.t5                                     -1
+xtt1.xsn3.mid                                1
+xtt1.xsn3.x1.mid                      0.599962
+xtt1.t6                                     -1
+xtt1.xsn.xn.m1                               1
+xtt1.xsn.xn.m2                               1
+xtt1.xsn.mid                                 1
+xtt1.sn                                     -1
+xtt1.gpsum                                   1
+st1                                          0
+xtt1.gpcout                                 -1
+cot1                                  0.997196
+lsumt1                                       0
+lcoutt1                                 0.9962
+at2                                          1
+bt2                                          1
+ct2                                          0
+xtt2.xra.ra                           0.755947
+xtt2.xra.rb                        0.000100097
+xtt2.xra.midp                               -1
+xtt2.pa                                      1
+xtt2.na                                     -1
+xtt2.xrb.ra                           0.755947
+xtt2.xrb.rb                        0.000100097
+xtt2.xrb.midp                               -1
+xtt2.pb                                      1
+xtt2.nb                                     -1
+xtt2.xrc.ra                       2.61847e-186
+xtt2.xrc.rb                       -2.6185e-186
+xtt2.xrc.midp                                1
+xtt2.pc                                     -1
+xtt2.nc                                     -1
+xtt2.xp2a.mid                               -1
+xtt2.xp2a.x1.mid                            -1
+xtt2.p21                                     1
+xtt2.xp2b.mid                                1
+xtt2.xp2b.x1.mid                      0.599962
+xtt2.p22                                    -1
+xtt2.xp2c.mid                                1
+xtt2.xp2c.x1.mid                      0.599962
+xtt2.p23                                    -1
+xtt2.xp2.xn.m1                       -0.599947
+xtt2.xp2.xn.m2                       -0.599956
+xtt2.xp2.mid                                -1
+xtt2.p2                                      1
+xtt2.xn2a.mid                                1
+xtt2.xn2a.x1.mid                            -1
+xtt2.n21                                    -1
+xtt2.xn2b.mid                                1
+xtt2.xn2b.x1.mid                            -1
+xtt2.n22                                    -1
+xtt2.xn2c.mid                                1
+xtt2.xn2c.x1.mid                            -1
+xtt2.n23                                    -1
+xtt2.xn2.xn.m1                               1
+xtt2.xn2.xn.m2                               1
+xtt2.xn2.mid                                 1
+xtt2.n2                                     -1
+xtt2.xpz.m1                                  1
+xtt2.xpz.m2                          -0.599969
+xtt2.pz                                     -1
+xtt2.xnz.m1                                  1
+xtt2.xnz.m2                                  1
+xtt2.nz                                      1
+xtt2.xa3p.mid                                1
+xtt2.xa3p.xn.m1                       0.599969
+xtt2.xa3p.xn.m2                       0.599962
+xtt2.a3p                                    -1
+xtt2.xa3n.mid                                1
+xtt2.xa3n.xn.m1                             -1
+xtt2.xa3n.xn.m2                             -1
+xtt2.a3n                                    -1
+xtt2.a3pb                                    1
+xtt2.a3nb                                    1
+xtt2.xp2x.mid                               -1
+xtt2.xp2x.x1.mid                            -1
+xtt2.p2x                                     1
+xtt2.xn2x.mid                                1
+xtt2.xn2x.x1.mid                            -1
+xtt2.n2x                                    -1
+xtt2.xpany.xn.m1                             1
+xtt2.xpany.xn.m2                     -0.599969
+xtt2.xpany.mid                              -1
+xtt2.pany                                    1
+xtt2.xnany.xn.m1                             1
+xtt2.xnany.xn.m2                             1
+xtt2.xnany.mid                               1
+xtt2.nany                                   -1
+xtt2.p2b                                    -1
+xtt2.n2b                                     1
+xtt2.xp1.mid                                 1
+xtt2.xp1.x1.mid                       0.599962
+xtt2.p1                                     -1
+xtt2.xn1.mid                                 1
+xtt2.xn1.x1.mid                             -1
+xtt2.n1                                     -1
+xtt2.xcop.mid                               -1
+xtt2.xcop.x1.mid                            -1
+xtt2.cop                                     1
+xtt2.xcon.mid                                1
+xtt2.xcon.x1.mid                            -1
+xtt2.con                                    -1
+xtt2.xsp1.mid                                1
+xtt2.xsp1.x1.mid                            -1
+xtt2.t1                                     -1
+xtt2.xsp2.mid                                1
+xtt2.xsp2.x1.mid                      0.599962
+xtt2.t2                                     -1
+xtt2.xsp3.mid                                1
+xtt2.xsp3.x1.mid                            -1
+xtt2.t3                                     -1
+xtt2.xsp.xn.m1                               1
+xtt2.xsp.xn.m2                               1
+xtt2.xsp.mid                                 1
+xtt2.sp                                     -1
+xtt2.xsn1.mid                                1
+xtt2.xsn1.x1.mid                            -1
+xtt2.t4                                     -1
+xtt2.xsn2.mid                                1
+xtt2.xsn2.x1.mid                            -1
+xtt2.t5                                     -1
+xtt2.xsn3.mid                               -1
+xtt2.xsn3.x1.mid                            -1
+xtt2.t6                                      1
+xtt2.xsn.xn.m1                               1
+xtt2.xsn.xn.m2                               1
+xtt2.xsn.mid                                -1
+xtt2.sn                                      1
+xtt2.gpsum                                   1
+st2                                  -0.997196
+xtt2.gpcout                                 -1
+cot2                                  0.997196
+lsumt2                                 -0.9962
+lcoutt2                                 0.9962
+at3                                          1
+bt3                                          0
+ct3                                          0
+xtt3.xra.ra                           0.755947
+xtt3.xra.rb                        0.000100097
+xtt3.xra.midp                               -1
+xtt3.pa                                      1
+xtt3.na                                     -1
+xtt3.xrb.ra                       2.61847e-186
+xtt3.xrb.rb                       -2.6185e-186
+xtt3.xrb.midp                                1
+xtt3.pb                                     -1
+xtt3.nb                                     -1
+xtt3.xrc.ra                       2.61847e-186
+xtt3.xrc.rb                       -2.6185e-186
+xtt3.xrc.midp                                1
+xtt3.pc                                     -1
+xtt3.nc                                     -1
+xtt3.xp2a.mid                                1
+xtt3.xp2a.x1.mid                      0.599962
+xtt3.p21                                    -1
+xtt3.xp2b.mid                                1
+xtt3.xp2b.x1.mid                      0.599962
+xtt3.p22                                    -1
+xtt3.xp2c.mid                                1
+xtt3.xp2c.x1.mid                            -1
+xtt3.p23                                    -1
+xtt3.xp2.xn.m1                               1
+xtt3.xp2.xn.m2                               1
+xtt3.xp2.mid                                 1
+xtt3.p2                                     -1
+xtt3.xn2a.mid                                1
+xtt3.xn2a.x1.mid                            -1
+xtt3.n21                                    -1
+xtt3.xn2b.mid                                1
+xtt3.xn2b.x1.mid                            -1
+xtt3.n22                                    -1
+xtt3.xn2c.mid                                1
+xtt3.xn2c.x1.mid                            -1
+xtt3.n23                                    -1
+xtt3.xn2.xn.m1                               1
+xtt3.xn2.xn.m2                               1
+xtt3.xn2.mid                                 1
+xtt3.n2                                     -1
+xtt3.xpz.m1                          -0.599947
+xtt3.xpz.m2                          -0.599956
+xtt3.pz                                     -1
+xtt3.xnz.m1                                  1
+xtt3.xnz.m2                                  1
+xtt3.nz                                      1
+xtt3.xa3p.mid                                1
+xtt3.xa3p.xn.m1                       0.599978
+xtt3.xa3p.xn.m2                             -1
+xtt3.a3p                                    -1
+xtt3.xa3n.mid                                1
+xtt3.xa3n.xn.m1                             -1
+xtt3.xa3n.xn.m2                             -1
+xtt3.a3n                                    -1
+xtt3.a3pb                                    1
+xtt3.a3nb                                    1
+xtt3.xp2x.mid                                1
+xtt3.xp2x.x1.mid                            -1
+xtt3.p2x                                    -1
+xtt3.xn2x.mid                                1
+xtt3.xn2x.x1.mid                            -1
+xtt3.n2x                                    -1
+xtt3.xpany.xn.m1                     -0.599947
+xtt3.xpany.xn.m2                     -0.599956
+xtt3.xpany.mid                              -1
+xtt3.pany                                    1
+xtt3.xnany.xn.m1                             1
+xtt3.xnany.xn.m2                             1
+xtt3.xnany.mid                               1
+xtt3.nany                                   -1
+xtt3.p2b                                     1
+xtt3.n2b                                     1
+xtt3.xp1.mid                                -1
+xtt3.xp1.x1.mid                             -1
+xtt3.p1                                      1
+xtt3.xn1.mid                                 1
+xtt3.xn1.x1.mid                             -1
+xtt3.n1                                     -1
+xtt3.xcop.mid                                1
+xtt3.xcop.x1.mid                      0.599962
+xtt3.cop                                    -1
+xtt3.xcon.mid                                1
+xtt3.xcon.x1.mid                            -1
+xtt3.con                                    -1
+xtt3.xsp1.mid                               -1
+xtt3.xsp1.x1.mid                            -1
+xtt3.t1                                      1
+xtt3.xsp2.mid                                1
+xtt3.xsp2.x1.mid                            -1
+xtt3.t2                                     -1
+xtt3.xsp3.mid                                1
+xtt3.xsp3.x1.mid                            -1
+xtt3.t3                                     -1
+xtt3.xsp.xn.m1                       -0.599947
+xtt3.xsp.xn.m2                       -0.599956
+xtt3.xsp.mid                                -1
+xtt3.sp                                      1
+xtt3.xsn1.mid                                1
+xtt3.xsn1.x1.mid                            -1
+xtt3.t4                                     -1
+xtt3.xsn2.mid                                1
+xtt3.xsn2.x1.mid                            -1
+xtt3.t5                                     -1
+xtt3.xsn3.mid                                1
+xtt3.xsn3.x1.mid                      0.599962
+xtt3.t6                                     -1
+xtt3.xsn.xn.m1                               1
+xtt3.xsn.xn.m2                               1
+xtt3.xsn.mid                                 1
+xtt3.sn                                     -1
+xtt3.gpsum                                  -1
+st3                                   0.997196
+xtt3.gpcout                                  1
+cot3                                         0
+lsumt3                                  0.9962
+lcoutt3                                      0
+at4                                          1
+bt4                                          1
+ct4                                         -1
+xtt4.xra.ra                           0.755947
+xtt4.xra.rb                        0.000100097
+xtt4.xra.midp                               -1
+xtt4.pa                                      1
+xtt4.na                                     -1
+xtt4.xrb.ra                           0.755947
+xtt4.xrb.rb                        0.000100097
+xtt4.xrb.midp                               -1
+xtt4.pb                                      1
+xtt4.nb                                     -1
+xtt4.xrc.ra                       -0.000100097
+xtt4.xrc.rb                          -0.755947
+xtt4.xrc.midp                                1
+xtt4.pc                                     -1
+xtt4.nc                                      1
+xtt4.xp2a.mid                               -1
+xtt4.xp2a.x1.mid                            -1
+xtt4.p21                                     1
+xtt4.xp2b.mid                                1
+xtt4.xp2b.x1.mid                      0.599962
+xtt4.p22                                    -1
+xtt4.xp2c.mid                                1
+xtt4.xp2c.x1.mid                      0.599962
+xtt4.p23                                    -1
+xtt4.xp2.xn.m1                       -0.599947
+xtt4.xp2.xn.m2                       -0.599956
+xtt4.xp2.mid                                -1
+xtt4.p2                                      1
+xtt4.xn2a.mid                                1
+xtt4.xn2a.x1.mid                            -1
+xtt4.n21                                    -1
+xtt4.xn2b.mid                                1
+xtt4.xn2b.x1.mid                            -1
+xtt4.n22                                    -1
+xtt4.xn2c.mid                                1
+xtt4.xn2c.x1.mid                            -1
+xtt4.n23                                    -1
+xtt4.xn2.xn.m1                               1
+xtt4.xn2.xn.m2                               1
+xtt4.xn2.mid                                 1
+xtt4.n2                                     -1
+xtt4.xpz.m1                                  1
+xtt4.xpz.m2                          -0.599969
+xtt4.pz                                     -1
+xtt4.xnz.m1                                  1
+xtt4.xnz.m2                                  1
+xtt4.nz                                     -1
+xtt4.xa3p.mid                                1
+xtt4.xa3p.xn.m1                       0.599969
+xtt4.xa3p.xn.m2                       0.599962
+xtt4.a3p                                    -1
+xtt4.xa3n.mid                                1
+xtt4.xa3n.xn.m1                             -1
+xtt4.xa3n.xn.m2                             -1
+xtt4.a3n                                    -1
+xtt4.a3pb                                    1
+xtt4.a3nb                                    1
+xtt4.xp2x.mid                               -1
+xtt4.xp2x.x1.mid                            -1
+xtt4.p2x                                     1
+xtt4.xn2x.mid                                1
+xtt4.xn2x.x1.mid                            -1
+xtt4.n2x                                    -1
+xtt4.xpany.xn.m1                             1
+xtt4.xpany.xn.m2                     -0.599969
+xtt4.xpany.mid                              -1
+xtt4.pany                                    1
+xtt4.xnany.xn.m1                             1
+xtt4.xnany.xn.m2                             1
+xtt4.xnany.mid                              -1
+xtt4.nany                                    1
+xtt4.p2b                                    -1
+xtt4.n2b                                     1
+xtt4.xp1.mid                                 1
+xtt4.xp1.x1.mid                       0.599962
+xtt4.p1                                     -1
+xtt4.xn1.mid                                -1
+xtt4.xn1.x1.mid                             -1
+xtt4.n1                                      1
+xtt4.xcop.mid                                1
+xtt4.xcop.x1.mid                            -1
+xtt4.cop                                    -1
+xtt4.xcon.mid                                1
+xtt4.xcon.x1.mid                            -1
+xtt4.con                                    -1
+xtt4.xsp1.mid                                1
+xtt4.xsp1.x1.mid                            -1
+xtt4.t1                                     -1
+xtt4.xsp2.mid                               -1
+xtt4.xsp2.x1.mid                            -1
+xtt4.t2                                      1
+xtt4.xsp3.mid                                1
+xtt4.xsp3.x1.mid                            -1
+xtt4.t3                                     -1
+xtt4.xsp.xn.m1                               1
+xtt4.xsp.xn.m2                       -0.599969
+xtt4.xsp.mid                                -1
+xtt4.sp                                      1
+xtt4.xsn1.mid                                1
+xtt4.xsn1.x1.mid                      0.599962
+xtt4.t4                                     -1
+xtt4.xsn2.mid                                1
+xtt4.xsn2.x1.mid                            -1
+xtt4.t5                                     -1
+xtt4.xsn3.mid                                1
+xtt4.xsn3.x1.mid                            -1
+xtt4.t6                                     -1
+xtt4.xsn.xn.m1                               1
+xtt4.xsn.xn.m2                               1
+xtt4.xsn.mid                                 1
+xtt4.sn                                     -1
+xtt4.gpsum                                  -1
+st4                                   0.997196
+xtt4.gpcout                                  1
+cot4                                         0
+lsumt4                                  0.9962
+lcoutt4                                      0
+at5                                          0
+bt5                                          0
+ct5                                          0
+xtt5.xra.ra                       2.61847e-186
+xtt5.xra.rb                       -2.6185e-186
+xtt5.xra.midp                                1
+xtt5.pa                                     -1
+xtt5.na                                     -1
+xtt5.xrb.ra                       2.61847e-186
+xtt5.xrb.rb                       -2.6185e-186
+xtt5.xrb.midp                                1
+xtt5.pb                                     -1
+xtt5.nb                                     -1
+xtt5.xrc.ra                       2.61847e-186
+xtt5.xrc.rb                       -2.6185e-186
+xtt5.xrc.midp                                1
+xtt5.pc                                     -1
+xtt5.nc                                     -1
+xtt5.xp2a.mid                                1
+xtt5.xp2a.x1.mid                            -1
+xtt5.p21                                    -1
+xtt5.xp2b.mid                                1
+xtt5.xp2b.x1.mid                            -1
+xtt5.p22                                    -1
+xtt5.xp2c.mid                                1
+xtt5.xp2c.x1.mid                            -1
+xtt5.p23                                    -1
+xtt5.xp2.xn.m1                               1
+xtt5.xp2.xn.m2                               1
+xtt5.xp2.mid                                 1
+xtt5.p2                                     -1
+xtt5.xn2a.mid                                1
+xtt5.xn2a.x1.mid                            -1
+xtt5.n21                                    -1
+xtt5.xn2b.mid                                1
+xtt5.xn2b.x1.mid                            -1
+xtt5.n22                                    -1
+xtt5.xn2c.mid                                1
+xtt5.xn2c.x1.mid                            -1
+xtt5.n23                                    -1
+xtt5.xn2.xn.m1                               1
+xtt5.xn2.xn.m2                               1
+xtt5.xn2.mid                                 1
+xtt5.n2                                     -1
+xtt5.xpz.m1                                  1
+xtt5.xpz.m2                                  1
+xtt5.pz                                      1
+xtt5.xnz.m1                                  1
+xtt5.xnz.m2                                  1
+xtt5.nz                                      1
+xtt5.xa3p.mid                                1
+xtt5.xa3p.xn.m1                             -1
+xtt5.xa3p.xn.m2                             -1
+xtt5.a3p                                    -1
+xtt5.xa3n.mid                                1
+xtt5.xa3n.xn.m1                             -1
+xtt5.xa3n.xn.m2                             -1
+xtt5.a3n                                    -1
+xtt5.a3pb                                    1
+xtt5.a3nb                                    1
+xtt5.xp2x.mid                                1
+xtt5.xp2x.x1.mid                            -1
+xtt5.p2x                                    -1
+xtt5.xn2x.mid                                1
+xtt5.xn2x.x1.mid                            -1
+xtt5.n2x                                    -1
+xtt5.xpany.xn.m1                             1
+xtt5.xpany.xn.m2                             1
+xtt5.xpany.mid                               1
+xtt5.pany                                   -1
+xtt5.xnany.xn.m1                             1
+xtt5.xnany.xn.m2                             1
+xtt5.xnany.mid                               1
+xtt5.nany                                   -1
+xtt5.p2b                                     1
+xtt5.n2b                                     1
+xtt5.xp1.mid                                 1
+xtt5.xp1.x1.mid                             -1
+xtt5.p1                                     -1
+xtt5.xn1.mid                                 1
+xtt5.xn1.x1.mid                             -1
+xtt5.n1                                     -1
+xtt5.xcop.mid                                1
+xtt5.xcop.x1.mid                      0.599962
+xtt5.cop                                    -1
+xtt5.xcon.mid                                1
+xtt5.xcon.x1.mid                      0.599962
+xtt5.con                                    -1
+xtt5.xsp1.mid                                1
+xtt5.xsp1.x1.mid                            -1
+xtt5.t1                                     -1
+xtt5.xsp2.mid                                1
+xtt5.xsp2.x1.mid                            -1
+xtt5.t2                                     -1
+xtt5.xsp3.mid                                1
+xtt5.xsp3.x1.mid                      0.599962
+xtt5.t3                                     -1
+xtt5.xsp.xn.m1                               1
+xtt5.xsp.xn.m2                               1
+xtt5.xsp.mid                                 1
+xtt5.sp                                     -1
+xtt5.xsn1.mid                                1
+xtt5.xsn1.x1.mid                            -1
+xtt5.t4                                     -1
+xtt5.xsn2.mid                                1
+xtt5.xsn2.x1.mid                            -1
+xtt5.t5                                     -1
+xtt5.xsn3.mid                                1
+xtt5.xsn3.x1.mid                      0.599962
+xtt5.t6                                     -1
+xtt5.xsn.xn.m1                               1
+xtt5.xsn.xn.m2                               1
+xtt5.xsn.mid                                 1
+xtt5.sn                                     -1
+xtt5.gpsum                                   1
+st5                                          0
+xtt5.gpcout                                  1
+cot5                                         0
+lsumt5                                       0
+lcoutt5                                      0
+at6                                          1
+bt6                                         -1
+ct6                                          0
+xtt6.xra.ra                           0.755947
+xtt6.xra.rb                        0.000100097
+xtt6.xra.midp                               -1
+xtt6.pa                                      1
+xtt6.na                                     -1
+xtt6.xrb.ra                       -0.000100097
+xtt6.xrb.rb                          -0.755947
+xtt6.xrb.midp                                1
+xtt6.pb                                     -1
+xtt6.nb                                      1
+xtt6.xrc.ra                       2.61847e-186
+xtt6.xrc.rb                       -2.6185e-186
+xtt6.xrc.midp                                1
+xtt6.pc                                     -1
+xtt6.nc                                     -1
+xtt6.xp2a.mid                                1
+xtt6.xp2a.x1.mid                      0.599962
+xtt6.p21                                    -1
+xtt6.xp2b.mid                                1
+xtt6.xp2b.x1.mid                      0.599962
+xtt6.p22                                    -1
+xtt6.xp2c.mid                                1
+xtt6.xp2c.x1.mid                            -1
+xtt6.p23                                    -1
+xtt6.xp2.xn.m1                               1
+xtt6.xp2.xn.m2                               1
+xtt6.xp2.mid                                 1
+xtt6.p2                                     -1
+xtt6.xn2a.mid                                1
+xtt6.xn2a.x1.mid                            -1
+xtt6.n21                                    -1
+xtt6.xn2b.mid                                1
+xtt6.xn2b.x1.mid                            -1
+xtt6.n22                                    -1
+xtt6.xn2c.mid                                1
+xtt6.xn2c.x1.mid                      0.599962
+xtt6.n23                                    -1
+xtt6.xn2.xn.m1                               1
+xtt6.xn2.xn.m2                               1
+xtt6.xn2.mid                                 1
+xtt6.n2                                     -1
+xtt6.xpz.m1                          -0.599947
+xtt6.xpz.m2                          -0.599956
+xtt6.pz                                     -1
+xtt6.xnz.m1                                  1
+xtt6.xnz.m2                          -0.599969
+xtt6.nz                                     -1
+xtt6.xa3p.mid                                1
+xtt6.xa3p.xn.m1                       0.599978
+xtt6.xa3p.xn.m2                             -1
+xtt6.a3p                                    -1
+xtt6.xa3n.mid                                1
+xtt6.xa3n.xn.m1                             -1
+xtt6.xa3n.xn.m2                             -1
+xtt6.a3n                                    -1
+xtt6.a3pb                                    1
+xtt6.a3nb                                    1
+xtt6.xp2x.mid                                1
+xtt6.xp2x.x1.mid                            -1
+xtt6.p2x                                    -1
+xtt6.xn2x.mid                                1
+xtt6.xn2x.x1.mid                            -1
+xtt6.n2x                                    -1
+xtt6.xpany.xn.m1                     -0.599947
+xtt6.xpany.xn.m2                     -0.599956
+xtt6.xpany.mid                              -1
+xtt6.pany                                    1
+xtt6.xnany.xn.m1                             1
+xtt6.xnany.xn.m2                     -0.599969
+xtt6.xnany.mid                              -1
+xtt6.nany                                    1
+xtt6.p2b                                     1
+xtt6.n2b                                     1
+xtt6.xp1.mid                                -1
+xtt6.xp1.x1.mid                             -1
+xtt6.p1                                      1
+xtt6.xn1.mid                                -1
+xtt6.xn1.x1.mid                             -1
+xtt6.n1                                      1
+xtt6.xcop.mid                                1
+xtt6.xcop.x1.mid                            -1
+xtt6.cop                                    -1
+xtt6.xcon.mid                                1
+xtt6.xcon.x1.mid                            -1
+xtt6.con                                    -1
+xtt6.xsp1.mid                                1
+xtt6.xsp1.x1.mid                      0.599962
+xtt6.t1                                     -1
+xtt6.xsp2.mid                                1
+xtt6.xsp2.x1.mid                            -1
+xtt6.t2                                     -1
+xtt6.xsp3.mid                                1
+xtt6.xsp3.x1.mid                            -1
+xtt6.t3                                     -1
+xtt6.xsp.xn.m1                               1
+xtt6.xsp.xn.m2                               1
+xtt6.xsp.mid                                 1
+xtt6.sp                                     -1
+xtt6.xsn1.mid                                1
+xtt6.xsn1.x1.mid                      0.599962
+xtt6.t4                                     -1
+xtt6.xsn2.mid                                1
+xtt6.xsn2.x1.mid                            -1
+xtt6.t5                                     -1
+xtt6.xsn3.mid                                1
+xtt6.xsn3.x1.mid                            -1
+xtt6.t6                                     -1
+xtt6.xsn.xn.m1                               1
+xtt6.xsn.xn.m2                               1
+xtt6.xsn.mid                                 1
+xtt6.sn                                     -1
+xtt6.gpsum                                   1
+st6                                          0
+xtt6.gpcout                                  1
+cot6                                         0
+lsumt6                                       0
+lcoutt6                                      0
+at7                                          1
+bt7                                          0
+ct7                                         -1
+xtt7.xra.ra                           0.755947
+xtt7.xra.rb                        0.000100097
+xtt7.xra.midp                               -1
+xtt7.pa                                      1
+xtt7.na                                     -1
+xtt7.xrb.ra                       2.61847e-186
+xtt7.xrb.rb                       -2.6185e-186
+xtt7.xrb.midp                                1
+xtt7.pb                                     -1
+xtt7.nb                                     -1
+xtt7.xrc.ra                       -0.000100097
+xtt7.xrc.rb                          -0.755947
+xtt7.xrc.midp                                1
+xtt7.pc                                     -1
+xtt7.nc                                      1
+xtt7.xp2a.mid                                1
+xtt7.xp2a.x1.mid                      0.599962
+xtt7.p21                                    -1
+xtt7.xp2b.mid                                1
+xtt7.xp2b.x1.mid                      0.599962
+xtt7.p22                                    -1
+xtt7.xp2c.mid                                1
+xtt7.xp2c.x1.mid                            -1
+xtt7.p23                                    -1
+xtt7.xp2.xn.m1                               1
+xtt7.xp2.xn.m2                               1
+xtt7.xp2.mid                                 1
+xtt7.p2                                     -1
+xtt7.xn2a.mid                                1
+xtt7.xn2a.x1.mid                            -1
+xtt7.n21                                    -1
+xtt7.xn2b.mid                                1
+xtt7.xn2b.x1.mid                            -1
+xtt7.n22                                    -1
+xtt7.xn2c.mid                                1
+xtt7.xn2c.x1.mid                            -1
+xtt7.n23                                    -1
+xtt7.xn2.xn.m1                               1
+xtt7.xn2.xn.m2                               1
+xtt7.xn2.mid                                 1
+xtt7.n2                                     -1
+xtt7.xpz.m1                          -0.599947
+xtt7.xpz.m2                          -0.599956
+xtt7.pz                                     -1
+xtt7.xnz.m1                                  1
+xtt7.xnz.m2                                  1
+xtt7.nz                                     -1
+xtt7.xa3p.mid                                1
+xtt7.xa3p.xn.m1                       0.599978
+xtt7.xa3p.xn.m2                             -1
+xtt7.a3p                                    -1
+xtt7.xa3n.mid                                1
+xtt7.xa3n.xn.m1                             -1
+xtt7.xa3n.xn.m2                             -1
+xtt7.a3n                                    -1
+xtt7.a3pb                                    1
+xtt7.a3nb                                    1
+xtt7.xp2x.mid                                1
+xtt7.xp2x.x1.mid                            -1
+xtt7.p2x                                    -1
+xtt7.xn2x.mid                                1
+xtt7.xn2x.x1.mid                            -1
+xtt7.n2x                                    -1
+xtt7.xpany.xn.m1                     -0.599947
+xtt7.xpany.xn.m2                     -0.599956
+xtt7.xpany.mid                              -1
+xtt7.pany                                    1
+xtt7.xnany.xn.m1                             1
+xtt7.xnany.xn.m2                             1
+xtt7.xnany.mid                              -1
+xtt7.nany                                    1
+xtt7.p2b                                     1
+xtt7.n2b                                     1
+xtt7.xp1.mid                                -1
+xtt7.xp1.x1.mid                             -1
+xtt7.p1                                      1
+xtt7.xn1.mid                                -1
+xtt7.xn1.x1.mid                             -1
+xtt7.n1                                      1
+xtt7.xcop.mid                                1
+xtt7.xcop.x1.mid                            -1
+xtt7.cop                                    -1
+xtt7.xcon.mid                                1
+xtt7.xcon.x1.mid                            -1
+xtt7.con                                    -1
+xtt7.xsp1.mid                                1
+xtt7.xsp1.x1.mid                      0.599962
+xtt7.t1                                     -1
+xtt7.xsp2.mid                                1
+xtt7.xsp2.x1.mid                            -1
+xtt7.t2                                     -1
+xtt7.xsp3.mid                                1
+xtt7.xsp3.x1.mid                            -1
+xtt7.t3                                     -1
+xtt7.xsp.xn.m1                               1
+xtt7.xsp.xn.m2                               1
+xtt7.xsp.mid                                 1
+xtt7.sp                                     -1
+xtt7.xsn1.mid                                1
+xtt7.xsn1.x1.mid                      0.599962
+xtt7.t4                                     -1
+xtt7.xsn2.mid                                1
+xtt7.xsn2.x1.mid                            -1
+xtt7.t5                                     -1
+xtt7.xsn3.mid                                1
+xtt7.xsn3.x1.mid                            -1
+xtt7.t6                                     -1
+xtt7.xsn.xn.m1                               1
+xtt7.xsn.xn.m2                               1
+xtt7.xsn.mid                                 1
+xtt7.sn                                     -1
+xtt7.gpsum                                   1
+st7                                          0
+xtt7.gpcout                                  1
+cot7                                         0
+lsumt7                                       0
+lcoutt7                                      0
+at8                                         -1
+bt8                                          0
+ct8                                          0
+xtt8.xra.ra                       -0.000100097
+xtt8.xra.rb                          -0.755947
+xtt8.xra.midp                                1
+xtt8.pa                                     -1
+xtt8.na                                      1
+xtt8.xrb.ra                       2.61847e-186
+xtt8.xrb.rb                       -2.6185e-186
+xtt8.xrb.midp                                1
+xtt8.pb                                     -1
+xtt8.nb                                     -1
+xtt8.xrc.ra                       2.61847e-186
+xtt8.xrc.rb                       -2.6185e-186
+xtt8.xrc.midp                                1
+xtt8.pc                                     -1
+xtt8.nc                                     -1
+xtt8.xp2a.mid                                1
+xtt8.xp2a.x1.mid                            -1
+xtt8.p21                                    -1
+xtt8.xp2b.mid                                1
+xtt8.xp2b.x1.mid                            -1
+xtt8.p22                                    -1
+xtt8.xp2c.mid                                1
+xtt8.xp2c.x1.mid                            -1
+xtt8.p23                                    -1
+xtt8.xp2.xn.m1                               1
+xtt8.xp2.xn.m2                               1
+xtt8.xp2.mid                                 1
+xtt8.p2                                     -1
+xtt8.xn2a.mid                                1
+xtt8.xn2a.x1.mid                      0.599962
+xtt8.n21                                    -1
+xtt8.xn2b.mid                                1
+xtt8.xn2b.x1.mid                      0.599962
+xtt8.n22                                    -1
+xtt8.xn2c.mid                                1
+xtt8.xn2c.x1.mid                            -1
+xtt8.n23                                    -1
+xtt8.xn2.xn.m1                               1
+xtt8.xn2.xn.m2                               1
+xtt8.xn2.mid                                 1
+xtt8.n2                                     -1
+xtt8.xpz.m1                                  1
+xtt8.xpz.m2                                  1
+xtt8.pz                                      1
+xtt8.xnz.m1                          -0.599947
+xtt8.xnz.m2                          -0.599956
+xtt8.nz                                     -1
+xtt8.xa3p.mid                                1
+xtt8.xa3p.xn.m1                             -1
+xtt8.xa3p.xn.m2                             -1
+xtt8.a3p                                    -1
+xtt8.xa3n.mid                                1
+xtt8.xa3n.xn.m1                       0.599978
+xtt8.xa3n.xn.m2                             -1
+xtt8.a3n                                    -1
+xtt8.a3pb                                    1
+xtt8.a3nb                                    1
+xtt8.xp2x.mid                                1
+xtt8.xp2x.x1.mid                            -1
+xtt8.p2x                                    -1
+xtt8.xn2x.mid                                1
+xtt8.xn2x.x1.mid                            -1
+xtt8.n2x                                    -1
+xtt8.xpany.xn.m1                             1
+xtt8.xpany.xn.m2                             1
+xtt8.xpany.mid                               1
+xtt8.pany                                   -1
+xtt8.xnany.xn.m1                     -0.599947
+xtt8.xnany.xn.m2                     -0.599956
+xtt8.xnany.mid                              -1
+xtt8.nany                                    1
+xtt8.p2b                                     1
+xtt8.n2b                                     1
+xtt8.xp1.mid                                 1
+xtt8.xp1.x1.mid                             -1
+xtt8.p1                                     -1
+xtt8.xn1.mid                                -1
+xtt8.xn1.x1.mid                             -1
+xtt8.n1                                      1
+xtt8.xcop.mid                                1
+xtt8.xcop.x1.mid                            -1
+xtt8.cop                                    -1
+xtt8.xcon.mid                                1
+xtt8.xcon.x1.mid                      0.599962
+xtt8.con                                    -1
+xtt8.xsp1.mid                                1
+xtt8.xsp1.x1.mid                            -1
+xtt8.t1                                     -1
+xtt8.xsp2.mid                                1
+xtt8.xsp2.x1.mid                            -1
+xtt8.t2                                     -1
+xtt8.xsp3.mid                                1
+xtt8.xsp3.x1.mid                      0.599962
+xtt8.t3                                     -1
+xtt8.xsp.xn.m1                               1
+xtt8.xsp.xn.m2                               1
+xtt8.xsp.mid                                 1
+xtt8.sp                                     -1
+xtt8.xsn1.mid                               -1
+xtt8.xsn1.x1.mid                            -1
+xtt8.t4                                      1
+xtt8.xsn2.mid                                1
+xtt8.xsn2.x1.mid                            -1
+xtt8.t5                                     -1
+xtt8.xsn3.mid                                1
+xtt8.xsn3.x1.mid                            -1
+xtt8.t6                                     -1
+xtt8.xsn.xn.m1                       -0.599947
+xtt8.xsn.xn.m2                       -0.599956
+xtt8.xsn.mid                                -1
+xtt8.sn                                      1
+xtt8.gpsum                                   1
+st8                                  -0.997196
+xtt8.gpcout                                  1
+cot8                                         0
+lsumt8                                 -0.9962
+lcoutt8                                      0
+at9                                         -1
+bt9                                         -1
+ct9                                          1
+xtt9.xra.ra                       -0.000100097
+xtt9.xra.rb                          -0.755947
+xtt9.xra.midp                                1
+xtt9.pa                                     -1
+xtt9.na                                      1
+xtt9.xrb.ra                       -0.000100097
+xtt9.xrb.rb                          -0.755947
+xtt9.xrb.midp                                1
+xtt9.pb                                     -1
+xtt9.nb                                      1
+xtt9.xrc.ra                           0.755947
+xtt9.xrc.rb                        0.000100097
+xtt9.xrc.midp                               -1
+xtt9.pc                                      1
+xtt9.nc                                     -1
+xtt9.xp2a.mid                                1
+xtt9.xp2a.x1.mid                            -1
+xtt9.p21                                    -1
+xtt9.xp2b.mid                                1
+xtt9.xp2b.x1.mid                            -1
+xtt9.p22                                    -1
+xtt9.xp2c.mid                                1
+xtt9.xp2c.x1.mid                            -1
+xtt9.p23                                    -1
+xtt9.xp2.xn.m1                               1
+xtt9.xp2.xn.m2                               1
+xtt9.xp2.mid                                 1
+xtt9.p2                                     -1
+xtt9.xn2a.mid                               -1
+xtt9.xn2a.x1.mid                            -1
+xtt9.n21                                     1
+xtt9.xn2b.mid                                1
+xtt9.xn2b.x1.mid                      0.599962
+xtt9.n22                                    -1
+xtt9.xn2c.mid                                1
+xtt9.xn2c.x1.mid                      0.599962
+xtt9.n23                                    -1
+xtt9.xn2.xn.m1                       -0.599947
+xtt9.xn2.xn.m2                       -0.599956
+xtt9.xn2.mid                                -1
+xtt9.n2                                      1
+xtt9.xpz.m1                                  1
+xtt9.xpz.m2                                  1
+xtt9.pz                                     -1
+xtt9.xnz.m1                                  1
+xtt9.xnz.m2                          -0.599969
+xtt9.nz                                     -1
+xtt9.xa3p.mid                                1
+xtt9.xa3p.xn.m1                             -1
+xtt9.xa3p.xn.m2                             -1
+xtt9.a3p                                    -1
+xtt9.xa3n.mid                                1
+xtt9.xa3n.xn.m1                       0.599969
+xtt9.xa3n.xn.m2                       0.599962
+xtt9.a3n                                    -1
+xtt9.a3pb                                    1
+xtt9.a3nb                                    1
+xtt9.xp2x.mid                                1
+xtt9.xp2x.x1.mid                            -1
+xtt9.p2x                                    -1
+xtt9.xn2x.mid                               -1
+xtt9.xn2x.x1.mid                            -1
+xtt9.n2x                                     1
+xtt9.xpany.xn.m1                             1
+xtt9.xpany.xn.m2                             1
+xtt9.xpany.mid                              -1
+xtt9.pany                                    1
+xtt9.xnany.xn.m1                             1
+xtt9.xnany.xn.m2                     -0.599969
+xtt9.xnany.mid                              -1
+xtt9.nany                                    1
+xtt9.p2b                                     1
+xtt9.n2b                                    -1
+xtt9.xp1.mid                                -1
+xtt9.xp1.x1.mid                             -1
+xtt9.p1                                      1
+xtt9.xn1.mid                                 1
+xtt9.xn1.x1.mid                       0.599962
+xtt9.n1                                     -1
+xtt9.xcop.mid                                1
+xtt9.xcop.x1.mid                            -1
+xtt9.cop                                    -1
+xtt9.xcon.mid                                1
+xtt9.xcon.x1.mid                            -1
+xtt9.con                                    -1
+xtt9.xsp1.mid                                1
+xtt9.xsp1.x1.mid                      0.599962
+xtt9.t1                                     -1
+xtt9.xsp2.mid                                1
+xtt9.xsp2.x1.mid                            -1
+xtt9.t2                                     -1
+xtt9.xsp3.mid                                1
+xtt9.xsp3.x1.mid                            -1
+xtt9.t3                                     -1
+xtt9.xsp.xn.m1                               1
+xtt9.xsp.xn.m2                               1
+xtt9.xsp.mid                                 1
+xtt9.sp                                     -1
+xtt9.xsn1.mid                                1
+xtt9.xsn1.x1.mid                            -1
+xtt9.t4                                     -1
+xtt9.xsn2.mid                               -1
+xtt9.xsn2.x1.mid                            -1
+xtt9.t5                                      1
+xtt9.xsn3.mid                                1
+xtt9.xsn3.x1.mid                            -1
+xtt9.t6                                     -1
+xtt9.xsn.xn.m1                               1
+xtt9.xsn.xn.m2                       -0.599969
+xtt9.xsn.mid                                -1
+xtt9.sn                                      1
+xtt9.gpsum                                   1
+st9                                  -0.997196
+xtt9.gpcout                                  1
+cot9                                         0
+lsumt9                                 -0.9962
+lcoutt9                                      0
+at10                                        -1
+bt10                                        -1
+ct10                                         0
+xtt10.xra.ra                      -0.000100097
+xtt10.xra.rb                         -0.755947
+xtt10.xra.midp                               1
+xtt10.pa                                    -1
+xtt10.na                                     1
+xtt10.xrb.ra                      -0.000100097
+xtt10.xrb.rb                         -0.755947
+xtt10.xrb.midp                               1
+xtt10.pb                                    -1
+xtt10.nb                                     1
+xtt10.xrc.ra                      2.61847e-186
+xtt10.xrc.rb                      -2.6185e-186
+xtt10.xrc.midp                               1
+xtt10.pc                                    -1
+xtt10.nc                                    -1
+xtt10.xp2a.mid                               1
+xtt10.xp2a.x1.mid                           -1
+xtt10.p21                                   -1
+xtt10.xp2b.mid                               1
+xtt10.xp2b.x1.mid                           -1
+xtt10.p22                                   -1
+xtt10.xp2c.mid                               1
+xtt10.xp2c.x1.mid                           -1
+xtt10.p23                                   -1
+xtt10.xp2.xn.m1                              1
+xtt10.xp2.xn.m2                              1
+xtt10.xp2.mid                                1
+xtt10.p2                                    -1
+xtt10.xn2a.mid                              -1
+xtt10.xn2a.x1.mid                           -1
+xtt10.n21                                    1
+xtt10.xn2b.mid                               1
+xtt10.xn2b.x1.mid                     0.599962
+xtt10.n22                                   -1
+xtt10.xn2c.mid                               1
+xtt10.xn2c.x1.mid                     0.599962
+xtt10.n23                                   -1
+xtt10.xn2.xn.m1                      -0.599947
+xtt10.xn2.xn.m2                      -0.599956
+xtt10.xn2.mid                               -1
+xtt10.n2                                     1
+xtt10.xpz.m1                                 1
+xtt10.xpz.m2                                 1
+xtt10.pz                                     1
+xtt10.xnz.m1                                 1
+xtt10.xnz.m2                         -0.599969
+xtt10.nz                                    -1
+xtt10.xa3p.mid                               1
+xtt10.xa3p.xn.m1                            -1
+xtt10.xa3p.xn.m2                            -1
+xtt10.a3p                                   -1
+xtt10.xa3n.mid                               1
+xtt10.xa3n.xn.m1                      0.599969
+xtt10.xa3n.xn.m2                      0.599962
+xtt10.a3n                                   -1
+xtt10.a3pb                                   1
+xtt10.a3nb                                   1
+xtt10.xp2x.mid                               1
+xtt10.xp2x.x1.mid                           -1
+xtt10.p2x                                   -1
+xtt10.xn2x.mid                              -1
+xtt10.xn2x.x1.mid                           -1
+xtt10.n2x                                    1
+xtt10.xpany.xn.m1                            1
+xtt10.xpany.xn.m2                            1
+xtt10.xpany.mid                              1
+xtt10.pany                                  -1
+xtt10.xnany.xn.m1                            1
+xtt10.xnany.xn.m2                    -0.599969
+xtt10.xnany.mid                             -1
+xtt10.nany                                   1
+xtt10.p2b                                    1
+xtt10.n2b                                   -1
+xtt10.xp1.mid                                1
+xtt10.xp1.x1.mid                            -1
+xtt10.p1                                    -1
+xtt10.xn1.mid                                1
+xtt10.xn1.x1.mid                      0.599962
+xtt10.n1                                    -1
+xtt10.xcop.mid                               1
+xtt10.xcop.x1.mid                           -1
+xtt10.cop                                   -1
+xtt10.xcon.mid                              -1
+xtt10.xcon.x1.mid                           -1
+xtt10.con                                    1
+xtt10.xsp1.mid                               1
+xtt10.xsp1.x1.mid                           -1
+xtt10.t1                                    -1
+xtt10.xsp2.mid                               1
+xtt10.xsp2.x1.mid                           -1
+xtt10.t2                                    -1
+xtt10.xsp3.mid                              -1
+xtt10.xsp3.x1.mid                           -1
+xtt10.t3                                     1
+xtt10.xsp.xn.m1                              1
+xtt10.xsp.xn.m2                              1
+xtt10.xsp.mid                               -1
+xtt10.sp                                     1
+xtt10.xsn1.mid                               1
+xtt10.xsn1.x1.mid                           -1
+xtt10.t4                                    -1
+xtt10.xsn2.mid                               1
+xtt10.xsn2.x1.mid                     0.599962
+xtt10.t5                                    -1
+xtt10.xsn3.mid                               1
+xtt10.xsn3.x1.mid                           -1
+xtt10.t6                                    -1
+xtt10.xsn.xn.m1                              1
+xtt10.xsn.xn.m2                              1
+xtt10.xsn.mid                                1
+xtt10.sn                                    -1
+xtt10.gpsum                                 -1
+st10                                  0.997196
+xtt10.gpcout                                 1
+cot10                                -0.997196
+lsumt10                                 0.9962
+lcoutt10                               -0.9962
+at11                                        -1
+bt11                                        -1
+ct11                                        -1
+xtt11.xra.ra                      -0.000100097
+xtt11.xra.rb                         -0.755947
+xtt11.xra.midp                               1
+xtt11.pa                                    -1
+xtt11.na                                     1
+xtt11.xrb.ra                      -0.000100097
+xtt11.xrb.rb                         -0.755947
+xtt11.xrb.midp                               1
+xtt11.pb                                    -1
+xtt11.nb                                     1
+xtt11.xrc.ra                      -0.000100097
+xtt11.xrc.rb                         -0.755947
+xtt11.xrc.midp                               1
+xtt11.pc                                    -1
+xtt11.nc                                     1
+xtt11.xp2a.mid                               1
+xtt11.xp2a.x1.mid                           -1
+xtt11.p21                                   -1
+xtt11.xp2b.mid                               1
+xtt11.xp2b.x1.mid                           -1
+xtt11.p22                                   -1
+xtt11.xp2c.mid                               1
+xtt11.xp2c.x1.mid                           -1
+xtt11.p23                                   -1
+xtt11.xp2.xn.m1                              1
+xtt11.xp2.xn.m2                              1
+xtt11.xp2.mid                                1
+xtt11.p2                                    -1
+xtt11.xn2a.mid                              -1
+xtt11.xn2a.x1.mid                           -1
+xtt11.n21                                    1
+xtt11.xn2b.mid                              -1
+xtt11.xn2b.x1.mid                           -1
+xtt11.n22                                    1
+xtt11.xn2c.mid                              -1
+xtt11.xn2c.x1.mid                           -1
+xtt11.n23                                    1
+xtt11.xn2.xn.m1                              1
+xtt11.xn2.xn.m2                              1
+xtt11.xn2.mid                               -1
+xtt11.n2                                     1
+xtt11.xpz.m1                                 1
+xtt11.xpz.m2                                 1
+xtt11.pz                                     1
+xtt11.xnz.m1                                 1
+xtt11.xnz.m2                                 1
+xtt11.nz                                    -1
+xtt11.xa3p.mid                               1
+xtt11.xa3p.xn.m1                            -1
+xtt11.xa3p.xn.m2                            -1
+xtt11.a3p                                   -1
+xtt11.xa3n.mid                              -1
+xtt11.xa3n.xn.m1                            -1
+xtt11.xa3n.xn.m2                            -1
+xtt11.a3n                                    1
+xtt11.a3pb                                   1
+xtt11.a3nb                                  -1
+xtt11.xp2x.mid                               1
+xtt11.xp2x.x1.mid                           -1
+xtt11.p2x                                   -1
+xtt11.xn2x.mid                               1
+xtt11.xn2x.x1.mid                     0.599962
+xtt11.n2x                                   -1
+xtt11.xpany.xn.m1                            1
+xtt11.xpany.xn.m2                            1
+xtt11.xpany.mid                              1
+xtt11.pany                                  -1
+xtt11.xnany.xn.m1                            1
+xtt11.xnany.xn.m2                            1
+xtt11.xnany.mid                             -1
+xtt11.nany                                   1
+xtt11.p2b                                    1
+xtt11.n2b                                   -1
+xtt11.xp1.mid                                1
+xtt11.xp1.x1.mid                            -1
+xtt11.p1                                    -1
+xtt11.xn1.mid                                1
+xtt11.xn1.x1.mid                      0.599962
+xtt11.n1                                    -1
+xtt11.xcop.mid                               1
+xtt11.xcop.x1.mid                           -1
+xtt11.cop                                   -1
+xtt11.xcon.mid                              -1
+xtt11.xcon.x1.mid                           -1
+xtt11.con                                    1
+xtt11.xsp1.mid                               1
+xtt11.xsp1.x1.mid                           -1
+xtt11.t1                                    -1
+xtt11.xsp2.mid                               1
+xtt11.xsp2.x1.mid                           -1
+xtt11.t2                                    -1
+xtt11.xsp3.mid                               1
+xtt11.xsp3.x1.mid                     0.599962
+xtt11.t3                                    -1
+xtt11.xsp.xn.m1                              1
+xtt11.xsp.xn.m2                              1
+xtt11.xsp.mid                                1
+xtt11.sp                                    -1
+xtt11.xsn1.mid                               1
+xtt11.xsn1.x1.mid                           -1
+xtt11.t4                                    -1
+xtt11.xsn2.mid                               1
+xtt11.xsn2.x1.mid                           -1
+xtt11.t5                                    -1
+xtt11.xsn3.mid                               1
+xtt11.xsn3.x1.mid                           -1
+xtt11.t6                                    -1
+xtt11.xsn.xn.m1                              1
+xtt11.xsn.xn.m2                              1
+xtt11.xsn.mid                                1
+xtt11.sn                                    -1
+xtt11.gpsum                                  1
+st11                                         0
+xtt11.gpcout                                 1
+cot11                                -0.997196
+lsumt11                                      0
+lcoutt11                               -0.9962
+at12                                         0
+bt12                                         1
+ct12                                         1
+xtt12.xra.ra                      2.61847e-186
+xtt12.xra.rb                      -2.6185e-186
+xtt12.xra.midp                               1
+xtt12.pa                                    -1
+xtt12.na                                    -1
+xtt12.xrb.ra                          0.755947
+xtt12.xrb.rb                       0.000100097
+xtt12.xrb.midp                              -1
+xtt12.pb                                     1
+xtt12.nb                                    -1
+xtt12.xrc.ra                          0.755947
+xtt12.xrc.rb                       0.000100097
+xtt12.xrc.midp                              -1
+xtt12.pc                                     1
+xtt12.nc                                    -1
+xtt12.xp2a.mid                               1
+xtt12.xp2a.x1.mid                           -1
+xtt12.p21                                   -1
+xtt12.xp2b.mid                               1
+xtt12.xp2b.x1.mid                           -1
+xtt12.p22                                   -1
+xtt12.xp2c.mid                              -1
+xtt12.xp2c.x1.mid                           -1
+xtt12.p23                                    1
+xtt12.xp2.xn.m1                              1
+xtt12.xp2.xn.m2                              1
+xtt12.xp2.mid                               -1
+xtt12.p2                                     1
+xtt12.xn2a.mid                               1
+xtt12.xn2a.x1.mid                           -1
+xtt12.n21                                   -1
+xtt12.xn2b.mid                               1
+xtt12.xn2b.x1.mid                           -1
+xtt12.n22                                   -1
+xtt12.xn2c.mid                               1
+xtt12.xn2c.x1.mid                           -1
+xtt12.n23                                   -1
+xtt12.xn2.xn.m1                              1
+xtt12.xn2.xn.m2                              1
+xtt12.xn2.mid                                1
+xtt12.n2                                    -1
+xtt12.xpz.m1                                 1
+xtt12.xpz.m2                                 1
+xtt12.pz                                    -1
+xtt12.xnz.m1                                 1
+xtt12.xnz.m2                                 1
+xtt12.nz                                     1
+xtt12.xa3p.mid                               1
+xtt12.xa3p.xn.m1                            -1
+xtt12.xa3p.xn.m2                            -1
+xtt12.a3p                                   -1
+xtt12.xa3n.mid                               1
+xtt12.xa3n.xn.m1                            -1
+xtt12.xa3n.xn.m2                            -1
+xtt12.a3n                                   -1
+xtt12.a3pb                                   1
+xtt12.a3nb                                   1
+xtt12.xp2x.mid                              -1
+xtt12.xp2x.x1.mid                           -1
+xtt12.p2x                                    1
+xtt12.xn2x.mid                               1
+xtt12.xn2x.x1.mid                           -1
+xtt12.n2x                                   -1
+xtt12.xpany.xn.m1                            1
+xtt12.xpany.xn.m2                            1
+xtt12.xpany.mid                             -1
+xtt12.pany                                   1
+xtt12.xnany.xn.m1                            1
+xtt12.xnany.xn.m2                            1
+xtt12.xnany.mid                              1
+xtt12.nany                                  -1
+xtt12.p2b                                   -1
+xtt12.n2b                                    1
+xtt12.xp1.mid                                1
+xtt12.xp1.x1.mid                      0.599962
+xtt12.p1                                    -1
+xtt12.xn1.mid                                1
+xtt12.xn1.x1.mid                            -1
+xtt12.n1                                    -1
+xtt12.xcop.mid                              -1
+xtt12.xcop.x1.mid                           -1
+xtt12.cop                                    1
+xtt12.xcon.mid                               1
+xtt12.xcon.x1.mid                           -1
+xtt12.con                                   -1
+xtt12.xsp1.mid                               1
+xtt12.xsp1.x1.mid                           -1
+xtt12.t1                                    -1
+xtt12.xsp2.mid                               1
+xtt12.xsp2.x1.mid                     0.599962
+xtt12.t2                                    -1
+xtt12.xsp3.mid                               1
+xtt12.xsp3.x1.mid                           -1
+xtt12.t3                                    -1
+xtt12.xsp.xn.m1                              1
+xtt12.xsp.xn.m2                              1
+xtt12.xsp.mid                                1
+xtt12.sp                                    -1
+xtt12.xsn1.mid                               1
+xtt12.xsn1.x1.mid                           -1
+xtt12.t4                                    -1
+xtt12.xsn2.mid                               1
+xtt12.xsn2.x1.mid                           -1
+xtt12.t5                                    -1
+xtt12.xsn3.mid                              -1
+xtt12.xsn3.x1.mid                           -1
+xtt12.t6                                     1
+xtt12.xsn.xn.m1                              1
+xtt12.xsn.xn.m2                              1
+xtt12.xsn.mid                               -1
+xtt12.sn                                     1
+xtt12.gpsum                                  1
+st12                                 -0.997196
+xtt12.gpcout                                -1
+cot12                                 0.997196
+lsumt12                                -0.9962
+lcoutt12                                0.9962
+at13                                         0
+bt13                                        -1
+ct13                                        -1
+xtt13.xra.ra                      2.61847e-186
+xtt13.xra.rb                      -2.6185e-186
+xtt13.xra.midp                               1
+xtt13.pa                                    -1
+xtt13.na                                    -1
+xtt13.xrb.ra                      -0.000100097
+xtt13.xrb.rb                         -0.755947
+xtt13.xrb.midp                               1
+xtt13.pb                                    -1
+xtt13.nb                                     1
+xtt13.xrc.ra                      -0.000100097
+xtt13.xrc.rb                         -0.755947
+xtt13.xrc.midp                               1
+xtt13.pc                                    -1
+xtt13.nc                                     1
+xtt13.xp2a.mid                               1
+xtt13.xp2a.x1.mid                           -1
+xtt13.p21                                   -1
+xtt13.xp2b.mid                               1
+xtt13.xp2b.x1.mid                           -1
+xtt13.p22                                   -1
+xtt13.xp2c.mid                               1
+xtt13.xp2c.x1.mid                           -1
+xtt13.p23                                   -1
+xtt13.xp2.xn.m1                              1
+xtt13.xp2.xn.m2                              1
+xtt13.xp2.mid                                1
+xtt13.p2                                    -1
+xtt13.xn2a.mid                               1
+xtt13.xn2a.x1.mid                           -1
+xtt13.n21                                   -1
+xtt13.xn2b.mid                               1
+xtt13.xn2b.x1.mid                           -1
+xtt13.n22                                   -1
+xtt13.xn2c.mid                              -1
+xtt13.xn2c.x1.mid                           -1
+xtt13.n23                                    1
+xtt13.xn2.xn.m1                              1
+xtt13.xn2.xn.m2                              1
+xtt13.xn2.mid                               -1
+xtt13.n2                                     1
+xtt13.xpz.m1                                 1
+xtt13.xpz.m2                                 1
+xtt13.pz                                     1
+xtt13.xnz.m1                                 1
+xtt13.xnz.m2                                 1
+xtt13.nz                                    -1
+xtt13.xa3p.mid                               1
+xtt13.xa3p.xn.m1                            -1
+xtt13.xa3p.xn.m2                            -1
+xtt13.a3p                                   -1
+xtt13.xa3n.mid                               1
+xtt13.xa3n.xn.m1                            -1
+xtt13.xa3n.xn.m2                            -1
+xtt13.a3n                                   -1
+xtt13.a3pb                                   1
+xtt13.a3nb                                   1
+xtt13.xp2x.mid                               1
+xtt13.xp2x.x1.mid                           -1
+xtt13.p2x                                   -1
+xtt13.xn2x.mid                              -1
+xtt13.xn2x.x1.mid                           -1
+xtt13.n2x                                    1
+xtt13.xpany.xn.m1                            1
+xtt13.xpany.xn.m2                            1
+xtt13.xpany.mid                              1
+xtt13.pany                                  -1
+xtt13.xnany.xn.m1                            1
+xtt13.xnany.xn.m2                            1
+xtt13.xnany.mid                             -1
+xtt13.nany                                   1
+xtt13.p2b                                    1
+xtt13.n2b                                   -1
+xtt13.xp1.mid                                1
+xtt13.xp1.x1.mid                            -1
+xtt13.p1                                    -1
+xtt13.xn1.mid                                1
+xtt13.xn1.x1.mid                      0.599962
+xtt13.n1                                    -1
+xtt13.xcop.mid                               1
+xtt13.xcop.x1.mid                           -1
+xtt13.cop                                   -1
+xtt13.xcon.mid                              -1
+xtt13.xcon.x1.mid                           -1
+xtt13.con                                    1
+xtt13.xsp1.mid                               1
+xtt13.xsp1.x1.mid                           -1
+xtt13.t1                                    -1
+xtt13.xsp2.mid                               1
+xtt13.xsp2.x1.mid                           -1
+xtt13.t2                                    -1
+xtt13.xsp3.mid                              -1
+xtt13.xsp3.x1.mid                           -1
+xtt13.t3                                     1
+xtt13.xsp.xn.m1                              1
+xtt13.xsp.xn.m2                              1
+xtt13.xsp.mid                               -1
+xtt13.sp                                     1
+xtt13.xsn1.mid                               1
+xtt13.xsn1.x1.mid                           -1
+xtt13.t4                                    -1
+xtt13.xsn2.mid                               1
+xtt13.xsn2.x1.mid                     0.599962
+xtt13.t5                                    -1
+xtt13.xsn3.mid                               1
+xtt13.xsn3.x1.mid                           -1
+xtt13.t6                                    -1
+xtt13.xsn.xn.m1                              1
+xtt13.xsn.xn.m2                              1
+xtt13.xsn.mid                                1
+xtt13.sn                                    -1
+xtt13.gpsum                                 -1
+st13                                  0.997196
+xtt13.gpcout                                 1
+cot13                                -0.997196
+lsumt13                                 0.9962
+lcoutt13                               -0.9962
+vdd1                                         1
+vss1                                        -1
+a1                                           0
+c1                                           0
+b1                                           0
+xfa1.xra.ra                       2.61847e-186
+xfa1.xra.rb                       -2.6185e-186
+xfa1.xra.midp                                1
+xfa1.pa                                     -1
+xfa1.na                                     -1
+xfa1.xrb.ra                       2.61847e-186
+xfa1.xrb.rb                       -2.6185e-186
+xfa1.xrb.midp                                1
+xfa1.pb                                     -1
+xfa1.nb                                     -1
+xfa1.xrc.ra                       2.61847e-186
+xfa1.xrc.rb                       -2.6185e-186
+xfa1.xrc.midp                                1
+xfa1.pc                                     -1
+xfa1.nc                                     -1
+xfa1.xp2a.mid                                1
+xfa1.xp2a.x1.mid                            -1
+xfa1.p21                                    -1
+xfa1.xp2b.mid                                1
+xfa1.xp2b.x1.mid                            -1
+xfa1.p22                                    -1
+xfa1.xp2c.mid                                1
+xfa1.xp2c.x1.mid                            -1
+xfa1.p23                                    -1
+xfa1.xp2.xn.m1                               1
+xfa1.xp2.xn.m2                               1
+xfa1.xp2.mid                                 1
+xfa1.p2                                     -1
+xfa1.xn2a.mid                                1
+xfa1.xn2a.x1.mid                            -1
+xfa1.n21                                    -1
+xfa1.xn2b.mid                                1
+xfa1.xn2b.x1.mid                            -1
+xfa1.n22                                    -1
+xfa1.xn2c.mid                                1
+xfa1.xn2c.x1.mid                            -1
+xfa1.n23                                    -1
+xfa1.xn2.xn.m1                               1
+xfa1.xn2.xn.m2                               1
+xfa1.xn2.mid                                 1
+xfa1.n2                                     -1
+xfa1.xpz.m1                                  1
+xfa1.xpz.m2                                  1
+xfa1.pz                                      1
+xfa1.xnz.m1                                  1
+xfa1.xnz.m2                                  1
+xfa1.nz                                      1
+xfa1.xa3p.mid                                1
+xfa1.xa3p.xn.m1                             -1
+xfa1.xa3p.xn.m2                             -1
+xfa1.a3p                                    -1
+xfa1.xa3n.mid                                1
+xfa1.xa3n.xn.m1                             -1
+xfa1.xa3n.xn.m2                             -1
+xfa1.a3n                                    -1
+xfa1.a3pb                                    1
+xfa1.a3nb                                    1
+xfa1.xp2x.mid                                1
+xfa1.xp2x.x1.mid                            -1
+xfa1.p2x                                    -1
+xfa1.xn2x.mid                                1
+xfa1.xn2x.x1.mid                            -1
+xfa1.n2x                                    -1
+xfa1.xpany.xn.m1                             1
+xfa1.xpany.xn.m2                             1
+xfa1.xpany.mid                               1
+xfa1.pany                                   -1
+xfa1.xnany.xn.m1                             1
+xfa1.xnany.xn.m2                             1
+xfa1.xnany.mid                               1
+xfa1.nany                                   -1
+xfa1.p2b                                     1
+xfa1.n2b                                     1
+xfa1.xp1.mid                                 1
+xfa1.xp1.x1.mid                             -1
+xfa1.p1                                     -1
+xfa1.xn1.mid                                 1
+xfa1.xn1.x1.mid                             -1
+xfa1.n1                                     -1
+xfa1.xcop.mid                                1
+xfa1.xcop.x1.mid                      0.599962
+xfa1.cop                                    -1
+xfa1.xcon.mid                                1
+xfa1.xcon.x1.mid                      0.599962
+xfa1.con                                    -1
+xfa1.xsp1.mid                                1
+xfa1.xsp1.x1.mid                            -1
+xfa1.t1                                     -1
+xfa1.xsp2.mid                                1
+xfa1.xsp2.x1.mid                            -1
+xfa1.t2                                     -1
+xfa1.xsp3.mid                                1
+xfa1.xsp3.x1.mid                      0.599962
+xfa1.t3                                     -1
+xfa1.xsp.xn.m1                               1
+xfa1.xsp.xn.m2                               1
+xfa1.xsp.mid                                 1
+xfa1.sp                                     -1
+xfa1.xsn1.mid                                1
+xfa1.xsn1.x1.mid                            -1
+xfa1.t4                                     -1
+xfa1.xsn2.mid                                1
+xfa1.xsn2.x1.mid                            -1
+xfa1.t5                                     -1
+xfa1.xsn3.mid                                1
+xfa1.xsn3.x1.mid                      0.599962
+xfa1.t6                                     -1
+xfa1.xsn.xn.m1                               1
+xfa1.xsn.xn.m2                               1
+xfa1.xsn.mid                                 1
+xfa1.sn                                     -1
+xfa1.gpsum                                   1
+s1                                           0
+xfa1.gpcout                                  1
+c1o                               -4.77098e-21
+ls1                               -3.29506e-49
+ras1                               1.33082e-46
+rbs1                               1.96753e-46
+lc1                               -4.77098e-21
+rac1                               4.12205e-21
+rbc1                               6.58929e-22
+p1                                   3.715e-10
+vdd2                                         1
+vss2                                        -1
+a2                                           1
+c2                                           0
+b2                                           0
+xfa2.xra.ra                           0.755947
+xfa2.xra.rb                        0.000100097
+xfa2.xra.midp                               -1
+xfa2.pa                                      1
+xfa2.na                                     -1
+xfa2.xrb.ra                       2.61847e-186
+xfa2.xrb.rb                       -2.6185e-186
+xfa2.xrb.midp                                1
+xfa2.pb                                     -1
+xfa2.nb                                     -1
+xfa2.xrc.ra                       2.61847e-186
+xfa2.xrc.rb                       -2.6185e-186
+xfa2.xrc.midp                                1
+xfa2.pc                                     -1
+xfa2.nc                                     -1
+xfa2.xp2a.mid                                1
+xfa2.xp2a.x1.mid                      0.599962
+xfa2.p21                                    -1
+xfa2.xp2b.mid                                1
+xfa2.xp2b.x1.mid                      0.599962
+xfa2.p22                                    -1
+xfa2.xp2c.mid                                1
+xfa2.xp2c.x1.mid                            -1
+xfa2.p23                                    -1
+xfa2.xp2.xn.m1                               1
+xfa2.xp2.xn.m2                               1
+xfa2.xp2.mid                                 1
+xfa2.p2                                     -1
+xfa2.xn2a.mid                                1
+xfa2.xn2a.x1.mid                            -1
+xfa2.n21                                    -1
+xfa2.xn2b.mid                                1
+xfa2.xn2b.x1.mid                            -1
+xfa2.n22                                    -1
+xfa2.xn2c.mid                                1
+xfa2.xn2c.x1.mid                            -1
+xfa2.n23                                    -1
+xfa2.xn2.xn.m1                               1
+xfa2.xn2.xn.m2                               1
+xfa2.xn2.mid                                 1
+xfa2.n2                                     -1
+xfa2.xpz.m1                          -0.599947
+xfa2.xpz.m2                          -0.599956
+xfa2.pz                                     -1
+xfa2.xnz.m1                                  1
+xfa2.xnz.m2                                  1
+xfa2.nz                                      1
+xfa2.xa3p.mid                                1
+xfa2.xa3p.xn.m1                       0.599978
+xfa2.xa3p.xn.m2                             -1
+xfa2.a3p                                    -1
+xfa2.xa3n.mid                                1
+xfa2.xa3n.xn.m1                             -1
+xfa2.xa3n.xn.m2                             -1
+xfa2.a3n                                    -1
+xfa2.a3pb                                    1
+xfa2.a3nb                                    1
+xfa2.xp2x.mid                                1
+xfa2.xp2x.x1.mid                            -1
+xfa2.p2x                                    -1
+xfa2.xn2x.mid                                1
+xfa2.xn2x.x1.mid                            -1
+xfa2.n2x                                    -1
+xfa2.xpany.xn.m1                     -0.599947
+xfa2.xpany.xn.m2                     -0.599956
+xfa2.xpany.mid                              -1
+xfa2.pany                                    1
+xfa2.xnany.xn.m1                             1
+xfa2.xnany.xn.m2                             1
+xfa2.xnany.mid                               1
+xfa2.nany                                   -1
+xfa2.p2b                                     1
+xfa2.n2b                                     1
+xfa2.xp1.mid                                -1
+xfa2.xp1.x1.mid                             -1
+xfa2.p1                                      1
+xfa2.xn1.mid                                 1
+xfa2.xn1.x1.mid                             -1
+xfa2.n1                                     -1
+xfa2.xcop.mid                                1
+xfa2.xcop.x1.mid                      0.599962
+xfa2.cop                                    -1
+xfa2.xcon.mid                                1
+xfa2.xcon.x1.mid                            -1
+xfa2.con                                    -1
+xfa2.xsp1.mid                               -1
+xfa2.xsp1.x1.mid                            -1
+xfa2.t1                                      1
+xfa2.xsp2.mid                                1
+xfa2.xsp2.x1.mid                            -1
+xfa2.t2                                     -1
+xfa2.xsp3.mid                                1
+xfa2.xsp3.x1.mid                            -1
+xfa2.t3                                     -1
+xfa2.xsp.xn.m1                       -0.599947
+xfa2.xsp.xn.m2                       -0.599956
+xfa2.xsp.mid                                -1
+xfa2.sp                                      1
+xfa2.xsn1.mid                                1
+xfa2.xsn1.x1.mid                            -1
+xfa2.t4                                     -1
+xfa2.xsn2.mid                                1
+xfa2.xsn2.x1.mid                            -1
+xfa2.t5                                     -1
+xfa2.xsn3.mid                                1
+xfa2.xsn3.x1.mid                      0.599962
+xfa2.t6                                     -1
+xfa2.xsn.xn.m1                               1
+xfa2.xsn.xn.m2                               1
+xfa2.xsn.mid                                 1
+xfa2.sn                                     -1
+xfa2.gpsum                                  -1
+s2                                    0.995092
+xfa2.gpcout                                  1
+c2o                                          0
+ls2                                   0.993349
+ras2                                   0.74954
+rbs2                               0.000100097
+lc2                                1.36202e-68
+rac2                              -8.14143e-66
+rbc2                               -5.4924e-66
+p2                                 1.74303e-05
+vdd3                                         1
+vss3                                        -1
+a3                                           1
+c3                                           0
+b3                                           1
+xfa3.xra.ra                           0.755947
+xfa3.xra.rb                        0.000100097
+xfa3.xra.midp                               -1
+xfa3.pa                                      1
+xfa3.na                                     -1
+xfa3.xrb.ra                           0.755947
+xfa3.xrb.rb                        0.000100097
+xfa3.xrb.midp                               -1
+xfa3.pb                                      1
+xfa3.nb                                     -1
+xfa3.xrc.ra                       2.61847e-186
+xfa3.xrc.rb                       -2.6185e-186
+xfa3.xrc.midp                                1
+xfa3.pc                                     -1
+xfa3.nc                                     -1
+xfa3.xp2a.mid                               -1
+xfa3.xp2a.x1.mid                            -1
+xfa3.p21                                     1
+xfa3.xp2b.mid                                1
+xfa3.xp2b.x1.mid                      0.599962
+xfa3.p22                                    -1
+xfa3.xp2c.mid                                1
+xfa3.xp2c.x1.mid                      0.599962
+xfa3.p23                                    -1
+xfa3.xp2.xn.m1                       -0.599947
+xfa3.xp2.xn.m2                       -0.599956
+xfa3.xp2.mid                                -1
+xfa3.p2                                      1
+xfa3.xn2a.mid                                1
+xfa3.xn2a.x1.mid                            -1
+xfa3.n21                                    -1
+xfa3.xn2b.mid                                1
+xfa3.xn2b.x1.mid                            -1
+xfa3.n22                                    -1
+xfa3.xn2c.mid                                1
+xfa3.xn2c.x1.mid                            -1
+xfa3.n23                                    -1
+xfa3.xn2.xn.m1                               1
+xfa3.xn2.xn.m2                               1
+xfa3.xn2.mid                                 1
+xfa3.n2                                     -1
+xfa3.xpz.m1                                  1
+xfa3.xpz.m2                          -0.599969
+xfa3.pz                                     -1
+xfa3.xnz.m1                                  1
+xfa3.xnz.m2                                  1
+xfa3.nz                                      1
+xfa3.xa3p.mid                                1
+xfa3.xa3p.xn.m1                       0.599969
+xfa3.xa3p.xn.m2                       0.599962
+xfa3.a3p                                    -1
+xfa3.xa3n.mid                                1
+xfa3.xa3n.xn.m1                             -1
+xfa3.xa3n.xn.m2                             -1
+xfa3.a3n                                    -1
+xfa3.a3pb                                    1
+xfa3.a3nb                                    1
+xfa3.xp2x.mid                               -1
+xfa3.xp2x.x1.mid                            -1
+xfa3.p2x                                     1
+xfa3.xn2x.mid                                1
+xfa3.xn2x.x1.mid                            -1
+xfa3.n2x                                    -1
+xfa3.xpany.xn.m1                             1
+xfa3.xpany.xn.m2                     -0.599969
+xfa3.xpany.mid                              -1
+xfa3.pany                                    1
+xfa3.xnany.xn.m1                             1
+xfa3.xnany.xn.m2                             1
+xfa3.xnany.mid                               1
+xfa3.nany                                   -1
+xfa3.p2b                                    -1
+xfa3.n2b                                     1
+xfa3.xp1.mid                                 1
+xfa3.xp1.x1.mid                       0.599962
+xfa3.p1                                     -1
+xfa3.xn1.mid                                 1
+xfa3.xn1.x1.mid                             -1
+xfa3.n1                                     -1
+xfa3.xcop.mid                               -1
+xfa3.xcop.x1.mid                            -1
+xfa3.cop                                     1
+xfa3.xcon.mid                                1
+xfa3.xcon.x1.mid                            -1
+xfa3.con                                    -1
+xfa3.xsp1.mid                                1
+xfa3.xsp1.x1.mid                            -1
+xfa3.t1                                     -1
+xfa3.xsp2.mid                                1
+xfa3.xsp2.x1.mid                      0.599962
+xfa3.t2                                     -1
+xfa3.xsp3.mid                                1
+xfa3.xsp3.x1.mid                            -1
+xfa3.t3                                     -1
+xfa3.xsp.xn.m1                               1
+xfa3.xsp.xn.m2                               1
+xfa3.xsp.mid                                 1
+xfa3.sp                                     -1
+xfa3.xsn1.mid                                1
+xfa3.xsn1.x1.mid                            -1
+xfa3.t4                                     -1
+xfa3.xsn2.mid                                1
+xfa3.xsn2.x1.mid                            -1
+xfa3.t5                                     -1
+xfa3.xsn3.mid                               -1
+xfa3.xsn3.x1.mid                            -1
+xfa3.t6                                      1
+xfa3.xsn.xn.m1                               1
+xfa3.xsn.xn.m2                               1
+xfa3.xsn.mid                                -1
+xfa3.sn                                      1
+xfa3.gpsum                                   1
+s3                                   -0.995092
+xfa3.gpcout                                 -1
+c3o                                   0.995092
+ls3                                  -0.993349
+ras3                              -0.000100097
+rbs3                                  -0.74954
+lc3                                   0.993349
+rac3                                   0.74954
+rbc3                               0.000100097
+p3                                 3.48602e-05
+vddb                                         1
+vssb                                        -1
+ab                                           1
+cib                                         -1
+bb                                          -1
+xbfa.xs1.xa.mid                              1
+xbfa.xs1.xa.x1.mid                    0.599962
+xbfa.xs1.mid1                               -1
+xbfa.xs1.xn.mid                      -0.599962
+xbfa.xs1.mid2                               -1
+xbfa.xs1.xo.mid                              1
+xbfa.s1                                      1
+xbfa.xs2.xa.mid                              1
+xbfa.xs2.xa.x1.mid                    0.599962
+xbfa.xs2.mid1                               -1
+xbfa.xs2.xn.mid                      -0.599962
+xbfa.xs2.mid2                               -1
+xbfa.xs2.xo.mid                              1
+sbm                                          1
+xbfa.xc1.mid                                 1
+xbfa.xc1.x1.mid                       0.599962
+xbfa.c1                                     -1
+xbfa.xc2.mid                                 1
+xbfa.xc2.x1.mid                             -1
+xbfa.c2                                     -1
+xbfa.xco.x1.mid                              1
+xbfa.xco.mid                                 1
+cbm                                         -1
+lsb                                          1
+lcb                                         -1
+pb                                 1.00539e-10
+bpb#branch                                   0
+vddb#branch                       -5.02696e-11
+vssb#branch                        5.02696e-11
+bp3#branch                                   0
+vdd3#branch                       -1.74301e-05
+vss3#branch                        1.74301e-05
+bp2#branch                                   0
+vdd2#branch                       -1.74301e-05
+vss2#branch                        2.01244e-10
+bp1#branch                                   0
+vdd1#branch                        -1.8575e-10
+vss1#branch                         1.8575e-10
+vsst#branch                        6.97365e-05
+vddt#branch                       -6.97365e-05
+vbb#branch                                   0
+vcib#branch                                  0
+vab#branch                                   0
+vb3#branch                        -7.56047e-06
+vc3#branch                        3.65664e-196
+va3#branch                        -7.56047e-06
+vb2#branch                        3.65664e-196
+vc2#branch                        3.65664e-196
+va2#branch                        -7.56047e-06
+vb1#branch                        3.65664e-196
+vc1#branch                        3.65664e-196
+va1#branch                        3.65664e-196
+vct13#branch                       7.56047e-06
+vbt13#branch                       7.56047e-06
+vat13#branch                      3.65664e-196
+vct12#branch                      -7.56047e-06
+vbt12#branch                      -7.56047e-06
+vat12#branch                      3.65664e-196
+vct11#branch                       7.56047e-06
+vbt11#branch                       7.56047e-06
+vat11#branch                       7.56047e-06
+vct10#branch                      3.65664e-196
+vbt10#branch                       7.56047e-06
+vat10#branch                       7.56047e-06
+vct9#branch                       -7.56047e-06
+vbt9#branch                        7.56047e-06
+vat9#branch                        7.56047e-06
+vct8#branch                       3.65664e-196
+vbt8#branch                       3.65664e-196
+vat8#branch                        7.56047e-06
+vct7#branch                        7.56047e-06
+vbt7#branch                       3.65664e-196
+vat7#branch                       -7.56047e-06
+vct6#branch                       3.65664e-196
+vbt6#branch                        7.56047e-06
+vat6#branch                       -7.56047e-06
+vct5#branch                       3.65664e-196
+vbt5#branch                       3.65664e-196
+vat5#branch                       3.65664e-196
+vct4#branch                        7.56047e-06
+vbt4#branch                       -7.56047e-06
+vat4#branch                       -7.56047e-06
+vct3#branch                       3.65664e-196
+vbt3#branch                       3.65664e-196
+vat3#branch                       -7.56047e-06
+vct2#branch                       3.65664e-196
+vbt2#branch                       -7.56047e-06
+vat2#branch                       -7.56047e-06
+vct1#branch                       -7.56047e-06
+vbt1#branch                       -7.56047e-06
+vat1#branch                       -7.56047e-06
+
+ Reference value :  0.00000e+00 Reference value :  8.65600e-10 Reference value :  1.98560e-09 Reference value :  3.00560e-09 Reference value :  4.10560e-09 Reference value :  5.28560e-09 Reference value :  6.40560e-09 Reference value :  7.68560e-09 Reference value :  8.94560e-09 Reference value :  1.02256e-08 Reference value :  1.15256e-08 Reference value :  1.28456e-08 Reference value :  1.41456e-08 Reference value :  1.54056e-08 Reference value :  1.66656e-08 Reference value :  1.79256e-08 Reference value :  1.92056e-08 Reference value :  2.05056e-08 Reference value :  2.18056e-08 Reference value :  2.30856e-08 Reference value :  2.43856e-08 Reference value :  2.55256e-08 Reference value :  2.65456e-08 Reference value :  2.76856e-08 Reference value :  2.89056e-08 Reference value :  3.01456e-08 Reference value :  3.13256e-08 Reference value :  3.25256e-08 Reference value :  3.37656e-08 Reference value :  3.50056e-08 Reference value :  3.62456e-08 Reference value :  3.75056e-08 Reference value :  3.87256e-08 Reference value :  3.99456e-08 Reference value :  4.11856e-08 Reference value :  4.24256e-08 Reference value :  4.37056e-08 Reference value :  4.49656e-08 Reference value :  4.62056e-08 Reference value :  4.74856e-08 Reference value :  4.87456e-08 Reference value :  4.99656e-08 Reference value :  5.11456e-08 Reference value :  5.23656e-08 Reference value :  5.35856e-08 Reference value :  5.47456e-08 Reference value :  5.59656e-08 Reference value :  5.71256e-08 Reference value :  5.83856e-08 Reference value :  5.93856e-08 Reference value :  6.06056e-08 Reference value :  6.17456e-08 Reference value :  6.28456e-08 Reference value :  6.40856e-08 Reference value :  6.53856e-08 Reference value :  6.66656e-08 Reference value :  6.79656e-08 Reference value :  6.92656e-08 Reference value :  7.05656e-08 Reference value :  7.18656e-08 Reference value :  7.30456e-08 Reference value :  7.42256e-08 Reference value :  7.55456e-08 Reference value :  7.68456e-08 Reference value :  7.81456e-08 Reference value :  7.93856e-08 Reference value :  8.06656e-08 Reference value :  8.19256e-08 Reference value :  8.31856e-08 Reference value :  8.44456e-08 Reference value :  8.57656e-08 Reference value :  8.70456e-08 Reference value :  8.83256e-08 Reference value :  8.95456e-08 Reference value :  9.08056e-08 Reference value :  9.20656e-08 Reference value :  9.33456e-08 Reference value :  9.44256e-08 Reference value :  9.55256e-08 Reference value :  9.66856e-08 Reference value :  9.79256e-08 Reference value :  9.91856e-08 Reference value :  1.00152e-07 Reference value :  1.00161e-07 Reference value :  1.00268e-07 Reference value :  1.00282e-07 Reference value :  1.00296e-07 Reference value :  1.00301e-07 Reference value :  1.00303e-07 Reference value :  1.00399e-07 Reference value :  1.00425e-07 Reference value :  1.00432e-07 Reference value :  1.00432e-07 Reference value :  1.00549e-07 Reference value :  1.00561e-07 Reference value :  1.00586e-07 Reference value :  1.00639e-07 Reference value :  1.00645e-07 Reference value :  1.00653e-07 Reference value :  1.00853e-07 Reference value :  1.01406e-07 Reference value :  1.01416e-07 Reference value :  1.01445e-07 Reference value :  1.01449e-07 Reference value :  1.01580e-07 Reference value :  1.01588e-07 Reference value :  1.01601e-07 Reference value :  1.01674e-07 Reference value :  1.02253e-07 Reference value :  1.03113e-07 Reference value :  1.03913e-07 Reference value :  1.04953e-07 Reference value :  1.05753e-07 Reference value :  1.06573e-07 Reference value :  1.07393e-07 Reference value :  1.08253e-07 Reference value :  1.09113e-07 Reference value :  1.09953e-07 Reference value :  1.10813e-07 Reference value :  1.11693e-07 Reference value :  1.12553e-07 Reference value :  1.13413e-07 Reference value :  1.14393e-07 Reference value :  1.15473e-07 Reference value :  1.16673e-07 Reference value :  1.17853e-07 Reference value :  1.19053e-07 Reference value :  1.20113e-07 Reference value :  1.20386e-07 Reference value :  1.20402e-07 Reference value :  1.20448e-07 Reference value :  1.20685e-07 Reference value :  1.20699e-07 Reference value :  1.20740e-07 Reference value :  1.21170e-07 Reference value :  1.21730e-07 Reference value :  1.21739e-07 Reference value :  1.21763e-07 Reference value :  1.21781e-07 Reference value :  1.21803e-07 Reference value :  1.21854e-07 Reference value :  1.21859e-07 Reference value :  1.21872e-07 Reference value :  1.21882e-07 Reference value :  1.21888e-07 Reference value :  1.21916e-07 Reference value :  1.21928e-07 Reference value :  1.21946e-07 Reference value :  1.21950e-07 Reference value :  1.22131e-07 Reference value :  1.22851e-07 Reference value :  1.23731e-07 Reference value :  1.24571e-07 Reference value :  1.25391e-07 Reference value :  1.26211e-07 Reference value :  1.27011e-07 Reference value :  1.27911e-07 Reference value :  1.28891e-07 Reference value :  1.29851e-07 Reference value :  1.30831e-07 Reference value :  1.31891e-07 Reference value :  1.33011e-07 Reference value :  1.34311e-07 Reference value :  1.35591e-07 Reference value :  1.36871e-07 Reference value :  1.38171e-07 Reference value :  1.39491e-07
+No. of Data Rows : 7263
+
+  Measurements for Transient Analysis
+
+egate_e1            =   3.00146e-12 from=  9.50000e-08 to=  1.35000e-07
+egate_e2            =   5.23568e-12 from=  9.50000e-08 to=  1.35000e-07
+egate_e3            =   8.80110e-12 from=  9.50000e-08 to=  1.35000e-07
+egate_bfa           =   1.59541e-12 from=  9.50000e-08 to=  1.35000e-07
+ept_e1              =  1.50073e-12
+ept_e2              =  2.61784e-12
+ept_e3              =  4.40055e-12
+ept_bfa             =  7.97703e-13
+eq_e1               =   2.78626e-17 from=  1.00000e-08 to=  8.50000e-08
+eq_e2               =   1.30727e-12 from=  1.00000e-08 to=  8.50000e-08
+vsum1_r             =  9.933485e-01
+vcout1_r            =  -1.818712e-25
+vsum1_f             =  2.333658e-03
+vcout1_f            =  -1.818712e-25
+vsum2_r             =  -9.933485e-01
+vcout2_r            =  9.933485e-01
+vsum2_f             =  9.933485e-01
+vcout2_f            =  2.328490e-03
+vsum3_r             =  6.664832e-05
+vcout3_r            =  5.594467e-05
+vsum3_f             =  -9.933485e-01
+vcout3_f            =  9.933485e-01
+vsum_b_r            =  -1.000000e+00
+vcar_b_r            =  1.000000e+00
+tdelay_cout         =  3.970855e-10 targ=  1.004971e-07 trig=  1.001000e-07
+tdelay_sum          =  5.052093e-10 targ=  1.006052e-07 trig=  1.001000e-07
+tsum1               =  0.000000e+00
+tcout1              =  9.961999e-01
+tsum2               =  -9.961999e-01
+tcout2              =  9.961999e-01
+tsum3               =  9.961999e-01
+tcout3              =  0.000000e+00
+tsum4               =  9.961999e-01
+tcout4              =  0.000000e+00
+tsum5               =  0.000000e+00
+tcout5              =  0.000000e+00
+tsum6               =  0.000000e+00
+tcout6              =  0.000000e+00
+tsum7               =  0.000000e+00
+tcout7              =  0.000000e+00
+tsum8               =  -9.961999e-01
+tcout8              =  0.000000e+00
+tsum9               =  -9.961999e-01
+tcout9              =  0.000000e+00
+tsum10              =  9.961999e-01
+tcout10             =  -9.961999e-01
+tsum11              =  0.000000e+00
+tcout11             =  -9.961999e-01
+tsum12              =  -9.961999e-01
+tcout12             =  9.961999e-01
+tsum13              =  9.961999e-01
+tcout13             =  -9.961999e-01
+
+
+Total analysis time (seconds) = 46.1796
+
+Total elapsed time (seconds) = 46.228 
+
+Total DRAM available = 62177.324 MB.
+DRAM currently available = 37051.559 MB.
+Maximum ngspice program size =   35.992 MB.
+Current ngspice program size =   25.430 MB.
+
+Shared ngspice pages =   10.902 MB.
+Text (code) pages =    7.578 MB.
+Stack = 0 bytes.
+Library pages =   14.586 MB.
+

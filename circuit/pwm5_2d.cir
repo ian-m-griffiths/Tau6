@@ -1,0 +1,448 @@
+* =====================================================================
+* pwm5_2d.cir  --  fair-fight test of Ian's 2D amplitude x duration
+* 5-symbol constellation: instead of separating the two nonzero
+* magnitudes on the TIME axis alone (pwm5.cir's {short,long} at fixed
+* amplitude, which lost to ternary/PAM-4 at 0.550 pJ/bit), separate
+* them in the (V,t) PLANE:
+*
+*   VARIANT (a) amplitude-distinguished:  BOTH magnitudes at ~1.0 ns;
+*     "low" = 11u driver (rail 0.142 V @ eval), "high" = wider driver
+*     (rail 0.218-0.232 V @ eval) -- same duration, different amplitude.
+*   VARIANT (b) long-low vs short-high:  "low" = WEAK driver (11u/3)
+*     pulsed LONG (1.618 ns), "high" = STRONG driver (11u) pulsed SHORT
+*     (1.0 ns) -- opposite corners of the (V,t) plane.
+*
+* Ian's physics claim under test: detectability ~ area (V*t), but the
+* two axes cost differently -- time is LINEAR in E_drv (~0.85 pJ/ns,
+* verified pwm5_pwscale.cir) while voltage is QUADRATIC (driver channel
+* loss (VDD-Vline)*I*t grows ~V^2). Prediction: the LONG-LOW corner
+* should deliver equal detectability for less energy than SHORT-HIGH.
+*
+* SAME HONESTY RULES as pwm5.cir / pam4.cir / ternary_fairfight.cir:
+*   1. REAL DRIVER -- CMOS push-pull on +/-1.0 V rails (LEVEL=1 models
+*      verbatim from binary_baseline: VTO=+/-0.4, KP 200u/100u, TOX=2n).
+*      Per-symbol PMOS width W_LOW/W_HIGH and pulse PW_LOW/PW_HIGH are
+*      parameters (NMOS width = /2, same Ron as PMOS). Channel
+*      dissipation, supply energy and gate charge all counted.
+*   2. REAL RECEIVER -- THREE comparators per symbol (shared supplies):
+*        SA_A : rail rA vs 0        -> + (push) detected
+*        SA_B : rail rB vs 0        -> - (pull) detected
+*        SA_L : active rail vs +/-THR -> HIGH vs LOW magnitude detected
+*      (identical receiver structure to pwm5.cir; the PULL magnitude
+*      comparator is the NMOS-input mirror SA with a +/-1 V clock,
+*      because the PMOS sense amp dies below ~-0.15 V common mode).
+*      All comparisons sit at 0.05-0.30 V common mode (the SA sweet
+*      spot) -- NO preamp needed, unless a variant's low corner falls
+*      below ~0.05 V rail (then the polarity SA margin collapses and
+*      that corner FAILS -- reported honestly, not papered over).
+*   3. WIRE + LOAD -- verbatim tcell4 (rwire=100, cline=1p, rload=500,
+*      cload=0.2p, rterm=1Meg), UNCHANGED ternary cell.
+*
+* ENERGY ACCOUNTING per symbol (identical to pwm5.cir):
+*   E_drv  = energy from the driver supply pair during the pulse window
+*   E_gate = |Q_gate(off edge)| x VDDR
+*   E_rec  = sense-amp supply energy for the 3-comparator eval
+*   E_fair(symbol) = E_drv + E_gate + E_rec
+*   E_bit  = avg(E_fair) / log2(5) = avg / 2.3219
+*
+* Symbols (each driven from rest, like the ternary/PAM-4 harnesses):
+*   +H (160n) : push, HIGH magnitude (W_HIGH for PW_HIGH)
+*   +L (190n) : push, LOW  magnitude (W_LOW  for PW_LOW)
+*   -L (220n) : pull, LOW  magnitude
+*   -H (250n) : pull, HIGH magnitude
+*   null(280n): driver idle, receiver evaluates only
+*
+* CONTROL BLOCK runs (this ngspice-44.2 build rejects .step; the
+* control block uses alterparam/reset/run):
+*   VARIANT A  : PW_LOW=1.0n PW_HIGH=1.0n W_LOW=11u W_HIGH=21u THR=0.18
+*                (high symbol energy-matched to pwm5's long: both ~1.6 pJ)
+*   VARIANT A2 : same, W_HIGH=25u THR=0.19 (max amplitude reachable at
+*                1.0 ns before the charging-time cap)
+*   VARIANT B  : PW_LOW=1.618n PW_HIGH=1.0n W_LOW=11u/3 W_HIGH=11u THR=0.095
+*                (long-LOW vs short-HIGH, opposite (V,t) corners)
+*
+* MEASURED headline (see pwm5_2d.log and ENERGY_RESULTS.md):
+*
+* VARIANT A (low=11u/0.142 V, high=21u/0.218 V, THR=0.18, both 1.0 ns):
+*   avg 1.286 pJ/symbol -> 0.554 pJ/bit, but the L comparator FAILS:
+*   input diff is only +-0.038 V and the sense amp latches LOW for BOTH
+*   magnitudes (dL +H = -0.736, -H = -1.74 -- wrong side). NOT a
+*   working 5-symbol scheme. Same for A2 (25u, diff 0.042, dL -0.746).
+* VARIANT A3 (low=8u/0.092 V, high=25u/0.232 V, THR=0.157, both 1.0 ns):
+*   the WIDEST gap 1.0 ns can give (diff 0.065-0.075) -- resolves
+*   (dL +0.607/-0.714/+1.627/-1.719) at avg 1.241 pJ/symbol ->
+*   0.534 pJ/bit, still worse than ternary (0.515) and PAM-4 (0.401),
+*   with thin margins (low rail 92 mV, right at the SA floor).
+* VARIANT B (long-low 3.67u @ 1.618 ns / rail 0.048 V vs short-high 11u
+*   @ 1.0 ns / rail 0.142 V, THR=0.095): ALL 5 SYMBOLS RESOLVE with the
+*   stock sense amps (dA/dB/dL: +H +0.571/+0.135/+0.559; +L +0.517/
+*   -0.072/-0.638; -L -0.073/+0.245/-1.65; -H +0.310/+0.375/+1.59;
+*   null +0.013/-0.006/-0.639):
+*     +H: E_drv 1.131  E_gate 0.023  E_rec 0.107 -> 1.261 pJ
+*     +L: E_drv 0.646  E_gate 0.007  E_rec 0.106 -> 0.760 pJ
+*     -L: E_drv 0.646  E_gate 0.004  E_rec 0.335 -> 0.985 pJ
+*     -H: E_drv 1.130  E_gate 0.012  E_rec 0.358 -> 1.500 pJ
+*     null:                              E_rec 0.108 -> 0.108 pJ
+*   avg = 0.923 pJ/symbol = 0.397 pJ/bit (x2.322): a TIE with PAM-4
+*   (0.401), 23% better than ternary (0.515), 28% better than PWM-5
+*   (0.550). The long-low corner (0.646 pJ) is the win: it replaces
+*   pwm5's expensive 1.60 pJ long pulse for the same 1.618 ns of time,
+*   at the cost of thinner receiver margins (0.047 V discriminator
+*   input diff, 48 mV low-symbol rail -- right at the SA resolution
+*   floor; a real process's offset would eat this margin).
+* =====================================================================
+
+.options reltol=1e-3 abstol=1e-15 vntol=1e-6 noopiter
+
+* ------------------------------------------------------------------
+* PARAMS (defaults = VARIANT B; the control block overrides per run)
+* ------------------------------------------------------------------
+.param VDDR    = 1.0
+.param WP      = 11u        ; strong driver PMOS width (binary/ternary op point)
+.param WLB     = 300        ; cell diode-leg width multiplier (verbatim tcell4)
+.param LEN     = 0.18u      ; channel length (all devices)
+.param W_LOW   = {WP/3}     ; LOW-magnitude driver PMOS width
+.param W_HIGH  = {WP}       ; HIGH-magnitude driver PMOS width
+.param PW_LOW  = 1.618n     ; LOW-magnitude pulse width  (long-low corner)
+.param PW_HIGH = 1.0n       ; HIGH-magnitude pulse width (short-high corner)
+.param THR     = 0.095      ; magnitude threshold (midpoint of the two rails)
+.param TEVAL   = 1.7n       ; eval edge after symbol start (pwm5.cir timing)
+.param EVALW   = 1.5n       ; eval window width
+.param SAMP    = {TEVAL + 1.0n}   ; demux sample time (1 ns into eval)
+.param T1 = 160n            ; +H
+.param T2 = 190n            ; +L
+.param T3 = 220n            ; -L
+.param T4 = 250n            ; -H
+.param T5 = 280n            ; null
+
+* ---------------- models (verbatim from binary_baseline + cell) ----
+.model NMOS1 NMOS(LEVEL=1 VTO=0.4 KP=200u LAMBDA=0.05 TOX=2n)
+.model PMOS1 PMOS(LEVEL=1 VTO=-0.4 KP=100u LAMBDA=0.05 TOX=2n)
+.model NMOSDIODEB NMOS(LEVEL=1 VTO=0.30 KP=200u LAMBDA=0.05 GAMMA=0 PHI=0.7 TOX=2n IS=0)
+
+* ---------------- cell: UNCHANGED N=4 paralleled transistor-diodes ----
+.subckt tcell4 in rA rB rwire=100 cline=1p rload=500 cload=0.2p rterm=1meg
+Rw in x {rwire}
+Cx x 0 {cline}
+Rterm x 0 {rterm}
+M1  x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1B x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1C x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M1D x x rA rA NMOSDIODEB W={WLB*LEN} L={LEN}
+M2  rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2B rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2C rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+M2D rB rB x x NMOSDIODEB W={WLB*LEN} L={LEN}
+RLA rA 0 {rload}
+CLA rA 0 {cload}
+RLB rB 0 {rload}
+CLB rB 0 {cload}
+.ends
+
+* ---------------- REAL RECEIVER: PMOS-input clocked sense amp ---------
+* (VERBATIM from ternary_fairfight.cir / pwm5.cir)
+* out = high when inP < inM (PMOS conducts more on the lower input).
+.subckt sensamp inP inM clk vddsa out outb
+M1 out  inP cs cs PMOS1 W=1u  L=0.18u
+M2 outb inM cs cs PMOS1 W=1u  L=0.18u
+M5 cs   clk vddsa vddsa PMOS1 W=0.3u L=0.18u
+M3 out  outb 0 0 NMOS1 W=0.5u L=0.18u
+M4 outb out  0 0 NMOS1 W=0.5u L=0.18u
+M6 out  clk  0 0 NMOS1 W=0.5u L=0.18u
+M7 outb clk  0 0 NMOS1 W=0.5u L=0.18u
+CLo  out  0 5f
+CLob outb 0 5f
+.ends
+
+* ---------------- PULL-length comparator: NMOS-input mirror SA ---------
+* (verbatim from pwm5.cir; out high when inP < inM, eval when clk HIGH)
+.subckt sensampN inP inM clk vddsa vsssa out outb
+M1 out  inP ct ct NMOS1 W=1u  L=0.18u
+M2 outb inM ct ct NMOS1 W=1u  L=0.18u
+M5 ct   clk vsssa vsssa NMOS1 W=0.3u L=0.18u
+M3 out  outb vddsa vddsa PMOS1 W=0.5u L=0.18u
+M4 outb out  vddsa vddsa PMOS1 W=0.5u L=0.18u
+M6 out  clk  vddsa vddsa PMOS1 W=0.5u L=0.18u
+M7 outb clk  vddsa vddsa PMOS1 W=0.5u L=0.18u
+CLo  out  0 5f
+CLob outb 0 5f
+.ends
+
+* =====================================================================
+* SHARED SUPPLIES + POWER PROBES
+* =====================================================================
+VDD   vdd   0 DC {VDDR}
+VSS   vss   0 DC {-VDDR}
+VDDSA vddsa 0 DC 1.0
+VSSSA vsssa 0 DC -1.0
+BpSUP pwpSUP 0 V = -(V(vdd)*I(VDD) + V(vss)*I(VSS))
+BpSA  pwpSA  0 V = -(V(vddsa)*I(VDDSA) + V(vsssa)*I(VSSSA))
+BpSAp pwpSAp 0 V = -(V(vddsa)*I(VDDSA))
+BpSAn pwpSAn 0 V = -(V(vsssa)*I(VSSSA))
+VthrP thrP 0 DC {THR}        ; gate loads only (same convention as pam4:
+VthrN thrN 0 DC {-THR}       ; one shared reference across lanes)
+
+* =====================================================================
+* CASE 1: +HIGH -- push, W_HIGH for PW_HIGH at 160 ns
+* =====================================================================
+MP1 drv1 gP1 vdd vdd PMOS1 W={W_HIGH} L=0.18u
+MN1 drv1 gN1 vss vss NMOS1 W={W_HIGH/2} L=0.18u
+VgP1 gP1 0 PULSE({VDDR} 0 {T1} 0.2n 0.2n {PW_HIGH} 200n)  ; PMOS on (gate 1->0)
+VgN1 gN1 0 DC {-VDDR}
+BpG1 pwpG1 0 V = V(gP1)*I(VgP1)
+BqG1 qG1 0 V = I(VgP1)
+Vs1  drv1 cell1 DC 0
+Xc1  cell1 rA1 rB1 tcell4
+BpL1 pwpL1 0 V = V(cell1)*I(Vs1)
+Vclk1 clk1 0 PULSE(1 0 {T1+TEVAL} 0.1n 0.1n {EVALW} 200n)
+BpCLK1 pwpCLK1 0 V = V(clk1)*I(Vclk1)
+XsaA1 0 rA1 clk1 vddsa outA1 outAb1 sensamp     ; outA high when rA > 0
+XsaB1 rB1 0 clk1 vddsa outB1 outBb1 sensamp     ; outB high when rB < 0
+XsaL1 thrP rA1 clk1 vddsa outL1 outLb1 sensamp  ; outL high when rA > THR
+BdA1 vdA1 0 V = V(outA1)-V(outAb1)
+BdB1 vdB1 0 V = V(outB1)-V(outBb1)
+BdL1 vdL1 0 V = V(outL1)-V(outLb1)
+
+* =====================================================================
+* CASE 2: +LOW -- push, W_LOW for PW_LOW at 190 ns
+* =====================================================================
+MP2 drv2 gP2 vdd vdd PMOS1 W={W_LOW} L=0.18u
+MN2 drv2 gN2 vss vss NMOS1 W={W_LOW/2} L=0.18u
+VgP2 gP2 0 PULSE({VDDR} 0 {T2} 0.2n 0.2n {PW_LOW} 200n)
+VgN2 gN2 0 DC {-VDDR}
+BpG2 pwpG2 0 V = V(gP2)*I(VgP2)
+BqG2 qG2 0 V = I(VgP2)
+Vs2  drv2 cell2 DC 0
+Xc2  cell2 rA2 rB2 tcell4
+BpL2 pwpL2 0 V = V(cell2)*I(Vs2)
+Vclk2 clk2 0 PULSE(1 0 {T2+TEVAL} 0.1n 0.1n {EVALW} 200n)
+BpCLK2 pwpCLK2 0 V = V(clk2)*I(Vclk2)
+XsaA2 0 rA2 clk2 vddsa outA2 outAb2 sensamp
+XsaB2 rB2 0 clk2 vddsa outB2 outBb2 sensamp
+XsaL2 thrP rA2 clk2 vddsa outL2 outLb2 sensamp
+BdA2 vdA2 0 V = V(outA2)-V(outAb2)
+BdB2 vdB2 0 V = V(outB2)-V(outBb2)
+BdL2 vdL2 0 V = V(outL2)-V(outLb2)
+
+* =====================================================================
+* CASE 3: -LOW -- pull, W_LOW for PW_LOW at 220 ns
+* =====================================================================
+MP3 drv3 gP3 vdd vdd PMOS1 W={W_LOW} L=0.18u
+MN3 drv3 gN3 vss vss NMOS1 W={W_LOW/2} L=0.18u
+VgP3 gP3 0 DC {VDDR}
+VgN3 gN3 0 PULSE({-VDDR} 0 {T3} 0.2n 0.2n {PW_LOW} 200n) ; NMOS on (gate -1->0)
+BpG3 pwpG3 0 V = V(gN3)*I(VgN3)
+BqG3 qG3 0 V = I(VgN3)
+Vs3  drv3 cell3 DC 0
+Xc3  cell3 rA3 rB3 tcell4
+BpL3 pwpL3 0 V = V(cell3)*I(Vs3)
+Vclk3 clk3 0 PULSE(1 0 {T3+TEVAL} 0.1n 0.1n {EVALW} 200n)
+BpCLK3 pwpCLK3 0 V = V(clk3)*I(Vclk3)
+Vclkb3 clkb3 0 PULSE({-1} {1} {T3+TEVAL} 0.1n 0.1n {EVALW} 200n) ; NMOS SA eval
+BpCLKb3 pwpCLKb3 0 V = V(clkb3)*I(Vclkb3)
+XsaA3 0 rA3 clk3 vddsa outA3 outAb3 sensamp
+XsaB3 rB3 0 clk3 vddsa outB3 outBb3 sensamp
+XsaL3 rB3 thrN clkb3 vddsa vsssa outL3 outLb3 sensampN ; outL high when rB < -THR
+BdA3 vdA3 0 V = V(outA3)-V(outAb3)
+BdB3 vdB3 0 V = V(outB3)-V(outBb3)
+BdL3 vdL3 0 V = V(outL3)-V(outLb3)
+
+* =====================================================================
+* CASE 4: -HIGH -- pull, W_HIGH for PW_HIGH at 250 ns
+* =====================================================================
+MP4 drv4 gP4 vdd vdd PMOS1 W={W_HIGH} L=0.18u
+MN4 drv4 gN4 vss vss NMOS1 W={W_HIGH/2} L=0.18u
+VgP4 gP4 0 DC {VDDR}
+VgN4 gN4 0 PULSE({-VDDR} 0 {T4} 0.2n 0.2n {PW_HIGH} 200n)
+BpG4 pwpG4 0 V = V(gN4)*I(VgN4)
+BqG4 qG4 0 V = I(VgN4)
+Vs4  drv4 cell4 DC 0
+Xc4  cell4 rA4 rB4 tcell4
+BpL4 pwpL4 0 V = V(cell4)*I(Vs4)
+Vclk4 clk4 0 PULSE(1 0 {T4+TEVAL} 0.1n 0.1n {EVALW} 200n)
+BpCLK4 pwpCLK4 0 V = V(clk4)*I(Vclk4)
+Vclkb4 clkb4 0 PULSE({-1} {1} {T4+TEVAL} 0.1n 0.1n {EVALW} 200n)
+BpCLKb4 pwpCLKb4 0 V = V(clkb4)*I(Vclkb4)
+XsaA4 0 rA4 clk4 vddsa outA4 outAb4 sensamp
+XsaB4 rB4 0 clk4 vddsa outB4 outBb4 sensamp
+XsaL4 rB4 thrN clkb4 vddsa vsssa outL4 outLb4 sensampN
+BdA4 vdA4 0 V = V(outA4)-V(outAb4)
+BdB4 vdB4 0 V = V(outB4)-V(outBb4)
+BdL4 vdL4 0 V = V(outL4)-V(outLb4)
+
+* =====================================================================
+* CASE 5: NULL -- driver idle, receiver evaluates at 280 ns
+* =====================================================================
+MP5 drv5 gP5 vdd vdd PMOS1 W={WP} L=0.18u
+MN5 drv5 gN5 vss vss NMOS1 W={WP/2} L=0.18u
+VgP5 gP5 0 DC {VDDR}
+VgN5 gN5 0 DC {-VDDR}
+Vs5  drv5 cell5 DC 0
+Xc5  cell5 rA5 rB5 tcell4
+BpL5 pwpL5 0 V = V(cell5)*I(Vs5)
+Vclk5 clk5 0 PULSE(1 0 {T5+TEVAL} 0.1n 0.1n {EVALW} 200n)
+BpCLK5 pwpCLK5 0 V = V(clk5)*I(Vclk5)
+XsaA5 0 rA5 clk5 vddsa outA5 outAb5 sensamp
+XsaB5 rB5 0 clk5 vddsa outB5 outBb5 sensamp
+XsaL5 thrP rA5 clk5 vddsa outL5 outLb5 sensamp
+BdA5 vdA5 0 V = V(outA5)-V(outAb5)
+BdB5 vdB5 0 V = V(outB5)-V(outBb5)
+BdL5 vdL5 0 V = V(outL5)-V(outLb5)
+
+* =====================================================================
+* SIMULATION + MEASUREMENTS (windows identical to pwm5.cir per case)
+* =====================================================================
+.tran 20p 315n
+
+* --- CASE 1: +HIGH ---
+.meas tran e1_drv  INTEG V(pwpSUP) FROM={T1-1n} TO={T1+PW_HIGH+5n}
+.meas tran e1_line INTEG V(pwpL1)  FROM={T1-1n} TO={T1+PW_HIGH+5n}
+.meas tran qg1     INTEG V(qG1)    FROM={T1+PW_HIGH+0.1n} TO={T1+PW_HIGH+1.1n}
+.meas tran e1_rec  INTEG V(pwpSA)  FROM={T1-2n} TO={T1+TEVAL+EVALW+2n}
+.meas tran e1_recp INTEG V(pwpSAp) FROM={T1-2n} TO={T1+TEVAL+EVALW+2n}
+.meas tran e1_recn INTEG V(pwpSAn) FROM={T1-2n} TO={T1+TEVAL+EVALW+2n}
+.meas tran railA1  MAX V(rA1)      FROM={T1} TO={T1+PW_HIGH+4n}
+.meas tran railA1e FIND V(rA1)     AT={T1+TEVAL}          ; rail at eval edge
+.meas tran areaA1  INTEG V(rA1)    FROM={T1} TO={T1+3.2n} ; rail area (detectability)
+.meas tran lineA1  MAX V(Xc1.x)    FROM={T1} TO={T1+PW_HIGH+2n}
+.meas tran demA1   FIND V(outA1)   AT={T1+SAMP}
+.meas tran demB1   FIND V(outB1)   AT={T1+SAMP}
+.meas tran demL1   FIND V(outL1)   AT={T1+SAMP}
+.meas tran dA1     FIND V(vdA1)    AT={T1+SAMP}
+.meas tran dB1     FIND V(vdB1)    AT={T1+SAMP}
+.meas tran dL1     FIND V(vdL1)    AT={T1+SAMP}
+.meas tran dA1pk   MAX V(vdA1)     FROM={T1+TEVAL} TO={T1+TEVAL+EVALW}
+.meas tran dL1pk   MAX V(vdL1)     FROM={T1+TEVAL} TO={T1+TEVAL+EVALW}
+
+* --- CASE 2: +LOW ---
+.meas tran e2_drv  INTEG V(pwpSUP) FROM={T2-1n} TO={T2+PW_LOW+5n}
+.meas tran e2_line INTEG V(pwpL2)  FROM={T2-1n} TO={T2+PW_LOW+5n}
+.meas tran qg2     INTEG V(qG2)    FROM={T2+PW_LOW+0.1n} TO={T2+PW_LOW+1.1n}
+.meas tran e2_rec  INTEG V(pwpSA)  FROM={T2-2n} TO={T2+TEVAL+EVALW+2n}
+.meas tran e2_recp INTEG V(pwpSAp) FROM={T2-2n} TO={T2+TEVAL+EVALW+2n}
+.meas tran e2_recn INTEG V(pwpSAn) FROM={T2-2n} TO={T2+TEVAL+EVALW+2n}
+.meas tran railA2  MAX V(rA2)      FROM={T2} TO={T2+PW_LOW+4n}
+.meas tran railA2e FIND V(rA2)     AT={T2+TEVAL}
+.meas tran areaA2  INTEG V(rA2)    FROM={T2} TO={T2+3.2n}
+.meas tran lineA2  MAX V(Xc2.x)    FROM={T2} TO={T2+PW_LOW+2n}
+.meas tran demA2   FIND V(outA2)   AT={T2+SAMP}
+.meas tran demB2   FIND V(outB2)   AT={T2+SAMP}
+.meas tran demL2   FIND V(outL2)   AT={T2+SAMP}
+.meas tran dA2     FIND V(vdA2)    AT={T2+SAMP}
+.meas tran dB2     FIND V(vdB2)    AT={T2+SAMP}
+.meas tran dL2     FIND V(vdL2)    AT={T2+SAMP}
+.meas tran dA2pk   MAX V(vdA2)     FROM={T2+TEVAL} TO={T2+TEVAL+EVALW}
+.meas tran dL2pk   MAX V(vdL2)     FROM={T2+TEVAL} TO={T2+TEVAL+EVALW}
+
+* --- CASE 3: -LOW ---
+.meas tran e3_drv  INTEG V(pwpSUP) FROM={T3-1n} TO={T3+PW_LOW+5n}
+.meas tran e3_line INTEG V(pwpL3)  FROM={T3-1n} TO={T3+PW_LOW+5n}
+.meas tran qg3     INTEG V(qG3)    FROM={T3+PW_LOW+0.1n} TO={T3+PW_LOW+1.1n}
+.meas tran e3_rec  INTEG V(pwpSA)  FROM={T3-2n} TO={T3+TEVAL+EVALW+2n}
+.meas tran e3_recp INTEG V(pwpSAp) FROM={T3-2n} TO={T3+TEVAL+EVALW+2n}
+.meas tran e3_recn INTEG V(pwpSAn) FROM={T3-2n} TO={T3+TEVAL+EVALW+2n}
+.meas tran railB3  MIN V(rB3)      FROM={T3} TO={T3+PW_LOW+4n}
+.meas tran railB3e FIND V(rB3)     AT={T3+TEVAL}
+.meas tran areaB3  INTEG V(rB3)    FROM={T3} TO={T3+3.2n} ; negative; abs in analysis
+.meas tran lineA3  MIN V(Xc3.x)    FROM={T3} TO={T3+PW_LOW+2n}
+.meas tran demA3   FIND V(outA3)   AT={T3+SAMP}
+.meas tran demB3   FIND V(outB3)   AT={T3+SAMP}
+.meas tran demL3   FIND V(outL3)   AT={T3+SAMP}
+.meas tran dA3     FIND V(vdA3)    AT={T3+SAMP}
+.meas tran dB3     FIND V(vdB3)    AT={T3+SAMP}
+.meas tran dL3     FIND V(vdL3)    AT={T3+SAMP}
+.meas tran dB3pk   MAX V(vdB3)     FROM={T3+TEVAL} TO={T3+TEVAL+EVALW}
+.meas tran dL3pk   MAX V(vdL3)     FROM={T3+TEVAL} TO={T3+TEVAL+EVALW}
+
+* --- CASE 4: -HIGH ---
+.meas tran e4_drv  INTEG V(pwpSUP) FROM={T4-1n} TO={T4+PW_HIGH+5n}
+.meas tran e4_line INTEG V(pwpL4)  FROM={T4-1n} TO={T4+PW_HIGH+5n}
+.meas tran qg4     INTEG V(qG4)    FROM={T4+PW_HIGH+0.1n} TO={T4+PW_HIGH+1.1n}
+.meas tran e4_rec  INTEG V(pwpSA)  FROM={T4-2n} TO={T4+TEVAL+EVALW+2n}
+.meas tran e4_recp INTEG V(pwpSAp) FROM={T4-2n} TO={T4+TEVAL+EVALW+2n}
+.meas tran e4_recn INTEG V(pwpSAn) FROM={T4-2n} TO={T4+TEVAL+EVALW+2n}
+.meas tran railB4  MIN V(rB4)      FROM={T4} TO={T4+PW_HIGH+4n}
+.meas tran railB4e FIND V(rB4)     AT={T4+TEVAL}
+.meas tran areaB4  INTEG V(rB4)    FROM={T4} TO={T4+3.2n}
+.meas tran lineA4  MIN V(Xc4.x)    FROM={T4} TO={T4+PW_HIGH+2n}
+.meas tran demA4   FIND V(outA4)   AT={T4+SAMP}
+.meas tran demB4   FIND V(outB4)   AT={T4+SAMP}
+.meas tran demL4   FIND V(outL4)   AT={T4+SAMP}
+.meas tran dA4     FIND V(vdA4)    AT={T4+SAMP}
+.meas tran dB4     FIND V(vdB4)    AT={T4+SAMP}
+.meas tran dL4     FIND V(vdL4)    AT={T4+SAMP}
+.meas tran dB4pk   MAX V(vdB4)     FROM={T4+TEVAL} TO={T4+TEVAL+EVALW}
+.meas tran dL4pk   MAX V(vdL4)     FROM={T4+TEVAL} TO={T4+TEVAL+EVALW}
+
+* --- CASE 5: NULL ---
+.meas tran e5_drv  INTEG V(pwpSUP) FROM={T5-1n} TO={T5+PW_HIGH+5n}
+.meas tran e5_rec  INTEG V(pwpSA)  FROM={T5-2n} TO={T5+TEVAL+EVALW+2n}
+.meas tran e5_recp INTEG V(pwpSAp) FROM={T5-2n} TO={T5+TEVAL+EVALW+2n}
+.meas tran e5_recn INTEG V(pwpSAn) FROM={T5-2n} TO={T5+TEVAL+EVALW+2n}
+.meas tran railA5  MAX V(rA5)      FROM={T5} TO={T5+PW_HIGH+4n}
+.meas tran railB5  MIN V(rB5)      FROM={T5} TO={T5+PW_HIGH+4n}
+.meas tran demA5   FIND V(outA5)   AT={T5+SAMP}
+.meas tran demB5   FIND V(outB5)   AT={T5+SAMP}
+.meas tran demL5   FIND V(outL5)   AT={T5+SAMP}
+.meas tran dA5     FIND V(vdA5)    AT={T5+SAMP}
+.meas tran dB5     FIND V(vdB5)    AT={T5+SAMP}
+.meas tran dL5     FIND V(vdL5)    AT={T5+SAMP}
+
+* ------------------------------------------------------------------
+* CONTROL BLOCK: runs the two variants (this ngspice build rejects
+* .step, so alterparam/reset/run is used; each run prints a full .meas
+* table, separated by the echo markers below).
+* ------------------------------------------------------------------
+.control
+echo "================================================================"
+echo "VARIANT A : amplitude-distinguished, both ~1.0 ns"
+echo "  +H = 21u @ 1.0n (rail ~0.218)   +L = 11u @ 1.0n (rail ~0.142)"
+echo "  THR=0.18 (midpoint). High symbol energy-matched to pwm5 long."
+echo "================================================================"
+alterparam PW_LOW = 1.0n
+alterparam PW_HIGH = 1.0n
+alterparam W_LOW = 11u
+alterparam W_HIGH = 21u
+alterparam THR = 0.18
+reset
+run
+echo "================================================================"
+echo "VARIANT A2 : amplitude-distinguished at max reachable amplitude"
+echo "  +H = 25u @ 1.0n (rail ~0.232)   +L = 11u @ 1.0n (rail ~0.142)"
+echo "  THR=0.19. Shows the amplitude ceiling at the RC floor."
+echo "================================================================"
+alterparam PW_LOW = 1.0n
+alterparam PW_HIGH = 1.0n
+alterparam W_LOW = 11u
+alterparam W_HIGH = 25u
+alterparam THR = 0.19
+reset
+run
+echo "================================================================"
+echo "VARIANT A3 : amplitude-distinguished, WIDEST resolvable gap"
+echo "  +H = 25u @ 1.0n (rail ~0.232)   +L = 8u @ 1.0n (rail ~0.083)"
+echo "  THR=0.157. Tests whether ANY amplitude split at 1.0 ns resolves"
+echo "  (A/A2 at +-0.038..0.042 V input diff latched WRONG side)."
+echo "================================================================"
+alterparam PW_LOW = 1.0n
+alterparam PW_HIGH = 1.0n
+alterparam W_LOW = 8u
+alterparam W_HIGH = 25u
+alterparam THR = 0.157
+reset
+run
+echo "================================================================"
+echo "VARIANT B : long-LOW vs short-HIGH (opposite (V,t) corners)"
+echo "  +L = 3.67u @ 1.618n (rail ~0.048)   +H = 11u @ 1.0n (rail ~0.142)"
+echo "  THR=0.095 (midpoint)."
+echo "================================================================"
+alterparam PW_LOW = 1.618n
+alterparam PW_HIGH = 1.0n
+alterparam W_LOW = 3.6667u
+alterparam W_HIGH = 11u
+alterparam THR = 0.095
+reset
+run
+.endc
+
+.end
